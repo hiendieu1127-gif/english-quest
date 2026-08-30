@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unit 1: All About Me — Exercises · English Quest</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="unit1-exercises.css">
+</head>
+<body data-page="exercises" style="--page-color: var(--c-exercises);">
+  <header class="site-header">
+    <nav class="container nav-row" aria-label="Main navigation">
+      <a class="brand" href="index.html">
+        <span class="brand-mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 5.5C4 4.7 4.7 4 5.5 4H12v16H5.5A1.5 1.5 0 0 1 4 18.5v-13Z" stroke-linejoin="round"/><path d="M20 5.5c0-.8-.7-1.5-1.5-1.5H12v16h6.5a1.5 1.5 0 0 0 1.5-1.5v-13Z" stroke-linejoin="round"/></svg></span>
+        English Quest
+      </a>
+      <button class="nav-toggle" aria-label="Open menu" aria-expanded="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke-linecap="round"/></svg>
+      </button>
+      <ul class="nav-links">
+        <li><a class="navlink" data-page="vocabulary" style="--section-color: var(--c-vocab)" href="vocabulary.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><text x="2.2" y="17" font-size="11" font-weight="800" fill="currentColor" stroke="none" font-family="sans-serif">ABC</text></svg><span>Vocabulary</span></a></li>
+        <li><a class="navlink" data-page="exercises" style="--section-color: var(--c-exercises)" href="exercises.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="4" stroke-linejoin="round"/><path d="M8 12.5l2.5 2.5L16 9" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Exercises</span></a></li>
+      </ul>
+    </nav>
+  </header>
+  <div class="nav-scrim"></div>
+
+  <main>
+    <section class="page-hero">
+      <div class="container">
+        <a class="btn btn-ghost btn-sm" href="exercises.html" style="margin-bottom:14px; display:inline-flex;">&larr; Back to Exercises</a>
+        <span class="eyebrow" style="border-color: var(--page-color);">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="4" stroke-linejoin="round"/><path d="M8 12.5l2.5 2.5L16 9" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Unit 1 &middot; Homework
+        </span>
+        <h1>All About Me! — Exercises</h1>
+        <p>7 dạng bài luyện tập cho Unit 1. Làm tại nhà, không cần chấm điểm giáo viên — web sẽ báo đúng/sai ngay khi chị bấm "Kiểm tra".</p>
+      </div>
+    </section>
+
+    <section class="section" style="padding-top:10px;">
+      <div class="container">
+
+        <div class="unit-banner">
+          <span class="unit-badge">1</span>
+          <div>
+            <h2>All About Me!</h2>
+            <p>Global Success 5 &middot; Sách bài tập trang 4-7</p>
+          </div>
+        </div>
+
+        <div class="ex-tabs" role="tablist" aria-label="Loại bài tập">
+          <button class="ex-tab active" data-target="panel-reading"><span class="tab-num">1</span>Reading</button>
+          <button class="ex-tab" data-target="panel-sbs"><span class="tab-num">2</span>Sentence by Sentence</button>
+          <button class="ex-tab" data-target="panel-vocab"><span class="tab-num">3</span>Vocabulary</button>
+          <button class="ex-tab" data-target="panel-fitb"><span class="tab-num">4</span>Fill in the Blank</button>
+          <button class="ex-tab" data-target="panel-order"><span class="tab-num">5</span>Sentence Ordering</button>
+          <button class="ex-tab" data-target="panel-quiz"><span class="tab-num">7</span>Quiz</button>
+        </div>
+
+        <!-- 1. Reading -->
+        <div class="ex-panel active" id="panel-reading">
+          <div class="ex-panel-head">
+            <h3>Reading</h3>
+            <p>Đọc cả đoạn văn tiếng Anh trước khi làm các bài tập khác.</p>
+          </div>
+          <div id="reading-panel-body"></div>
+        </div>
+
+        <!-- 2. Sentence by Sentence -->
+        <div class="ex-panel" id="panel-sbs">
+          <div class="ex-panel-head">
+            <h3>Sentence by Sentence</h3>
+            <p>Chạm vào từng câu để xem nghĩa tiếng Việt.</p>
+          </div>
+          <div class="sbs-list" id="sbs-list"></div>
+        </div>
+
+        <!-- 3. Vocabulary -->
+        <div class="ex-panel" id="panel-vocab">
+          <div class="ex-panel-head">
+            <h3>Vocabulary</h3>
+            <p>Chạm vào thẻ để lật xem nghĩa.</p>
+          </div>
+          <div class="flash-grid" id="flash-grid"></div>
+        </div>
+
+        <!-- 4. Fill in the Blank -->
+        <div class="ex-panel" id="panel-fitb">
+          <div class="ex-panel-head">
+            <h3>Fill in the Blank</h3>
+            <p>Gõ từ còn thiếu vào chỗ trống rồi bấm Kiểm tra.</p>
+          </div>
+          <div class="fitb-grid" id="fitb-grid"></div>
+        </div>
+
+        <!-- 5. Sentence Ordering -->
+        <div class="ex-panel" id="panel-order">
+          <div class="ex-panel-head">
+            <h3>Sentence Ordering</h3>
+            <p>Chạm vào các từ theo đúng thứ tự để tạo thành câu đúng.</p>
+          </div>
+          <div class="order-group">
+            <h4>A. Sắp xếp từ thành câu</h4>
+            <div id="order-group-a"></div>
+          </div>
+          <div class="order-group">
+            <h4>B. Sắp xếp thứ tự đoạn hội thoại</h4>
+            <div id="order-group-b"></div>
+          </div>
+        </div>
+
+        <!-- 7. Quiz -->
+        <div class="ex-panel" id="panel-quiz">
+          <div class="ex-panel-head">
+            <h3>Quiz</h3>
+            <p>Câu 1-14: chọn đáp án đúng (một số câu có audio 🔊). Câu 15-19: dịch nghĩa từ mới sang tiếng Việt.</p>
+          </div>
+          <div id="quiz-list"></div>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <div class="footer-brand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 5.5C4 4.7 4.7 4 5.5 4H12v16H5.5A1.5 1.5 0 0 1 4 18.5v-13Z" stroke-linejoin="round"/><path d="M20 5.5c0-.8-.7-1.5-1.5-1.5H12v16h6.5a1.5 1.5 0 0 0 1.5-1.5v-13Z" stroke-linejoin="round"/></svg> English Quest</div>
+          <p style="max-width:32ch; font-size:.9rem; opacity:.85;">A friendly place for Grade 5 students to read, play, and practise English every week.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Learn</h4>
+          <ul>
+            <li><a href="lessons.html">Lessons</a></li>
+            <li><a href="vocabulary.html">Vocabulary</a></li>
+            <li><a href="grammar.html">Grammar</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Practise</h4>
+          <ul>
+            <li><a href="exercises.html">Exercises</a></li>
+            <li><a href="games.html">Games</a></li>
+            <li><a href="quizzes.html">Quizzes</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>You</h4>
+          <ul>
+            <li><a href="progress.html">My progress</a></li>
+            <li><a href="index.html">Home</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; 2026 English Quest &mdash; a class website by teacher Hien.</span>
+        <span>Unit 1 exercises &mdash; content from teacher Hien's materials.</span>
+      </div>
+    </div>
+  </footer>
+<script src="script.js"></script>
+<script src="unit1-exercises.js"></script>
+</body>
+</html>
