@@ -3,7 +3,18 @@
 // Source: teacher Hien's slides + "Tiếng Anh 5 – Sách bài tập" (Unit 1, p.4-7)
 // Lines marked "translated by Claude" were not in the source material
 // and were translated to fill a gap — flagged for the teacher to review.
+//
+// SCORING: FITB + Quiz (MC + Translate) are graded questions. Reading /
+// Sentence-by-Sentence / Flashcards are study aids and are NOT graded.
+// A "Nộp bài" button (added by renderScoreBar, generic — no unit-specific
+// code) totals every graded question and saves ONE combined "exercises"
+// result via window.EQResults.saveResult. Copying this whole file to
+// unit2-exercises.js etc. and swapping only the data above + the
+// THIS_UNIT_ID/THIS_UNIT_LABEL constants below is all a future unit needs.
 // ============================================================
+
+const THIS_UNIT_ID = "unit1";
+const THIS_UNIT_LABEL = "Unit 1: All About Me";
 
 const READING_PASSAGE = [
   { en: "My name's Jack.", vi: "Tên tôi là Jack." },
@@ -112,6 +123,21 @@ const PIC_ICONS = {
 };
 
 // ============================================================
+// Scoring state — filled in as the student checks each graded
+// question, read by renderScoreBar()'s "Nộp bài" handler.
+// ============================================================
+const gradedState = {
+  fitb: {},   // idx -> { correct, studentAnswer, correctAnswer, question }
+  mc: {},     // idx -> { correct, studentAnswer, correctAnswer, question }
+  tr: {},     // idx -> { correct, studentAnswer, correctAnswer, question }
+};
+
+function whenResultsReady(cb) {
+  if (window.EQResults) { cb(); return; }
+  window.addEventListener("eq-results-ready", cb, { once: true });
+}
+
+// ============================================================
 // Rendering
 // ============================================================
 document.addEventListener("DOMContentLoaded", () => {
@@ -122,6 +148,19 @@ document.addEventListener("DOMContentLoaded", () => {
   renderOrdering();
   renderQuiz();
   setupTabs();
+  renderScoreBar();
+
+  const studentName = window.EQStudent ? window.EQStudent.ensureName() : "";
+  whenResultsReady(() => {
+    if (studentName) {
+      window.EQResults.markInProgress({
+        student: studentName,
+        unitId: THIS_UNIT_ID,
+        unitLabel: THIS_UNIT_LABEL,
+        section: "exercises",
+      }).catch(() => {});
+    }
+  });
 });
 
 function renderReading() {
@@ -188,6 +227,8 @@ function renderFITB() {
       const correct = normalize(input.value) === normalize(FITB[i].answer);
       fb.textContent = correct ? "✓ Chính xác!" : `✗ Chưa đúng — đáp án: "${FITB[i].answer}"`;
       fb.className = "fitb-feedback " + (correct ? "ok" : "no");
+      gradedState.fitb[i] = { correct, studentAnswer: input.value, correctAnswer: FITB[i].answer, question: FITB[i].sentence };
+      updateScoreBar();
     });
   });
   el.querySelectorAll(".fitb-input").forEach(inp => {
@@ -333,9 +374,17 @@ function renderQuiz() {
       const selected = item.querySelector(".quiz-opt.selected");
       const fb = document.getElementById(`quiz-feedback-mc-${i}`);
       if (!selected) { fb.textContent = "Hãy chọn một đáp án trước nhé."; fb.className = "quiz-feedback no"; return; }
-      const correct = Number(selected.dataset.opt) === QUIZ_MC[i].answer;
+      const chosenIdx = Number(selected.dataset.opt);
+      const correct = chosenIdx === QUIZ_MC[i].answer;
       fb.textContent = correct ? "✓ Chính xác!" : `✗ Chưa đúng — đáp án: ${QUIZ_MC[i].opts[QUIZ_MC[i].answer]}`;
       fb.className = "quiz-feedback " + (correct ? "ok" : "no");
+      gradedState.mc[i] = {
+        correct,
+        studentAnswer: QUIZ_MC[i].opts[chosenIdx],
+        correctAnswer: QUIZ_MC[i].opts[QUIZ_MC[i].answer],
+        question: QUIZ_MC[i].q,
+      };
+      updateScoreBar();
     });
   });
 
@@ -347,6 +396,8 @@ function renderQuiz() {
       const correct = normalize(input.value) === normalize(QUIZ_TRANSLATE[i].answer);
       fb.textContent = correct ? "✓ Chính xác!" : `✗ Chưa đúng — đáp án: "${QUIZ_TRANSLATE[i].answer}"`;
       fb.className = "quiz-feedback " + (correct ? "ok" : "no");
+      gradedState.tr[i] = { correct, studentAnswer: input.value, correctAnswer: QUIZ_TRANSLATE[i].answer, question: `Dịch nghĩa: ${QUIZ_TRANSLATE[i].q}` };
+      updateScoreBar();
     });
   });
 }
@@ -361,6 +412,80 @@ function setupTabs() {
       tab.classList.add("active");
       document.getElementById(tab.dataset.target).classList.add("active");
       window.scrollTo({ top: document.querySelector(".ex-tabs").offsetTop - 90, behavior: "smooth" });
+    });
+  });
+}
+
+// ============================================================
+// Score bar + "Nộp bài" (submit) — generic, reused as-is for every
+// future unitN-exercises.js (only THIS_UNIT_ID/LABEL differ per file).
+// ============================================================
+const GRADED_TOTAL = FITB.length + QUIZ_MC.filter(q => q.q !== null).length + QUIZ_TRANSLATE.length;
+
+function countAnswered() {
+  return Object.keys(gradedState.fitb).length + Object.keys(gradedState.mc).length + Object.keys(gradedState.tr).length;
+}
+
+function renderScoreBar() {
+  const container = document.querySelector("main .container") || document.body;
+  const bar = document.createElement("div");
+  bar.className = "ex-score-bar";
+  bar.id = "eq-score-bar";
+  bar.innerHTML = `<div class="ex-score-pill" id="eq-score-pill">Đã làm 0/${GRADED_TOTAL} câu — <button id="eq-submit-btn" style="margin-left:8px;background:#fff;color:var(--brand-dark, #232966);border:none;border-radius:999px;padding:5px 14px;font-weight:800;font-size:.8rem;cursor:pointer;">Nộp bài</button></div>`;
+  container.appendChild(bar);
+  document.getElementById("eq-submit-btn").addEventListener("click", submitExercises);
+}
+
+function updateScoreBar() {
+  const pill = document.getElementById("eq-score-pill");
+  if (!pill) return;
+  const answered = countAnswered();
+  const btn = pill.querySelector("#eq-submit-btn");
+  pill.firstChild.textContent = `Đã làm ${answered}/${GRADED_TOTAL} câu — `;
+  if (btn) pill.appendChild(btn); // re-append since textContent write above only touched the text node
+}
+
+function submitExercises() {
+  const answered = countAnswered();
+  if (answered < GRADED_TOTAL) {
+    const ok = window.confirm(`Chị mới làm ${answered}/${GRADED_TOTAL} câu (còn thiếu ${GRADED_TOTAL - answered} câu chưa bấm "Kiểm tra"). Những câu chưa làm sẽ tính là sai. Vẫn nộp bài chứ?`);
+    if (!ok) return;
+  }
+
+  let correct = 0;
+  const answers = [];
+  FITB.forEach((item, i) => {
+    const r = gradedState.fitb[i];
+    if (r) { if (r.correct) correct++; answers.push({ question: r.question, studentAnswer: r.studentAnswer, correctAnswer: r.correctAnswer, correct: r.correct }); }
+    else answers.push({ question: item.sentence, studentAnswer: "(chưa làm)", correctAnswer: item.answer, correct: false });
+  });
+  QUIZ_MC.forEach((item, i) => {
+    if (item.q === null) return; // not gradable yet
+    const r = gradedState.mc[i];
+    if (r) { if (r.correct) correct++; answers.push({ question: r.question, studentAnswer: r.studentAnswer, correctAnswer: r.correctAnswer, correct: r.correct }); }
+    else answers.push({ question: item.q, studentAnswer: "(chưa làm)", correctAnswer: item.opts[item.answer], correct: false });
+  });
+  QUIZ_TRANSLATE.forEach((item, i) => {
+    const r = gradedState.tr[i];
+    if (r) { if (r.correct) correct++; answers.push({ question: r.question, studentAnswer: r.studentAnswer, correctAnswer: r.correctAnswer, correct: r.correct }); }
+    else answers.push({ question: `Dịch nghĩa: ${item.q}`, studentAnswer: "(chưa làm)", correctAnswer: item.answer, correct: false });
+  });
+
+  const studentName = window.EQStudent ? window.EQStudent.ensureName() : "";
+  const pill = document.getElementById("eq-score-pill");
+
+  whenResultsReady(() => {
+    if (!studentName) { if (pill) pill.textContent = "Cần nhập tên trước khi nộp bài."; return; }
+    window.EQResults.saveResult({
+      student: studentName,
+      unitId: THIS_UNIT_ID,
+      unitLabel: THIS_UNIT_LABEL,
+      section: "exercises",
+      correct, total: GRADED_TOTAL, answers,
+    }).then(({ percent }) => {
+      if (pill) pill.innerHTML = `✓ Đã nộp bài — ${correct}/${GRADED_TOTAL} đúng (${percent}%)`;
+    }).catch(() => {
+      if (pill) pill.textContent = "Có lỗi khi lưu bài, chị thử bấm Nộp bài lại nhé.";
     });
   });
 }
