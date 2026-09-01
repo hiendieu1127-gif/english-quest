@@ -5,6 +5,34 @@
 // and were translated to fill a gap — flagged for the teacher to review.
 // ============================================================
 
+const EQ_UNIT_ID = "unit1";
+const EQ_UNIT_LABEL = "Unit 1: All About Me";
+let eqStudent = "";
+let eqAnswers = {}; // key -> {question, studentAnswer, correctAnswer, correct}
+
+function eqTotalItems() {
+  return FITB.length + ORDER_SENTENCES.length + 1 /* dialogue */
+    + QUIZ_MC.filter(q => q.q !== null).length + QUIZ_TRANSLATE.length;
+}
+
+// Recomputes totals from eqAnswers and saves — fires on every check
+// (right or wrong) so the Teacher Dashboard updates live.
+function eqRecordAndSave(key, question, studentAnswer, correctAnswer, correct) {
+  eqAnswers[key] = { question, studentAnswer, correctAnswer, correct };
+  if (!window.EQResults || !eqStudent) return;
+  const values = Object.values(eqAnswers);
+  const correctCount = values.filter(a => a.correct).length;
+  window.EQResults.saveResult({
+    student: eqStudent,
+    unitId: EQ_UNIT_ID,
+    unitLabel: EQ_UNIT_LABEL,
+    section: "exercises",
+    correct: correctCount,
+    total: eqTotalItems(),
+    answers: values,
+  }).catch(() => {});
+}
+
 const READING_PASSAGE = [
   { en: "My name's Jack.", vi: "Tên tôi là Jack." },
   { en: "I live in a small village in Australia.", vi: "Tôi sống ở một ngôi làng nhỏ ở Úc." },
@@ -115,6 +143,15 @@ const PIC_ICONS = {
 // Rendering
 // ============================================================
 document.addEventListener("DOMContentLoaded", () => {
+  eqStudent = window.EQStudent ? window.EQStudent.ensureName() : "";
+  if (window.EQResults && eqStudent) {
+    window.EQResults.markInProgress({
+      student: eqStudent,
+      unitId: EQ_UNIT_ID,
+      unitLabel: EQ_UNIT_LABEL,
+      section: "exercises",
+    }).catch(() => {});
+  }
   renderReading();
   renderFlashcards();
   renderFITB();
@@ -173,6 +210,7 @@ function renderFITB() {
       const correct = normalize(input.value) === normalize(FITB[i].answer);
       fb.textContent = correct ? "✓ Chính xác!" : "✗ Try again.";
       fb.className = "fitb-feedback " + (correct ? "ok" : "no");
+      eqRecordAndSave(`fitb-${i}`, FITB[i].sentence, input.value, FITB[i].answer, correct);
     });
   });
   el.querySelectorAll(".fitb-input").forEach(inp => {
@@ -189,7 +227,7 @@ function shuffle(arr) {
   return a;
 }
 
-function buildOrderItem(container, words, answerText, label) {
+function buildOrderItem(container, words, answerText, key) {
   const wrap = document.createElement("div");
   wrap.className = "order-item";
   const shuffled = shuffle(words);
@@ -230,6 +268,7 @@ function buildOrderItem(container, words, answerText, label) {
     const correct = normalize(built) === normalize(answerText);
     feedback.textContent = correct ? "✓ Đúng rồi!" : "✗ Chưa đúng, thử lại nhé";
     feedback.className = "order-feedback " + (correct ? "ok" : "no");
+    eqRecordAndSave(key, "Sentence ordering", built, answerText, correct);
   });
 
   wrap.querySelector(".order-reset").addEventListener("click", () => {
@@ -243,10 +282,10 @@ function renderOrdering() {
   const groupA = document.getElementById("order-group-a");
   const groupB = document.getElementById("order-group-b");
   if (groupA) {
-    ORDER_SENTENCES.forEach(item => buildOrderItem(groupA, item.words, item.answer));
+    ORDER_SENTENCES.forEach((item, i) => buildOrderItem(groupA, item.words, item.answer, `order-a-${i}`));
   }
   if (groupB) {
-    buildOrderItem(groupB, ORDER_DIALOGUE.words, ORDER_DIALOGUE.words.join(" "));
+    buildOrderItem(groupB, ORDER_DIALOGUE.words, ORDER_DIALOGUE.words.join(" "), "order-dialogue");
   }
 }
 
@@ -321,6 +360,7 @@ function renderQuiz() {
       const correct = Number(selected.dataset.opt) === QUIZ_MC[i].answer;
       fb.textContent = correct ? "✓ Chính xác!" : "✗ Try again.";
       fb.className = "quiz-feedback " + (correct ? "ok" : "no");
+      eqRecordAndSave(`quiz-mc-${i}`, QUIZ_MC[i].q, QUIZ_MC[i].opts[Number(selected.dataset.opt)], QUIZ_MC[i].opts[QUIZ_MC[i].answer], correct);
     });
   });
 
@@ -332,6 +372,7 @@ function renderQuiz() {
       const correct = normalize(input.value) === normalize(QUIZ_TRANSLATE[i].answer);
       fb.textContent = correct ? "✓ Chính xác!" : "✗ Try again.";
       fb.className = "quiz-feedback " + (correct ? "ok" : "no");
+      eqRecordAndSave(`quiz-tr-${i}`, `Translate: ${QUIZ_TRANSLATE[i].q}`, input.value, QUIZ_TRANSLATE[i].answer, correct);
     });
   });
 }

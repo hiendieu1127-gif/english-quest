@@ -68,6 +68,38 @@ function getMasteredCount(unit) {
 let currentUnit = null;
 let currentStageIdx = 0;
 const stageDone = {}; // stageKey -> true
+let eqStudent = "";
+let eqAnswers = {}; // key -> {question, studentAnswer, correctAnswer, correct}
+
+function eqUnitLabel(unit) {
+  return `Unit ${unit.number}: ${unit.title}`;
+}
+
+// Recompute totals from eqAnswers and save (fires on every check, right or
+// wrong, so the Teacher Dashboard updates live as the student works).
+// Fixed total = every scoreable item across the 4 sequential stages
+// (Tap Pairs is a matching drill, not scored). Recomputed from the unit's
+// word list so it always matches what buildSequentialItems() will produce.
+function eqTotalItems(unit) {
+  return ["picture-matching", "multiple-choice", "missing-word", "sentence-shuffle"]
+    .reduce((sum, key) => sum + buildSequentialItems(key, unit).length, 0);
+}
+
+function eqRecordAndSave(key, question, studentAnswer, correctAnswer, correct) {
+  eqAnswers[key] = { question, studentAnswer, correctAnswer, correct };
+  if (!window.EQResults || !eqStudent || !currentUnit) return;
+  const values = Object.values(eqAnswers);
+  const correctCount = values.filter(a => a.correct).length;
+  window.EQResults.saveResult({
+    student: eqStudent,
+    unitId: currentUnit.id,
+    unitLabel: eqUnitLabel(currentUnit),
+    section: "vocabulary",
+    correct: correctCount,
+    total: eqTotalItems(currentUnit),
+    answers: values,
+  }).catch(() => {});
+}
 
 function shuffle(arr) {
   const a = arr.slice();
@@ -116,6 +148,16 @@ function openUnit(unitId) {
   if (!currentUnit) return;
   currentStageIdx = 0;
   Object.keys(stageDone).forEach(k => delete stageDone[k]);
+  eqAnswers = {};
+  eqStudent = window.EQStudent ? window.EQStudent.ensureName() : "";
+  if (window.EQResults && eqStudent) {
+    window.EQResults.markInProgress({
+      student: eqStudent,
+      unitId: currentUnit.id,
+      unitLabel: eqUnitLabel(currentUnit),
+      section: "vocabulary",
+    }).catch(() => {});
+  }
   document.getElementById("unit-select-view").classList.add("hidden");
   document.getElementById("path-view").classList.add("active");
   document.getElementById("path-title").textContent = `Unit ${currentUnit.number}: ${currentUnit.title}`;
@@ -323,6 +365,23 @@ function runSequential(host, stageKey, items, onDone) {
           if (opt.dataset.wrong || host.querySelector(`${optSelector}[data-locked="1"]`)) return;
           const chosen = Number(opt.dataset.idx);
           const correct = chosen === item.correctIdx;
+
+          let question, chosenLabel, correctLabel;
+          if (stageKey === "picture-matching") {
+            question = `Picture for "${item.word.en}"`;
+            chosenLabel = item.opts[chosen].en;
+            correctLabel = item.word.en;
+          } else if (stageKey === "multiple-choice") {
+            question = `What does "${item.word.en}" mean?`;
+            chosenLabel = item.opts[chosen];
+            correctLabel = item.opts[item.correctIdx];
+          } else {
+            question = item.sentence;
+            chosenLabel = item.opts[chosen];
+            correctLabel = item.opts[item.correctIdx];
+          }
+          eqRecordAndSave(`${stageKey}-${item.word.id}`, question, chosenLabel, correctLabel, correct);
+
           if (correct) {
             host.querySelectorAll(optSelector).forEach(o => o.dataset.locked = "1");
             opt.classList.add("correct");
@@ -350,6 +409,7 @@ function runSequential(host, stageKey, items, onDone) {
             const built = Array.from(target.children).map(c => c.textContent).join(" ");
             const norm = s => s.toLowerCase().replace(/[.?!]/g, "").replace(/\s+/g, " ").trim();
             const correct = norm(built) === norm(item.answer);
+            eqRecordAndSave(`sentence-shuffle-${item.word.id}`, item.word.vi, built, item.answer, correct);
             setTimeout(() => finishAnswer(correct), 250);
           }
         });
