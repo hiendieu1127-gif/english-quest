@@ -1,10 +1,12 @@
 // ============================================================
 // Vocabulary — interactive learning path
 // Data-driven: adding a new unit = adding one object to VOCAB_UNITS.
-// Each word can carry an icon (for Picture Matching) and an example
-// sentence (used by Missing Word + Sentence Shuffle). Stages skip
-// words that don't have what they need (e.g. no icon -> skipped in
-// Picture Matching) rather than breaking.
+// Each word has a `stages` array saying which stage(s) it belongs to
+// (tap-pairs / picture-matching / multiple-choice / missing-word).
+// Sentence Shuffle is the one exception: it still just uses any word
+// that has an `example` sentence, regardless of stage tag.
+// Picture Matching also needs an `icon`; Missing Word also needs an
+// `example` containing the phrase to blank out.
 // ============================================================
 
 const VOCAB_UNITS = [
@@ -12,13 +14,40 @@ const VOCAB_UNITS = [
     id: "unit1",
     number: 1,
     title: "All About Me",
-    subtitle: "Sample words for testing the learning path",
+    subtitle: "Global Success 5 · New Vocabulary",
     words: [
-      { id: "city", en: "city", vi: "thành phố", example: "I live in the city.", icon: "city" },
-      { id: "countryside", en: "countryside", vi: "vùng nông thôn", example: "My grandparents live in the countryside.", icon: "countryside" },
-      { id: "nice-to-meet-you", en: "Nice to meet you.", vi: "Rất vui được gặp bạn.", example: "Nice to meet you.", icon: null },
-      { id: "tell-about-yourself", en: "Can you tell me about yourself?", vi: "Bạn có thể giới thiệu về bản thân không?", example: "Can you tell me about yourself?", icon: null },
-      { id: "basketball", en: "basketball", vi: "bóng rổ", example: "I like playing basketball.", icon: "basketball" },
+      // Tap Pairs — slide 1
+      { id: "city", en: "city", vi: "thành phố", stages: ["tap-pairs"] },
+      { id: "countryside", en: "countryside", vi: "vùng nông thôn", stages: ["tap-pairs"] },
+      { id: "class", en: "class", vi: "lớp học", stages: ["tap-pairs"] },
+      { id: "nice-to-meet-you", en: "Nice to meet you.", vi: "Rất vui được gặp bạn.", stages: ["tap-pairs"] },
+      { id: "tell-about-yourself", en: "Can you tell me about yourself?", vi: "Bạn có thể kể cho tôi về bản thân của bạn được không?", stages: ["tap-pairs"] },
+
+      // Picture Matching — slides 2 & 3
+      { id: "dolphin", en: "dolphin", vi: "cá heo", icon: "img/vocab-dolphin.jpg", stages: ["picture-matching"] },
+      { id: "basketball", en: "basketball", vi: "bóng rổ", icon: "img/vocab-basketball.jpg", stages: ["picture-matching"] },
+      { id: "swimming", en: "swimming", vi: "bơi lội", icon: "img/vocab-swimming.jpg", stages: ["picture-matching"] },
+      { id: "table-tennis", en: "table tennis", vi: "bóng bàn", icon: "img/vocab-table-tennis.jpg", stages: ["picture-matching"] },
+      { id: "panda", en: "panda", vi: "gấu trúc", icon: "img/vocab-panda.jpg", stages: ["picture-matching"] },
+      { id: "giraffe", en: "giraffe", vi: "hươu cao cổ", icon: "img/vocab-giraffe.jpg", stages: ["picture-matching"] },
+      { id: "japan", en: "Japan", vi: "Nhật Bản", icon: "img/vocab-japan.jpg", stages: ["picture-matching"] },
+      { id: "england", en: "England", vi: "nước Anh", icon: "img/vocab-england.jpg", stages: ["picture-matching"] },
+
+      // Multiple Choice — slides 4 & 5 (selected words)
+      { id: "fish", en: "fish", vi: "(món) cá", stages: ["multiple-choice"] },
+      { id: "chips", en: "chips", vi: "khoai tây chiên", stages: ["multiple-choice"] },
+      { id: "big-fan", en: "a big fan", vi: "một fan hâm mộ lớn", stages: ["multiple-choice"] },
+      { id: "baseball", en: "baseball", vi: "bóng chày", stages: ["multiple-choice"] },
+      { id: "rabbit", en: "rabbit", vi: "thỏ", stages: ["multiple-choice"] },
+      { id: "food", en: "food", vi: "thức ăn", stages: ["multiple-choice"] },
+      { id: "kitten", en: "kitten", vi: "mèo con", stages: ["multiple-choice"] },
+      { id: "pets", en: "pets", vi: "thú cưng", stages: ["multiple-choice"] },
+
+      // Missing Word — 4 set phrases (also feed Sentence Shuffle, unchanged mechanism)
+      { id: "tell-a-little-bit", en: "Let me tell you a little bit about myself.", vi: "Để tôi kể cho các bạn nghe một chút về bản thân tôi.", example: "Let me tell you a little bit about myself.", stages: ["missing-word"] },
+      { id: "introduce-myself", en: "Let me introduce myself.", vi: "Để tôi giới thiệu về bản thân mình.", example: "Let me introduce myself.", stages: ["missing-word"] },
+      { id: "tell-about-yourself-q", en: "Can you tell me about yourself?", vi: "Bạn có thể kể cho tôi về bản thân của bạn được không?", example: "Can you tell me about yourself?", stages: ["missing-word"] },
+      { id: "whats-your-name", en: "What's your name?", vi: "Tên bạn là gì?", example: "What's your name?", stages: ["missing-word"] },
     ],
   },
 ];
@@ -31,11 +60,8 @@ const STAGES = [
   { key: "sentence-shuffle", title: "Sentence Shuffle", subtitle: "Sắp xếp câu" },
 ];
 
-const VOCAB_ICONS = {
-  city: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 20V9l4-3v14M12 20V5l4 2v13M20 20V11l-4-2" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 20h16" stroke-linecap="round"/></svg>',
-  countryside: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 18l5-8 4 5 2-3 7 6H3Z" stroke-linejoin="round" stroke-linecap="round"/><circle cx="17" cy="6" r="2"/></svg>',
-  basketball: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="8.5"/><path d="M12 3.5v17M3.5 12h17M5.3 6.3c2 1.8 3.3 4 3.3 5.7s-1.3 3.9-3.3 5.7M18.7 6.3c-2 1.8-3.3 4-3.3 5.7s1.3 3.9 3.3 5.7" stroke-linecap="round"/></svg>',
-};
+// Picture Matching now uses real photos (see each word's `icon` path
+// above) instead of hand-drawn icons.
 
 const PASS_LS_KEY = "eq_vocab_progress";
 
@@ -228,25 +254,27 @@ function onStageComplete(stageKey) {
 // Build the item list for a sequential (one-at-a-time) stage
 // ============================================================
 function buildSequentialItems(stageKey, unit) {
-  const words = unit.words;
+  const wordsForStage = unit.words.filter(w => w.stages && w.stages.includes(stageKey));
+
   if (stageKey === "picture-matching") {
-    return words.filter(w => w.icon).map(w => {
-      const wIdx = words.indexOf(w);
-      const distractorIdx = sample(words.filter(x => x.icon), 2, words.filter(x => x.icon).indexOf(w));
-      const iconPool = words.filter(x => x.icon);
+    const pool = wordsForStage.filter(w => w.icon);
+    return pool.map(w => {
+      const wIdx = pool.indexOf(w);
+      const distractorIdx = sample(pool, 2, wIdx);
       const correctPos = Math.floor(Math.random() * 3);
       const opts = [];
       let di = 0;
       for (let i = 0; i < 3; i++) {
         if (i === correctPos) opts.push(w);
-        else { opts.push(iconPool[distractorIdx[di] ?? 0]); di++; }
+        else { opts.push(pool[distractorIdx[di] ?? 0]); di++; }
       }
       return { word: w, opts, correctIdx: correctPos };
     });
   }
   if (stageKey === "multiple-choice") {
-    return words.map((w, i) => {
-      const distractors = sample(words, 2, i).map(di => words[di]);
+    const pool = wordsForStage;
+    return pool.map((w, i) => {
+      const distractors = sample(pool, 2, i).map(di => pool[di]);
       const correctPos = Math.floor(Math.random() * 3);
       const opts = [];
       let di = 0;
@@ -258,16 +286,18 @@ function buildSequentialItems(stageKey, unit) {
     });
   }
   if (stageKey === "missing-word") {
-    return words.filter(w => {
+    const pool = wordsForStage.filter(w => {
       if (!w.example) return false;
       const target = w.en.replace(/[?.!]/g, "");
       if (!w.example.toLowerCase().includes(target.toLowerCase())) return false;
-      // skip items where the blank would swallow the whole sentence (no context left)
-      return tokenize(target).length < tokenize(w.example).length;
-    }).map((w, i) => {
+      // allow the blank to cover the whole sentence (set phrases like
+      // "Let me introduce myself.") as well as a word inside a longer one
+      return tokenize(target).length <= tokenize(w.example).length;
+    });
+    return pool.map((w, i) => {
       const target = w.en.replace(/[?.!]/g, "");
       const blanked = w.example.replace(new RegExp(target.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i"), "___");
-      const distractors = sample(words, 2, words.indexOf(w)).map(di => words[di].en);
+      const distractors = sample(pool, 2, i).map(di => pool[di].en);
       const correctPos = Math.floor(Math.random() * 3);
       const opts = [];
       let di = 0;
@@ -279,7 +309,9 @@ function buildSequentialItems(stageKey, unit) {
     });
   }
   if (stageKey === "sentence-shuffle") {
-    return words.filter(w => w.example).map(w => ({
+    // Unchanged: still just uses any word with an example, regardless
+    // of stage tag (per teacher's request to leave this stage as-is)
+    return unit.words.filter(w => w.example).map(w => ({
       word: w,
       tokens: tokenize(w.example),
       answer: w.example,
@@ -307,7 +339,7 @@ function runSequential(host, stageKey, items, onDone) {
       body = `
         <div class="runner-prompt"><div class="prompt-label">Chọn hình đúng</div><div class="prompt-main">${item.word.en}</div></div>
         <div class="runner-pics">
-          ${item.opts.map((o, oi) => `<div class="runner-pic-opt" data-idx="${oi}">${VOCAB_ICONS[o.icon] || ""}</div>`).join("")}
+          ${item.opts.map((o, oi) => `<div class="runner-pic-opt" data-idx="${oi}">${o.icon ? `<img src="${o.icon}" alt="${o.en}" style="width:100%;height:100%;object-fit:cover;border-radius:12px;">` : ""}</div>`).join("")}
         </div>`;
     } else if (stageKey === "multiple-choice") {
       body = `
@@ -424,7 +456,7 @@ function runSequential(host, stageKey, items, onDone) {
 // Tap Pairs (whole board — all pairs on one screen)
 // ============================================================
 function renderTapPairs(host, unit, onDone) {
-  const words = unit.words;
+  const words = unit.words.filter(w => w.stages && w.stages.includes("tap-pairs"));
   const leftItems = words.map(w => ({ id: w.id, text: w.en }));
   const rightItems = shuffle(words.map(w => ({ id: w.id, text: w.vi })));
   const leftShuffled = shuffle(leftItems);
