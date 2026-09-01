@@ -20,8 +20,7 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke-linecap="round"/></svg>
       </button>
       <ul class="nav-links">
-        <li><a class="navlink" data-page="vocabulary" style="--section-color: var(--c-vocab)" href="vocabulary.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><text x="2.2" y="17" font-size="11" font-weight="800" fill="currentColor" stroke="none" font-family="sans-serif">ABC</text></svg><span>Vocabulary</span></a></li>
-        <li><a class="navlink" data-page="exercises" style="--section-color: var(--c-exercises)" href="exercises.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="4" stroke-linejoin="round"/><path d="M8 12.5l2.5 2.5L16 9" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Exercises</span></a></li>
+        <li><a class="navlink" data-page="lessons" style="--section-color: var(--c-lessons)" href="lessons.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 5.5C4 4.7 4.7 4 5.5 4H12v16H5.5A1.5 1.5 0 0 1 4 18.5v-13Z" stroke-linejoin="round"/><path d="M20 5.5c0-.8-.7-1.5-1.5-1.5H12v16h6.5a1.5 1.5 0 0 0 1.5-1.5v-13Z" stroke-linejoin="round"/></svg><span>Lessons</span></a></li>
       </ul>
     </nav>
   </header>
@@ -53,11 +52,10 @@
 
         <div class="ex-tabs" role="tablist" aria-label="Loại bài tập">
           <button class="ex-tab active" data-target="panel-reading"><span class="tab-num">1</span>Reading</button>
-          <button class="ex-tab" data-target="panel-sbs"><span class="tab-num">2</span>Sentence by Sentence</button>
-          <button class="ex-tab" data-target="panel-vocab"><span class="tab-num">3</span>Vocabulary</button>
-          <button class="ex-tab" data-target="panel-fitb"><span class="tab-num">4</span>Fill in the Blank</button>
-          <button class="ex-tab" data-target="panel-order"><span class="tab-num">5</span>Sentence Ordering</button>
-          <button class="ex-tab" data-target="panel-quiz"><span class="tab-num">7</span>Quiz</button>
+          <button class="ex-tab" data-target="panel-vocab"><span class="tab-num">2</span>Vocabulary</button>
+          <button class="ex-tab" data-target="panel-fitb"><span class="tab-num">3</span>Fill in the Blank</button>
+          <button class="ex-tab" data-target="panel-order"><span class="tab-num">4</span>Sentence Ordering</button>
+          <button class="ex-tab" data-target="panel-quiz"><span class="tab-num">5</span>Quiz</button>
         </div>
 
         <!-- 1. Reading -->
@@ -69,16 +67,7 @@
           <div id="reading-panel-body"></div>
         </div>
 
-        <!-- 2. Sentence by Sentence -->
-        <div class="ex-panel" id="panel-sbs">
-          <div class="ex-panel-head">
-            <h3>Sentence by Sentence</h3>
-            <p>Chạm vào từng câu để xem nghĩa tiếng Việt.</p>
-          </div>
-          <div class="sbs-list" id="sbs-list"></div>
-        </div>
-
-        <!-- 3. Vocabulary -->
+        <!-- 2. Vocabulary -->
         <div class="ex-panel" id="panel-vocab">
           <div class="ex-panel-head">
             <h3>Vocabulary</h3>
@@ -87,7 +76,7 @@
           <div class="flash-grid" id="flash-grid"></div>
         </div>
 
-        <!-- 4. Fill in the Blank -->
+        <!-- 3. Fill in the Blank -->
         <div class="ex-panel" id="panel-fitb">
           <div class="ex-panel-head">
             <h3>Fill in the Blank</h3>
@@ -96,7 +85,7 @@
           <div class="fitb-grid" id="fitb-grid"></div>
         </div>
 
-        <!-- 5. Sentence Ordering -->
+        <!-- 4. Sentence Ordering -->
         <div class="ex-panel" id="panel-order">
           <div class="ex-panel-head">
             <h3>Sentence Ordering</h3>
@@ -112,7 +101,7 @@
           </div>
         </div>
 
-        <!-- 7. Quiz -->
+        <!-- 5. Quiz -->
         <div class="ex-panel" id="panel-quiz">
           <div class="ex-panel-head">
             <h3>Quiz</h3>
@@ -163,8 +152,6 @@
     </div>
   </footer>
 <script src="script.js"></script>
-<script src="student-gate.js"></script>
-<script type="module" src="results-service.js"></script>
 <script src="unit1-exercises.js"></script>
 </body>
 </html>

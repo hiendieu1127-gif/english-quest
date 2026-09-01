@@ -5,13 +5,6 @@
 // sentence (used by Missing Word + Sentence Shuffle). Stages skip
 // words that don't have what they need (e.g. no icon -> skipped in
 // Picture Matching) rather than breaking.
-//
-// SCORING: this file tracks correct/total across ALL 5 stages for the
-// currently-open unit (unitScore, reset each time a unit is opened) and
-// saves ONE combined "vocabulary" result via window.EQResults.saveResult
-// when the last stage is completed. This save call is 100% generic —
-// it only ever passes unit.id / unit.title, so Unit 2-10 need zero
-// changes here once they're added to VOCAB_UNITS below.
 // ============================================================
 
 const VOCAB_UNITS = [
@@ -28,8 +21,6 @@ const VOCAB_UNITS = [
       { id: "basketball", en: "basketball", vi: "bóng rổ", example: "I like playing basketball.", icon: "basketball" },
     ],
   },
-  // Unit 2-10: add more objects here, same shape as above.
-  // Nothing else in this file (or in results-service.js) needs to change.
 ];
 
 const STAGES = [
@@ -78,16 +69,6 @@ let currentUnit = null;
 let currentStageIdx = 0;
 const stageDone = {}; // stageKey -> true
 
-// Cumulative score for the WHOLE unit (all 5 stages), reset in openUnit(),
-// saved once via EQResults.saveResult() when the last stage finishes.
-let unitScore = { correct: 0, total: 0, answers: [] };
-
-function recordAnswer(question, studentAnswer, correctAnswer, correct) {
-  unitScore.total++;
-  if (correct) unitScore.correct++;
-  unitScore.answers.push({ question, studentAnswer, correctAnswer, correct });
-}
-
 function shuffle(arr) {
   const a = arr.slice();
   for (let i = a.length - 1; i > 0; i--) {
@@ -133,19 +114,6 @@ function renderUnitSelect() {
 function openUnit(unitId) {
   currentUnit = VOCAB_UNITS.find(u => u.id === unitId);
   if (!currentUnit) return;
-
-  // Make sure we know who's doing this unit, and reset the running score.
-  const studentName = window.EQStudent ? window.EQStudent.ensureName() : "";
-  unitScore = { correct: 0, total: 0, answers: [] };
-  if (window.EQResults && studentName) {
-    window.EQResults.markInProgress({
-      student: studentName,
-      unitId: currentUnit.id,
-      unitLabel: `Unit ${currentUnit.number}: ${currentUnit.title}`,
-      section: "vocabulary",
-    }).catch(() => {});
-  }
-
   currentStageIdx = 0;
   Object.keys(stageDone).forEach(k => delete stageDone[k]);
   document.getElementById("unit-select-view").classList.add("hidden");
@@ -195,28 +163,12 @@ function onStageComplete(stageKey) {
   renderStepper();
   const host = document.getElementById("runner-host");
   const isLast = currentStageIdx === STAGES.length - 1;
-
-  if (isLast) {
-    const studentName = window.EQStudent ? window.EQStudent.getName() : "";
-    if (window.EQResults && studentName) {
-      window.EQResults.saveResult({
-        student: studentName,
-        unitId: currentUnit.id,
-        unitLabel: `Unit ${currentUnit.number}: ${currentUnit.title}`,
-        section: "vocabulary",
-        correct: unitScore.correct,
-        total: unitScore.total,
-        answers: unitScore.answers,
-      }).catch(() => {});
-    }
-  }
-
   host.innerHTML = `
     <div class="runner-card">
       <div class="stage-complete">
         <div class="badge-circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
         <h3>Xong rồi!</h3>
-        <p>${isLast ? `Chị đã hoàn thành hết các bài trong Unit này — ${unitScore.correct}/${unitScore.total} đúng.` : "Sẵn sàng cho dạng bài tiếp theo chưa?"}</p>
+        <p>${isLast ? "Chị đã hoàn thành hết các bài trong Unit này." : "Sẵn sàng cho dạng bài tiếp theo chưa?"}</p>
         <div class="runner-actions">
           ${isLast
             ? `<button class="btn btn-primary" id="btn-back-units">Quay lại danh sách Unit</button>`
@@ -351,9 +303,8 @@ function runSequential(host, stageKey, items, onDone) {
     const feedback = document.getElementById("runner-feedback");
     const actions = document.getElementById("runner-actions");
 
-    function finishAnswer(correct, questionLabel, studentAnswerLabel, correctAnswerLabel) {
+    function finishAnswer(correct) {
       recordExposure(currentUnit.id, item.word.id, correct);
-      recordAnswer(questionLabel, studentAnswerLabel, correctAnswerLabel, correct);
       if (correct) correctCount++;
       feedback.textContent = correct ? "✓ Correct!" : "✗ Try again.";
       feedback.className = "runner-feedback " + (correct ? "ok" : "no");
@@ -369,21 +320,19 @@ function runSequential(host, stageKey, items, onDone) {
       const optSelector = stageKey === "picture-matching" ? ".runner-pic-opt" : ".runner-opt";
       host.querySelectorAll(optSelector).forEach(opt => {
         opt.addEventListener("click", () => {
-          if (opt.dataset.locked) return;
-          host.querySelectorAll(optSelector).forEach(o => o.dataset.locked = "1");
+          if (opt.dataset.wrong || host.querySelector(`${optSelector}[data-locked="1"]`)) return;
           const chosen = Number(opt.dataset.idx);
           const correct = chosen === item.correctIdx;
-          opt.classList.add(correct ? "correct" : "incorrect");
-          if (!correct) {
-            const correctEl = host.querySelector(`${optSelector}[data-idx="${item.correctIdx}"]`);
-            if (correctEl) correctEl.classList.add("correct");
+          if (correct) {
+            host.querySelectorAll(optSelector).forEach(o => o.dataset.locked = "1");
+            opt.classList.add("correct");
+            finishAnswer(true);
+          } else {
+            opt.classList.add("incorrect");
+            opt.dataset.wrong = "1";
+            feedback.textContent = "✗ Try again.";
+            feedback.className = "runner-feedback no";
           }
-          const questionLabel = stageKey === "picture-matching" ? item.word.en
-            : stageKey === "multiple-choice" ? `What does "${item.word.en}" mean?`
-            : item.sentence;
-          const studentLabel = stageKey === "picture-matching" ? (item.opts[chosen]?.en || "") : item.opts[chosen];
-          const correctLabel = stageKey === "picture-matching" ? item.word.en : item.opts[item.correctIdx];
-          finishAnswer(correct, questionLabel, studentLabel, correctLabel);
         });
       });
     } else if (stageKey === "sentence-shuffle") {
@@ -401,7 +350,7 @@ function runSequential(host, stageKey, items, onDone) {
             const built = Array.from(target.children).map(c => c.textContent).join(" ");
             const norm = s => s.toLowerCase().replace(/[.?!]/g, "").replace(/\s+/g, " ").trim();
             const correct = norm(built) === norm(item.answer);
-            setTimeout(() => finishAnswer(correct, item.word.vi, built, item.answer), 250);
+            setTimeout(() => finishAnswer(correct), 250);
           }
         });
       });
@@ -460,7 +409,6 @@ function renderTapPairs(host, unit, onDone) {
         selectedLeft.classList.add("matched");
         selectedRight.classList.add("matched");
         recordExposure(currentUnit.id, selectedLeft.dataset.id, true);
-        recordAnswer(`Ghép cặp: ${selectedLeft.textContent}`, selectedRight.textContent, selectedRight.textContent, true);
         matched++;
         selectedLeft = null; selectedRight = null;
         if (matched === leftShuffled.length) {
