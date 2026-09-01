@@ -624,3 +624,82 @@ a:focus-visible, button:focus-visible, .navlink:focus-visible{
 /* utility */
 .mt-lg{ margin-top: 40px; }
 .text-center{ text-align:center; }
+
+/* =========================================================
+   Unit status badges (Lessons / Unit pages)
+   ========================================================= */
+.status-badge{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  font-size:.72rem;
+  font-weight:800;
+  padding:5px 12px;
+  border-radius:999px;
+  text-transform:uppercase;
+  letter-spacing:.03em;
+}
+.status-badge.not-started{ background:#F1EFE6; color:#8b8672; }
+.status-badge.in-progress{ background:#FFF1DC; color:#B5760A; }
+.status-badge.completed{ background:#E4F8EA; color:#1F8A45; }
+.status-badge::before{
+  content:"";
+  width:7px; height:7px;
+  border-radius:50%;
+  background: currentColor;
+}
+
+/* =========================================================
+   Unit detail page — activity picker cards
+   ========================================================= */
+.activity-grid{
+  display:grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+  margin-top: 8px;
+}
+@media (max-width: 780px){ .activity-grid{ grid-template-columns: 1fr; } }
+
+.activity-card{
+  background: var(--paper);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  padding: 26px 22px;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  text-align:center;
+  align-items:center;
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+.activity-card.is-live{ cursor:pointer; }
+.activity-card.is-live:hover{ transform: translateY(-4px); box-shadow: var(--shadow-card-hover); }
+.activity-card.is-locked{ opacity:.6; }
+.activity-icon{
+  width: 58px; height: 58px;
+  border-radius: 16px;
+  display:flex; align-items:center; justify-content:center;
+  color:#fff;
+}
+.activity-icon svg{ width:28px; height:28px; }
+.activity-card h3{ margin:0; font-size:1.1rem; }
+.activity-card p{ font-size:.86rem; color:var(--ink-soft); margin:0; }
+
+.unit-lesson-header{
+  display:flex;
+  align-items:center;
+  gap:16px;
+  flex-wrap:wrap;
+  margin-bottom: 8px;
+}
+.unit-lesson-num{
+  font-family: var(--font-display);
+  font-weight:800;
+  font-size:1.4rem;
+  color:#fff;
+  background: var(--c-lessons);
+  width:48px; height:48px;
+  border-radius:14px;
+  display:flex; align-items:center; justify-content:center;
+  flex-shrink:0;
+}
