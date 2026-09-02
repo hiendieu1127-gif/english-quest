@@ -44,10 +44,10 @@ const VOCAB_UNITS = [
       { id: "pets", en: "pets", vi: "thú cưng", stages: ["multiple-choice"] },
 
       // Missing Word — 4 set phrases (also feed Sentence Shuffle, unchanged mechanism)
-      { id: "tell-a-little-bit", en: "Let me tell you a little bit about myself.", vi: "Để tôi kể cho các bạn nghe một chút về bản thân tôi.", example: "Let me tell you a little bit about myself.", stages: ["missing-word"] },
-      { id: "introduce-myself", en: "Let me introduce myself.", vi: "Để tôi giới thiệu về bản thân mình.", example: "Let me introduce myself.", stages: ["missing-word"] },
-      { id: "tell-about-yourself-q", en: "Can you tell me about yourself?", vi: "Bạn có thể kể cho tôi về bản thân của bạn được không?", example: "Can you tell me about yourself?", stages: ["missing-word"] },
-      { id: "whats-your-name", en: "What's your name?", vi: "Tên bạn là gì?", example: "What's your name?", stages: ["missing-word"] },
+      { id: "tell-a-little-bit", en: "Let me tell you a little bit about myself.", vi: "Để tôi kể cho các bạn nghe một chút về bản thân tôi.", example: "Let me tell you a little bit about myself.", blank: "tell you", stages: ["missing-word"] },
+      { id: "introduce-myself", en: "Let me introduce myself.", vi: "Để tôi giới thiệu về bản thân mình.", example: "Let me introduce myself.", blank: "introduce", stages: ["missing-word"] },
+      { id: "tell-about-yourself-q", en: "Can you tell me about yourself?", vi: "Bạn có thể kể cho tôi về bản thân của bạn được không?", example: "Can you tell me about yourself?", blank: "tell", stages: ["missing-word"] },
+      { id: "whats-your-name", en: "What's your name?", vi: "Tên bạn là gì?", example: "What's your name?", blank: "name", stages: ["missing-word"] },
     ],
   },
 ];
@@ -286,23 +286,15 @@ function buildSequentialItems(stageKey, unit) {
     });
   }
   if (stageKey === "missing-word") {
-    const pool = wordsForStage.filter(w => {
-      if (!w.example) return false;
-      const target = w.en.replace(/[?.!]/g, "");
-      if (!w.example.toLowerCase().includes(target.toLowerCase())) return false;
-      // allow the blank to cover the whole sentence (set phrases like
-      // "Let me introduce myself.") as well as a word inside a longer one
-      return tokenize(target).length <= tokenize(w.example).length;
-    });
+    const pool = wordsForStage.filter(w => w.example && w.blank && w.example.toLowerCase().includes(w.blank.toLowerCase()));
     return pool.map((w, i) => {
-      const target = w.en.replace(/[?.!]/g, "");
-      const blanked = w.example.replace(new RegExp(target.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i"), "___");
-      const distractors = sample(pool, 2, i).map(di => pool[di].en);
+      const blanked = w.example.replace(new RegExp(w.blank.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i"), "___");
+      const distractors = sample(pool, 2, i).map(di => pool[di].blank);
       const correctPos = Math.floor(Math.random() * 3);
       const opts = [];
       let di = 0;
       for (let p = 0; p < 3; p++) {
-        if (p === correctPos) opts.push(w.en);
+        if (p === correctPos) opts.push(w.blank);
         else { opts.push(distractors[di]); di++; }
       }
       return { word: w, sentence: blanked, opts, correctIdx: correctPos };

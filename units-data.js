@@ -10,21 +10,21 @@
 const EQ_UNITS = [
   {
     id: 1,
-    title: "My Friends",
+    title: "All About Me",
     status: "in-progress",
     vocabulary: "vocabulary.html",
     grammar: null,
     exercises: "unit1-exercises.html",
   },
-  { id: 2, title: "My Week", status: "not-started", vocabulary: null, grammar: null, exercises: null },
-  { id: 3, title: "My House", status: "not-started", vocabulary: null, grammar: null, exercises: null },
-  { id: 4, title: "Food & Drink", status: "not-started", vocabulary: null, grammar: null, exercises: null },
-  { id: 5, title: "Free Time", status: "not-started", vocabulary: null, grammar: null, exercises: null },
-  { id: 6, title: "Weather & Seasons", status: "not-started", vocabulary: null, grammar: null, exercises: null },
-  { id: 7, title: null, status: "not-started", vocabulary: null, grammar: null, exercises: null },
-  { id: 8, title: null, status: "not-started", vocabulary: null, grammar: null, exercises: null },
-  { id: 9, title: null, status: "not-started", vocabulary: null, grammar: null, exercises: null },
-  { id: 10, title: null, status: "not-started", vocabulary: null, grammar: null, exercises: null },
+  { id: 2, title: "Our Homes", status: "not-started", vocabulary: null, grammar: null, exercises: null },
+  { id: 3, title: "My Foreign Friends", status: "not-started", vocabulary: null, grammar: null, exercises: null },
+  { id: 4, title: "Our Free-time Activities", status: "not-started", vocabulary: null, grammar: null, exercises: null },
+  { id: 5, title: "My Future Job", status: "not-started", vocabulary: null, grammar: null, exercises: null },
+  { id: 6, title: "Our School Rooms", status: "not-started", vocabulary: null, grammar: null, exercises: null },
+  { id: 7, title: "Our Favourite School Activities", status: "not-started", vocabulary: null, grammar: null, exercises: null },
+  { id: 8, title: "In Our Classroom", status: "not-started", vocabulary: null, grammar: null, exercises: null },
+  { id: 9, title: "Our Outdoor Activities", status: "not-started", vocabulary: null, grammar: null, exercises: null },
+  { id: 10, title: "Our School Trip", status: "not-started", vocabulary: null, grammar: null, exercises: null },
 ];
 
 const EQ_STATUS_LABEL = {
