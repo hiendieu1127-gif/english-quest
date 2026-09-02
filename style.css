@@ -36,7 +36,7 @@
 }
 
 *{ box-sizing: border-box; }
-html{ scroll-behavior: smooth; overflow-x: hidden; touch-action: pan-y; }
+html{ scroll-behavior: smooth; }
 
 /* Safety net: every inline icon gets a sane default size unless a more
    specific rule below overrides it. Prevents any un-sized <svg> from
@@ -51,8 +51,6 @@ body{
   font-size: 16px;
   line-height: 1.55;
   -webkit-font-smoothing: antialiased;
-  overflow-x: hidden;
-  touch-action: pan-y;
 }
 
 img{ max-width:100%; display:block; }
@@ -176,7 +174,7 @@ a:focus-visible, button:focus-visible, .navlink:focus-visible{
 @media (max-width: 900px){
   .nav-links{
     position: fixed;
-    top: 0; right: 0;
+    top: 0; right: -100%;
     height: 100dvh;
     width: min(78vw, 320px);
     background: var(--paper);
@@ -185,11 +183,10 @@ a:focus-visible, button:focus-visible, .navlink:focus-visible{
     padding: 90px 20px 30px;
     gap: 6px;
     box-shadow: -12px 0 32px rgba(35,41,102,.18);
-    transform: translateX(105%);
-    transition: transform .28s ease;
+    transition: right .28s ease;
     overflow-y: auto;
   }
-  .nav-links.open{ transform: translateX(0); }
+  .nav-links.open{ right: 0; }
   .navlink{ padding: 12px 14px; font-size: 1rem; }
   .nav-toggle{ display:flex; }
 
@@ -627,3 +624,43 @@ a:focus-visible, button:focus-visible, .navlink:focus-visible{
 /* utility */
 .mt-lg{ margin-top: 40px; }
 .text-center{ text-align:center; }
+
+/* =========================================================
+   Unit page — activity cards (Vocabulary / Grammar / Exercises)
+   ========================================================= */
+.activity-grid{
+  display:grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+}
+@media (max-width: 760px){
+  .activity-grid{ grid-template-columns: 1fr; }
+}
+.activity-card{
+  background: var(--paper);
+  border-radius: var(--radius-lg);
+  padding: 26px 22px;
+  box-shadow: var(--shadow-card);
+  border: 2px solid transparent;
+  transition: transform .16s ease, box-shadow .16s ease, border-color .16s ease;
+  display:flex;
+  flex-direction: column;
+  gap: 8px;
+  text-align:left;
+}
+a.activity-card.is-live:hover{
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-card-hover);
+  border-color: var(--page-color);
+}
+.activity-card.is-locked{ opacity:.6; cursor:default; }
+.activity-icon{
+  width: 54px; height: 54px;
+  border-radius: 14px;
+  color:#fff;
+  display:flex; align-items:center; justify-content:center;
+  margin-bottom: 4px;
+}
+.activity-icon svg{ width:28px; height:28px; }
+.activity-card h3{ font-size: 1.15rem; margin: 0 0 2px; }
+.activity-card p{ color: var(--ink-soft); font-size: .92rem; margin:0; }

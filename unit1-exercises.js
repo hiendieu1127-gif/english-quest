@@ -186,6 +186,7 @@ function renderFITB() {
       const input = el.querySelector(`.fitb-input[data-idx="${i}"]`);
       const fb = document.getElementById(`fitb-feedback-${i}`);
       const correct = normalize(input.value) === normalize(FITB[i].answer);
+      window.EQSound && (correct ? window.EQSound.correct() : window.EQSound.wrong());
       fb.textContent = correct ? "✓ Chính xác!" : `✗ Chưa đúng — đáp án: "${FITB[i].answer}"`;
       fb.className = "fitb-feedback " + (correct ? "ok" : "no");
     });
@@ -243,6 +244,7 @@ function buildOrderItem(container, words, answerText, label) {
   wrap.querySelector(".order-check").addEventListener("click", () => {
     const built = Array.from(target.children).map(c => c.textContent).join(" ");
     const correct = normalize(built) === normalize(answerText);
+    window.EQSound && (correct ? window.EQSound.correct() : window.EQSound.wrong());
     feedback.textContent = correct ? "✓ Đúng rồi!" : "✗ Chưa đúng, thử lại nhé";
     feedback.className = "order-feedback " + (correct ? "ok" : "no");
   });
@@ -334,6 +336,7 @@ function renderQuiz() {
       const fb = document.getElementById(`quiz-feedback-mc-${i}`);
       if (!selected) { fb.textContent = "Hãy chọn một đáp án trước nhé."; fb.className = "quiz-feedback no"; return; }
       const correct = Number(selected.dataset.opt) === QUIZ_MC[i].answer;
+      window.EQSound && (correct ? window.EQSound.correct() : window.EQSound.wrong());
       fb.textContent = correct ? "✓ Chính xác!" : `✗ Chưa đúng — đáp án: ${QUIZ_MC[i].opts[QUIZ_MC[i].answer]}`;
       fb.className = "quiz-feedback " + (correct ? "ok" : "no");
     });
@@ -345,6 +348,7 @@ function renderQuiz() {
       const input = el.querySelector(`.fitb-input[data-tr-idx="${i}"]`);
       const fb = document.getElementById(`quiz-feedback-tr-${i}`);
       const correct = normalize(input.value) === normalize(QUIZ_TRANSLATE[i].answer);
+      window.EQSound && (correct ? window.EQSound.correct() : window.EQSound.wrong());
       fb.textContent = correct ? "✓ Chính xác!" : `✗ Chưa đúng — đáp án: "${QUIZ_TRANSLATE[i].answer}"`;
       fb.className = "quiz-feedback " + (correct ? "ok" : "no");
     });

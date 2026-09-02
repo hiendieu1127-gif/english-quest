@@ -1,3 +1,34 @@
+// English Quest — shared sound effects (no audio files needed)
+window.EQSound = (function () {
+  let ctx;
+  function getCtx() {
+    if (!ctx) ctx = new (window.AudioContext || window.webkitAudioContext)();
+    if (ctx.state === "suspended") ctx.resume();
+    return ctx;
+  }
+  function tone(freq, start, duration, type, peak) {
+    const c = getCtx();
+    const osc = c.createOscillator();
+    const gain = c.createGain();
+    osc.type = type;
+    osc.frequency.value = freq;
+    gain.gain.setValueAtTime(0.0001, c.currentTime + start);
+    gain.gain.linearRampToValueAtTime(peak, c.currentTime + start + 0.01);
+    gain.gain.exponentialRampToValueAtTime(0.0001, c.currentTime + start + duration);
+    osc.connect(gain).connect(c.destination);
+    osc.start(c.currentTime + start);
+    osc.stop(c.currentTime + start + duration + 0.03);
+  }
+  return {
+    correct() {
+      try { tone(660, 0, 0.12, "sine", 0.18); tone(880, 0.09, 0.16, "sine", 0.18); } catch (e) {}
+    },
+    wrong() {
+      try { tone(180, 0, 0.2, "sawtooth", 0.12); } catch (e) {}
+    },
+  };
+})();
+
 // English Quest — shared behaviour
 document.addEventListener("DOMContentLoaded", () => {
   const toggle = document.querySelector(".nav-toggle");

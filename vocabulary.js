@@ -405,6 +405,7 @@ function runSequential(host, stageKey, items, onDone) {
             correctLabel = item.opts[item.correctIdx];
           }
           eqRecordAndSave(`${stageKey}-${item.word.id}`, question, chosenLabel, correctLabel, correct);
+          window.EQSound && (correct ? window.EQSound.correct() : window.EQSound.wrong());
 
           if (correct) {
             host.querySelectorAll(optSelector).forEach(o => o.dataset.locked = "1");
@@ -434,6 +435,7 @@ function runSequential(host, stageKey, items, onDone) {
             const norm = s => s.toLowerCase().replace(/[.?!]/g, "").replace(/\s+/g, " ").trim();
             const correct = norm(built) === norm(item.answer);
             eqRecordAndSave(`sentence-shuffle-${item.word.id}`, item.word.vi, built, item.answer, correct);
+            window.EQSound && (correct ? window.EQSound.correct() : window.EQSound.wrong());
             setTimeout(() => finishAnswer(correct), 250);
           }
         });
@@ -487,6 +489,7 @@ function renderTapPairs(host, unit, onDone) {
     }
     if (selectedLeft && selectedRight) {
       const isMatch = selectedLeft.dataset.id === selectedRight.dataset.id;
+      window.EQSound && (isMatch ? window.EQSound.correct() : window.EQSound.wrong());
       if (isMatch) {
         selectedLeft.classList.remove("selected");
         selectedRight.classList.remove("selected");
