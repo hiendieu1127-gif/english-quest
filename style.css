@@ -175,7 +175,7 @@ a:focus-visible, button:focus-visible, .navlink:focus-visible{
 @media (max-width: 900px){
   .nav-links{
     position: fixed;
-    top: 0; right: -100%;
+    top: 0; right: 0;
     height: 100dvh;
     width: min(78vw, 320px);
     background: var(--paper);
@@ -184,10 +184,11 @@ a:focus-visible, button:focus-visible, .navlink:focus-visible{
     padding: 90px 20px 30px;
     gap: 6px;
     box-shadow: -12px 0 32px rgba(35,41,102,.18);
-    transition: right .28s ease;
+    transform: translateX(105%);
+    transition: transform .28s ease;
     overflow-y: auto;
   }
-  .nav-links.open{ right: 0; }
+  .nav-links.open{ transform: translateX(0); }
   .navlink{ padding: 12px 14px; font-size: 1rem; }
   .nav-toggle{ display:flex; }
 
