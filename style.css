@@ -36,7 +36,7 @@
 }
 
 *{ box-sizing: border-box; }
-html{ scroll-behavior: smooth; overflow-x: hidden; }
+html{ scroll-behavior: smooth; overflow-x: hidden; touch-action: pan-y; }
 
 /* Safety net: every inline icon gets a sane default size unless a more
    specific rule below overrides it. Prevents any un-sized <svg> from
@@ -52,6 +52,7 @@ body{
   line-height: 1.55;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
+  touch-action: pan-y;
 }
 
 img{ max-width:100%; display:block; }
