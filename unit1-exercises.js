@@ -5,34 +5,6 @@
 // and were translated to fill a gap — flagged for the teacher to review.
 // ============================================================
 
-const EQ_UNIT_ID = "unit1";
-const EQ_UNIT_LABEL = "Unit 1: All About Me";
-let eqStudent = "";
-let eqAnswers = {}; // key -> {question, studentAnswer, correctAnswer, correct}
-
-function eqTotalItems() {
-  return FITB.length + ORDER_SENTENCES.length + 1 /* dialogue */
-    + QUIZ_MC.filter(q => q.q !== null).length + QUIZ_TRANSLATE.length;
-}
-
-// Recomputes totals from eqAnswers and saves — fires on every check
-// (right or wrong) so the Teacher Dashboard updates live.
-function eqRecordAndSave(key, question, studentAnswer, correctAnswer, correct) {
-  eqAnswers[key] = { question, studentAnswer, correctAnswer, correct };
-  if (!window.EQResults || !eqStudent) return;
-  const values = Object.values(eqAnswers);
-  const correctCount = values.filter(a => a.correct).length;
-  window.EQResults.saveResult({
-    student: eqStudent,
-    unitId: EQ_UNIT_ID,
-    unitLabel: EQ_UNIT_LABEL,
-    section: "exercises",
-    correct: correctCount,
-    total: eqTotalItems(),
-    answers: values,
-  }).catch(() => {});
-}
-
 const READING_PASSAGE = [
   { en: "My name's Jack.", vi: "Tên tôi là Jack." },
   { en: "I live in a small village in Australia.", vi: "Tôi sống ở một ngôi làng nhỏ ở Úc." },
@@ -102,12 +74,12 @@ const ORDER_DIALOGUE = {
 // Question text, answer options, and correct answers are still pending — do not guess; placeholders below.
 // Questions 7-14 = Grammar/Sentence Patterns — unchanged, from "Tiếng Anh 5 – Sách bài tập"
 const QUIZ_MC = [
-  { q: "My favourite animal is a ___.", audio: "audio/listening-1.wav", opts: ["tiger", "dolphin", "hippo"], answer: 1 },
-  { q: "I want to visit my grandparents in the ___.", audio: "audio/listening-2.wav", opts: ["village", "mountains", "city"], answer: 0 },
-  { q: "Where does Kate live?", audio: "audio/listening-3.wav", opts: ["She lives in the city.", "She lives in the countryside."], answer: 1 },
-  { q: "What class is Long in?", audio: "audio/listening-4.wav", opts: ["He's in Class 3A.", "He's in Class 5A."], answer: 1 },
-  { q: "What's Tom's favourite animal?", audio: "audio/listening-5.wav", opts: ["It's a hippo.", "It's a dolphin."], answer: 0 },
-  { q: "What's Lisa's favourite sport?", audio: "audio/listening-6.wav", opts: ["She likes badminton.", "She likes table tennis."], answer: 1 },
+  { q: "My favourite animal is a ___.", audio: "listening-1.wav", opts: ["tiger", "dolphin", "hippo"], answer: 1 },
+  { q: "I want to visit my grandparents in the ___.", audio: "listening-2.wav", opts: ["village", "mountains", "city"], answer: 0 },
+  { q: "Where does Kate live?", audio: "listening-3.wav", opts: ["She lives in the city.", "She lives in the countryside."], answer: 1 },
+  { q: "What class is Long in?", audio: "listening-4.wav", opts: ["He's in Class 3A.", "He's in Class 5A."], answer: 1 },
+  { q: "What's Tom's favourite animal?", audio: "listening-5.wav", opts: ["It's a hippo.", "It's a dolphin."], answer: 0 },
+  { q: "What's Lisa's favourite sport?", audio: "listening-6.wav", opts: ["She likes badminton.", "She likes table tennis."], answer: 1 },
   { q: "My friend lives ___ the city.", opts: ["on", "at", "in"], answer: 2 },
   { q: "Can you tell me about ___?", opts: ["yourself", "your", "you"], answer: 0 },
   { q: "___ your favourite sport?", opts: ["What", "What's", "How"], answer: 1 },
@@ -143,16 +115,8 @@ const PIC_ICONS = {
 // Rendering
 // ============================================================
 document.addEventListener("DOMContentLoaded", () => {
-  eqStudent = window.EQStudent ? window.EQStudent.ensureName() : "";
-  if (window.EQResults && eqStudent) {
-    window.EQResults.markInProgress({
-      student: eqStudent,
-      unitId: EQ_UNIT_ID,
-      unitLabel: EQ_UNIT_LABEL,
-      section: "exercises",
-    }).catch(() => {});
-  }
   renderReading();
+  renderSentenceBySentence();
   renderFlashcards();
   renderFITB();
   renderOrdering();
@@ -164,6 +128,20 @@ function renderReading() {
   const el = document.getElementById("reading-panel-body");
   if (!el) return;
   el.innerHTML = `<div class="reading-card"><p>${READING_PASSAGE.map(s => s.en).join(" ")}</p></div>`;
+}
+
+function renderSentenceBySentence() {
+  const el = document.getElementById("sbs-list");
+  if (!el) return;
+  el.innerHTML = READING_PASSAGE.map((s, i) => `
+    <div class="sbs-item" data-idx="${i}">
+      <div class="sbs-en"><span class="sbs-num">${i + 1}</span>${s.en}<span class="sbs-hint">Chạm để xem nghĩa</span></div>
+      <div class="sbs-vi">${s.vi}</div>
+    </div>
+  `).join("");
+  el.querySelectorAll(".sbs-item").forEach(item => {
+    item.addEventListener("click", () => item.classList.toggle("revealed"));
+  });
 }
 
 function renderFlashcards() {
@@ -208,9 +186,8 @@ function renderFITB() {
       const input = el.querySelector(`.fitb-input[data-idx="${i}"]`);
       const fb = document.getElementById(`fitb-feedback-${i}`);
       const correct = normalize(input.value) === normalize(FITB[i].answer);
-      fb.textContent = correct ? "✓ Chính xác!" : "✗ Try again.";
+      fb.textContent = correct ? "✓ Chính xác!" : `✗ Chưa đúng — đáp án: "${FITB[i].answer}"`;
       fb.className = "fitb-feedback " + (correct ? "ok" : "no");
-      eqRecordAndSave(`fitb-${i}`, FITB[i].sentence, input.value, FITB[i].answer, correct);
     });
   });
   el.querySelectorAll(".fitb-input").forEach(inp => {
@@ -227,7 +204,7 @@ function shuffle(arr) {
   return a;
 }
 
-function buildOrderItem(container, words, answerText, key) {
+function buildOrderItem(container, words, answerText, label) {
   const wrap = document.createElement("div");
   wrap.className = "order-item";
   const shuffled = shuffle(words);
@@ -268,7 +245,6 @@ function buildOrderItem(container, words, answerText, key) {
     const correct = normalize(built) === normalize(answerText);
     feedback.textContent = correct ? "✓ Đúng rồi!" : "✗ Chưa đúng, thử lại nhé";
     feedback.className = "order-feedback " + (correct ? "ok" : "no");
-    eqRecordAndSave(key, "Sentence ordering", built, answerText, correct);
   });
 
   wrap.querySelector(".order-reset").addEventListener("click", () => {
@@ -282,10 +258,10 @@ function renderOrdering() {
   const groupA = document.getElementById("order-group-a");
   const groupB = document.getElementById("order-group-b");
   if (groupA) {
-    ORDER_SENTENCES.forEach((item, i) => buildOrderItem(groupA, item.words, item.answer, `order-a-${i}`));
+    ORDER_SENTENCES.forEach(item => buildOrderItem(groupA, item.words, item.answer));
   }
   if (groupB) {
-    buildOrderItem(groupB, ORDER_DIALOGUE.words, ORDER_DIALOGUE.words.join(" "), "order-dialogue");
+    buildOrderItem(groupB, ORDER_DIALOGUE.words, ORDER_DIALOGUE.words.join(" "));
   }
 }
 
@@ -358,9 +334,8 @@ function renderQuiz() {
       const fb = document.getElementById(`quiz-feedback-mc-${i}`);
       if (!selected) { fb.textContent = "Hãy chọn một đáp án trước nhé."; fb.className = "quiz-feedback no"; return; }
       const correct = Number(selected.dataset.opt) === QUIZ_MC[i].answer;
-      fb.textContent = correct ? "✓ Chính xác!" : "✗ Try again.";
+      fb.textContent = correct ? "✓ Chính xác!" : `✗ Chưa đúng — đáp án: ${QUIZ_MC[i].opts[QUIZ_MC[i].answer]}`;
       fb.className = "quiz-feedback " + (correct ? "ok" : "no");
-      eqRecordAndSave(`quiz-mc-${i}`, QUIZ_MC[i].q, QUIZ_MC[i].opts[Number(selected.dataset.opt)], QUIZ_MC[i].opts[QUIZ_MC[i].answer], correct);
     });
   });
 
@@ -370,9 +345,8 @@ function renderQuiz() {
       const input = el.querySelector(`.fitb-input[data-tr-idx="${i}"]`);
       const fb = document.getElementById(`quiz-feedback-tr-${i}`);
       const correct = normalize(input.value) === normalize(QUIZ_TRANSLATE[i].answer);
-      fb.textContent = correct ? "✓ Chính xác!" : "✗ Try again.";
+      fb.textContent = correct ? "✓ Chính xác!" : `✗ Chưa đúng — đáp án: "${QUIZ_TRANSLATE[i].answer}"`;
       fb.className = "quiz-feedback " + (correct ? "ok" : "no");
-      eqRecordAndSave(`quiz-tr-${i}`, `Translate: ${QUIZ_TRANSLATE[i].q}`, input.value, QUIZ_TRANSLATE[i].answer, correct);
     });
   });
 }
