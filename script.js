@@ -1,4 +1,4 @@
-// English Quest — shared sound effects
+// English Quest — shared sound effects (no audio files needed)
 window.EQSound = (function () {
   let ctx;
   function getCtx() {
@@ -19,26 +19,13 @@ window.EQSound = (function () {
     osc.start(c.currentTime + start);
     osc.stop(c.currentTime + start + duration + 0.03);
   }
-  const fallback = {
-    correct() { try { tone(660, 0, 0.12, "sine", 0.18); tone(880, 0.09, 0.16, "sine", 0.18); } catch (e) {} },
-    wrong() { try { tone(180, 0, 0.2, "sawtooth", 0.12); } catch (e) {} },
-  };
-
-  const correctAudio = new Audio("dragon-studio-correct-472358.mp3");
-  const wrongAudio = new Audio("sfx-wrong.mp3");
-  correctAudio.preload = "auto";
-  wrongAudio.preload = "auto";
-
-  function playFile(audio, onFail) {
-    try {
-      audio.currentTime = 0;
-      audio.play().catch(() => onFail());
-    } catch (e) { onFail(); }
-  }
-
   return {
-    correct() { playFile(correctAudio, fallback.correct); },
-    wrong() { playFile(wrongAudio, fallback.wrong); },
+    correct() {
+      try { tone(660, 0, 0.12, "sine", 0.18); tone(880, 0.09, 0.16, "sine", 0.18); } catch (e) {}
+    },
+    wrong() {
+      try { tone(180, 0, 0.2, "sawtooth", 0.12); } catch (e) {}
+    },
   };
 })();
 
