@@ -1,3 +1,4 @@
+
 /* =========================================================
    English Quest â€” shared stylesheet
    Design tokens
@@ -37,6 +38,7 @@
 
 *{ box-sizing: border-box; }
 html{ scroll-behavior: smooth; }
+html, body{ overflow-x: hidden; touch-action: pan-y; } 
 
 /* Safety net: every inline icon gets a sane default size unless a more
    specific rule below overrides it. Prevents any un-sized <svg> from
