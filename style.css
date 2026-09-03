@@ -1,5 +1,5 @@
 /* =========================================================
-   English Quest — shared stylesheet
+   English Quest â€” shared stylesheet
    Design tokens
    ========================================================= */
 :root{
@@ -626,7 +626,7 @@ a:focus-visible, button:focus-visible, .navlink:focus-visible{
 .text-center{ text-align:center; }
 
 /* =========================================================
-   Unit page — activity cards (Vocabulary / Grammar / Exercises)
+   Unit page â€” activity cards (Vocabulary / Grammar / Exercises)
    ========================================================= */
 .activity-grid{
   display:grid;
