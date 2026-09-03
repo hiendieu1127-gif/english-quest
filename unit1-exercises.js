@@ -188,7 +188,7 @@ function renderFITB() {
       const fb = document.getElementById(`fitb-feedback-${i}`);
       const correct = normalize(input.value) === normalize(FITB[i].answer);
       window.EQSound && (correct ? window.EQSound.correct() : window.EQSound.wrong());
-      fb.textContent = correct ? "✓ Chính xác!" : `✗ Chưa đúng — đáp án: "${FITB[i].answer}"`;
+      fb.textContent = correct ? "✓ Chính xác!" : "✗ Chưa đúng, thử lại nhé!";
       fb.className = "fitb-feedback " + (correct ? "ok" : "no");
     });
   });
@@ -338,7 +338,7 @@ function renderQuiz() {
       if (!selected) { fb.textContent = "Hãy chọn một đáp án trước nhé."; fb.className = "quiz-feedback no"; return; }
       const correct = Number(selected.dataset.opt) === QUIZ_MC[i].answer;
       window.EQSound && (correct ? window.EQSound.correct() : window.EQSound.wrong());
-      fb.textContent = correct ? "✓ Chính xác!" : `✗ Chưa đúng — đáp án: ${QUIZ_MC[i].opts[QUIZ_MC[i].answer]}`;
+      fb.textContent = correct ? "✓ Chính xác!" : "✗ Chưa đúng, thử lại nhé!";
       fb.className = "quiz-feedback " + (correct ? "ok" : "no");
     });
   });
@@ -350,7 +350,7 @@ function renderQuiz() {
       const fb = document.getElementById(`quiz-feedback-tr-${i}`);
       const correct = normalize(input.value) === normalize(QUIZ_TRANSLATE[i].answer);
       window.EQSound && (correct ? window.EQSound.correct() : window.EQSound.wrong());
-      fb.textContent = correct ? "✓ Chính xác!" : `✗ Chưa đúng — đáp án: "${QUIZ_TRANSLATE[i].answer}"`;
+      fb.textContent = correct ? "✓ Chính xác!" : "✗ Chưa đúng, thử lại nhé!";
       fb.className = "quiz-feedback " + (correct ? "ok" : "no");
     });
   });
