@@ -66,6 +66,13 @@ const STAGES = [
 const PASS_LS_KEY = "eq_vocab_progress";
 
 // ============================================================
+// Pronunciation — tap any English word/sentence to hear it read aloud
+// ============================================================
+function speakWord(text) {
+  if (window.EQSpeak) window.EQSpeak.speak(text);
+}
+
+// ============================================================
 // Progress (localStorage, per word exposure count — mastered at 2+)
 // ============================================================
 function loadProgress() {
@@ -271,6 +278,7 @@ function buildSequentialItems(stageKey, unit) {
       return { word: w, opts, correctIdx: correctPos };
     });
   }
+
   if (stageKey === "multiple-choice") {
     const pool = wordsForStage;
     return pool.map((w, i) => {
@@ -285,6 +293,7 @@ function buildSequentialItems(stageKey, unit) {
       return { word: w, opts, correctIdx: correctPos };
     });
   }
+
   if (stageKey === "missing-word") {
     const pool = wordsForStage.filter(w => w.example && w.blank && w.example.toLowerCase().includes(w.blank.toLowerCase()));
     return pool.map((w, i) => {
@@ -300,6 +309,7 @@ function buildSequentialItems(stageKey, unit) {
       return { word: w, sentence: blanked, opts, correctIdx: correctPos };
     });
   }
+
   if (stageKey === "sentence-shuffle") {
     // Unchanged: still just uses any word with an example, regardless
     // of stage tag (per teacher's request to leave this stage as-is)
@@ -309,6 +319,7 @@ function buildSequentialItems(stageKey, unit) {
       answer: w.example,
     }));
   }
+
   return [];
 }
 
@@ -329,19 +340,19 @@ function runSequential(host, stageKey, items, onDone) {
 
     if (stageKey === "picture-matching") {
       body = `
-        <div class="runner-prompt"><div class="prompt-label">Chọn hình đúng</div><div class="prompt-main">${item.word.en}</div></div>
+        <div class="runner-prompt"><div class="prompt-label">Chọn hình đúng</div><div class="prompt-main prompt-speak" id="prompt-speak">🔊 ${item.word.en}</div></div>
         <div class="runner-pics">
           ${item.opts.map((o, oi) => `<div class="runner-pic-opt" data-idx="${oi}">${o.icon ? `<img src="${o.icon}" alt="${o.en}" style="width:100%;height:100%;object-fit:cover;border-radius:12px;">` : ""}</div>`).join("")}
         </div>`;
     } else if (stageKey === "multiple-choice") {
       body = `
-        <div class="runner-prompt"><div class="prompt-label">Chọn nghĩa đúng</div><div class="prompt-main">What does "${item.word.en}" mean?</div></div>
+        <div class="runner-prompt"><div class="prompt-label">Chọn nghĩa đúng</div><div class="prompt-main prompt-speak" id="prompt-speak">🔊 What does "${item.word.en}" mean?</div></div>
         <div class="runner-options">
           ${item.opts.map((o, oi) => `<div class="runner-opt" data-idx="${oi}"><span class="opt-letter">${String.fromCharCode(65 + oi)}</span>${o}</div>`).join("")}
         </div>`;
     } else if (stageKey === "missing-word") {
       body = `
-        <div class="runner-prompt"><div class="prompt-label">Chọn từ còn thiếu</div><div class="prompt-main prompt-sentence">${item.sentence.replace("___", '<span class="blank">&nbsp;</span>')}</div></div>
+        <div class="runner-prompt"><div class="prompt-label">Chọn từ còn thiếu</div><div class="prompt-main prompt-sentence prompt-speak" id="prompt-speak">🔊 ${item.sentence.replace("___", '<span class="blank">&nbsp;</span>')}</div></div>
         <div class="runner-options">
           ${item.opts.map((o, oi) => `<div class="runner-opt" data-idx="${oi}"><span class="opt-letter">${String.fromCharCode(65 + oi)}</span>${o}</div>`).join("")}
         </div>`;
@@ -361,6 +372,20 @@ function runSequential(host, stageKey, items, onDone) {
         <div class="runner-feedback" id="runner-feedback"></div>
         <div class="runner-actions" id="runner-actions"></div>
       </div>`;
+
+    // Auto-play pronunciation as soon as a new item appears (Duolingo-style
+    // constant listening practice), and let the student tap the prompt to
+    // hear it again as many times as they like.
+    if (stageKey === "picture-matching" || stageKey === "multiple-choice") {
+      speakWord(item.word.en);
+    } else if (stageKey === "missing-word") {
+      speakWord(item.word.en);
+    }
+    const promptEl = document.getElementById("prompt-speak");
+    if (promptEl) {
+      promptEl.style.cursor = "pointer";
+      promptEl.addEventListener("click", () => speakWord(item.word.en));
+    }
 
     wireItem(item);
   }
@@ -395,6 +420,9 @@ function runSequential(host, stageKey, items, onDone) {
             question = `Picture for "${item.word.en}"`;
             chosenLabel = item.opts[chosen].en;
             correctLabel = item.word.en;
+            // Tapping a picture always speaks the word it stands for —
+            // this is the main "tap to hear" moment for this stage.
+            speakWord(item.opts[chosen].en);
           } else if (stageKey === "multiple-choice") {
             question = `What does "${item.word.en}" mean?`;
             chosenLabel = item.opts[chosen];
@@ -403,7 +431,10 @@ function runSequential(host, stageKey, items, onDone) {
             question = item.sentence;
             chosenLabel = item.opts[chosen];
             correctLabel = item.opts[item.correctIdx];
+            // Tapping a Missing Word option speaks that English word.
+            speakWord(item.opts[chosen]);
           }
+
           eqRecordAndSave(`${stageKey}-${item.word.id}`, question, chosenLabel, correctLabel, correct);
           window.EQSound && (correct ? window.EQSound.correct() : window.EQSound.wrong());
 
@@ -424,6 +455,9 @@ function runSequential(host, stageKey, items, onDone) {
       const pool = document.getElementById("shuffle-pool");
       pool.querySelectorAll(".runner-chip").forEach(chip => {
         chip.addEventListener("click", () => {
+          // Tapping a word chip speaks it — constant listening practice
+          // while building the sentence, word by word.
+          speakWord(chip.dataset.word);
           chip.classList.add("used");
           const clone = document.createElement("span");
           clone.className = "runner-chip";
@@ -478,7 +512,11 @@ function renderTapPairs(host, unit, onDone) {
     const tile = e.currentTarget;
     if (tile.classList.contains("matched")) return;
     const side = tile.dataset.side;
+
     if (side === "l") {
+      // English tile — always speak it on tap, whether selecting or
+      // re-selecting, so listening practice happens on every touch.
+      speakWord(tile.textContent);
       if (selectedLeft) selectedLeft.classList.remove("selected");
       selectedLeft = tile;
       tile.classList.add("selected");
@@ -487,6 +525,7 @@ function renderTapPairs(host, unit, onDone) {
       selectedRight = tile;
       tile.classList.add("selected");
     }
+
     if (selectedLeft && selectedRight) {
       const isMatch = selectedLeft.dataset.id === selectedRight.dataset.id;
       window.EQSound && (isMatch ? window.EQSound.correct() : window.EQSound.wrong());

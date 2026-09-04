@@ -44,6 +44,21 @@ window.EQSound = (function () {
   };
 })();
 
+// English Quest — text-to-speech for vocabulary words (browser built-in voice, no audio files needed)
+window.EQSpeak = (function () {
+  function speak(text) {
+    try {
+      if (!text || !("speechSynthesis" in window)) return;
+      window.speechSynthesis.cancel();
+      const utter = new SpeechSynthesisUtterance(text);
+      utter.lang = "en-US";
+      utter.rate = 0.9;
+      window.speechSynthesis.speak(utter);
+    } catch (e) {}
+  }
+  return { speak };
+})();
+
 // English Quest — shared behaviour
 document.addEventListener("DOMContentLoaded", () => {
   const toggle = document.querySelector(".nav-toggle");
