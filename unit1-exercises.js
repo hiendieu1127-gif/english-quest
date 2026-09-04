@@ -1,4 +1,3 @@
-
 // ============================================================
 // Unit 1 — All About Me — Exercise data
 // Source: teacher Hien's slides + "Tiếng Anh 5 – Sách bài tập" (Unit 1, p.4-7)
@@ -72,7 +71,6 @@ const ORDER_DIALOGUE = {
 
 // Quiz type A: English question, multiple choice (kept in English, as in the workbook)
 // Questions 1-6 = Listening — audio provided by teacher Hien (audio/listening-1.wav ... 6.wav, in the order she sent).
-// Question text, answer options, and correct answers are still pending — do not guess; placeholders below.
 // Questions 7-14 = Grammar/Sentence Patterns — unchanged, from "Tiếng Anh 5 – Sách bài tập"
 const QUIZ_MC = [
   { q: "My favourite animal is a ___.", audio: "listening-1.wav", opts: ["tiger", "dolphin", "hippo"], answer: 1 },
@@ -112,6 +110,18 @@ const PIC_ICONS = {
   "football": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.3l3 2.2-1.2 3.6h-3.6L9 9.5l3-2.2ZM12 3.5v3.8M12 20.5v-3.7M5 8.3l3 1M19 8.3l-3 1M6.3 17l2.4-2.6M17.7 17l-2.4-2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>',
 };
 
+function normalize(s) {
+  return s.trim().toLowerCase().replace(/\s+/g, " ").replace(/[.?!,]/g, "");
+}
+function shuffle(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
 // ============================================================
 // Rendering
 // ============================================================
@@ -119,9 +129,9 @@ document.addEventListener("DOMContentLoaded", () => {
   renderReading();
   renderSentenceBySentence();
   renderFlashcards();
-  renderFITB();
+  runFITBSequential();
   renderOrdering();
-  renderQuiz();
+  runQuizSequential();
   setupTabs();
 });
 
@@ -161,52 +171,118 @@ function renderFlashcards() {
   });
 }
 
-function normalize(s) {
-  return s.trim().toLowerCase().replace(/\s+/g, " ").replace(/[.?!,]/g, "");
-}
+// ============================================================
+// Round-based one-at-a-time runner, shared shape for FITB and Quiz.
+// A wrong answer reveals the correct answer and moves to the next
+// question. Whatever was answered wrong is collected and re-asked in
+// a new round once the current pass finishes — repeating until a
+// round is completed with zero mistakes.
+// ============================================================
+function runRoundBased(host, items, renderQuestion) {
+  let queue = items;
+  let i = 0;
+  let wrongQueue = [];
+  let round = 1;
 
-function renderFITB() {
-  const el = document.getElementById("fitb-grid");
-  if (!el) return;
-  el.innerHTML = FITB.map((item, i) => `
-    <div class="fitb-card">
-      <div class="fitb-pic">${PIC_ICONS[item.pic] || ""}</div>
-      <div class="fitb-body">
-        <div class="fitb-sentence">${item.sentence}</div>
-        <div class="fitb-row">
-          <input class="fitb-input" type="text" placeholder="Gõ câu trả lời..." data-idx="${i}">
-          <button class="btn btn-secondary btn-sm fitb-check" data-idx="${i}">Kiểm tra</button>
-        </div>
-        <div class="fitb-feedback" id="fitb-feedback-${i}"></div>
-      </div>
-    </div>
-  `).join("");
-  el.querySelectorAll(".fitb-check").forEach(btn => {
-    btn.addEventListener("click", () => {
-      const i = btn.dataset.idx;
-      const input = el.querySelector(`.fitb-input[data-idx="${i}"]`);
-      const fb = document.getElementById(`fitb-feedback-${i}`);
-      const correct = normalize(input.value) === normalize(FITB[i].answer);
-      window.EQSound && (correct ? window.EQSound.correct() : window.EQSound.wrong());
-      fb.textContent = correct ? "✓ Chính xác!" : "✗ Chưa đúng, thử lại nhé!";
-      fb.className = "fitb-feedback " + (correct ? "ok" : "no");
-    });
-  });
-  el.querySelectorAll(".fitb-input").forEach(inp => {
-    inp.addEventListener("keydown", e => { if (e.key === "Enter") el.querySelector(`.fitb-check[data-idx="${inp.dataset.idx}"]`).click(); });
-  });
-}
-
-function shuffle(arr) {
-  const a = arr.slice();
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
+  function renderDots() {
+    return `<div class="runner-dots">${queue.map((_, idx) => `<span class="runner-dot ${idx < i ? "done" : idx === i ? "current" : ""}"></span>`).join("")}</div>`;
   }
-  return a;
+
+  function next(wasCorrect, item) {
+    if (!wasCorrect) wrongQueue.push(item);
+    i++;
+    if (i >= queue.length) {
+      if (wrongQueue.length > 0) {
+        queue = wrongQueue;
+        wrongQueue = [];
+        i = 0;
+        round++;
+        render();
+      } else {
+        host.innerHTML = `
+          <div class="runner-card">
+            <div class="stage-complete">
+              <div class="badge-circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+              <h3>Xong rồi!</h3>
+              <p>Chị đã hoàn thành hết các câu trong phần này.</p>
+            </div>
+          </div>`;
+      }
+    } else {
+      render();
+    }
+  }
+
+  function render() {
+    const item = queue[i];
+    host.innerHTML = `
+      <div class="runner-card">
+        ${round > 1 ? `<div class="prompt-label" style="margin-bottom:6px;">🔁 Làm lại các câu sai — vòng ${round}</div>` : ""}
+        ${renderDots()}
+        <div id="rb-question"></div>
+        <div class="runner-feedback" id="rb-feedback"></div>
+        <div class="runner-actions" id="rb-actions"></div>
+      </div>`;
+    renderQuestion(document.getElementById("rb-question"), item, (correct) => {
+      const fb = document.getElementById("rb-feedback");
+      fb.textContent = correct ? "✓ Chính xác!" : "✗ Chưa đúng — đáp án đúng đã hiện phía trên.";
+      fb.className = "runner-feedback " + (correct ? "ok" : "no");
+      const actions = document.getElementById("rb-actions");
+      actions.innerHTML = `<button class="btn btn-primary" id="rb-continue">Câu tiếp theo</button>`;
+      document.getElementById("rb-continue").addEventListener("click", () => next(correct, item));
+    });
+  }
+
+  render();
 }
 
-function buildOrderItem(container, words, answerText, label) {
+// ============================================================
+// Fill in the Blank — one at a time, typed answer
+// ============================================================
+function runFITBSequential() {
+  const host = document.getElementById("fitb-grid");
+  if (!host) return;
+  runRoundBased(host, FITB, (mount, item, onAnswered) => {
+    mount.innerHTML = `
+      <div class="fitb-card">
+        <div class="fitb-pic">${PIC_ICONS[item.pic] || ""}</div>
+        <div class="fitb-body">
+          <div class="fitb-sentence">${item.sentence}</div>
+          <div class="fitb-row">
+            <input class="fitb-input" type="text" placeholder="Gõ câu trả lời...">
+            <button class="btn btn-secondary btn-sm" id="fitb-check">Kiểm tra</button>
+          </div>
+          <div class="fitb-feedback" id="fitb-reveal"></div>
+        </div>
+      </div>`;
+    const input = mount.querySelector(".fitb-input");
+    const btn = mount.querySelector("#fitb-check");
+    const reveal = mount.querySelector("#fitb-reveal");
+
+    function check() {
+      if (btn.disabled) return;
+      const correct = normalize(input.value) === normalize(item.answer);
+      window.EQSound && (correct ? window.EQSound.correct() : window.EQSound.wrong());
+      input.disabled = true;
+      btn.disabled = true;
+      if (!correct) {
+        reveal.textContent = `Đáp án đúng: ${item.answer}`;
+        reveal.className = "fitb-feedback no";
+      } else {
+        reveal.textContent = "";
+      }
+      onAnswered(correct);
+    }
+    btn.addEventListener("click", check);
+    input.addEventListener("keydown", e => { if (e.key === "Enter") check(); });
+    input.focus();
+  });
+}
+
+// ============================================================
+// Ordering (unchanged)
+// ============================================================
+function buildOrderItem(container, words, answerText) {
   const wrap = document.createElement("div");
   wrap.className = "order-item";
   const shuffled = shuffle(words);
@@ -268,91 +344,78 @@ function renderOrdering() {
   }
 }
 
-function renderQuiz() {
-  const el = document.getElementById("quiz-list");
-  if (!el) return;
-  let html = "";
-  QUIZ_MC.forEach((item, i) => {
-    if (item.q === null) {
-      // Placeholder — Listening question text/options not yet provided by the teacher (audio may already be set)
-      html += `
-        <div class="quiz-item quiz-placeholder" data-type="mc" data-idx="${i}">
-          <div class="quiz-q"><span class="quiz-pending">${i + 1}. ⏳ Đang chờ nội dung câu hỏi từ giáo viên</span>${item.audio ? `<button type="button" class="quiz-audio quiz-play" data-src="${item.audio}">🔊 Nghe</button>` : ""}</div>
+// ============================================================
+// Quiz — one at a time, combines multiple-choice + translate items
+// ============================================================
+function runQuizSequential() {
+  const host = document.getElementById("quiz-list");
+  if (!host) return;
+
+  const items = [
+    ...QUIZ_MC.map(q => ({ kind: "mc", ...q })),
+    ...QUIZ_TRANSLATE.map(q => ({ kind: "tr", ...q })),
+  ];
+
+  runRoundBased(host, items, (mount, item, onAnswered) => {
+    if (item.kind === "mc") {
+      mount.innerHTML = `
+        <div class="quiz-item">
+          <div class="quiz-q">${item.q}${item.audio ? `<button type="button" class="quiz-audio quiz-play" data-src="${item.audio}">🔊 Nghe</button>` : ""}</div>
           <div class="quiz-opts">
-            <div class="quiz-opt quiz-opt-disabled"><span class="opt-letter">a</span>...</div>
-            <div class="quiz-opt quiz-opt-disabled"><span class="opt-letter">b</span>...</div>
-            <div class="quiz-opt quiz-opt-disabled"><span class="opt-letter">c</span>...</div>
+            ${item.opts.map((o, oi) => `<div class="quiz-opt" data-opt="${oi}"><span class="opt-letter">${String.fromCharCode(97 + oi)}</span>${o}</div>`).join("")}
           </div>
-          <div class="fitb-row"><button class="btn btn-secondary btn-sm" disabled>Kiểm tra</button></div>
-          <div class="quiz-feedback">${item.audio ? "Đã có audio — đang chờ câu hỏi và đáp án." : "Chưa có câu hỏi/audio cho câu này."}</div>
         </div>`;
-      return;
-    }
-    html += `
-      <div class="quiz-item" data-type="mc" data-idx="${i}">
-        <div class="quiz-q">${i + 1}. ${item.q}${item.audio ? `<button type="button" class="quiz-audio quiz-play" data-src="${item.audio}">🔊 Nghe</button>` : ""}</div>
-        <div class="quiz-opts">
-          ${item.opts.map((o, oi) => `<div class="quiz-opt" data-opt="${oi}"><span class="opt-letter">${String.fromCharCode(97 + oi)}</span>${o}</div>`).join("")}
-        </div>
-        <div class="fitb-row"><button class="btn btn-secondary btn-sm quiz-check" data-kind="mc" data-idx="${i}">Kiểm tra</button></div>
-        <div class="quiz-feedback" id="quiz-feedback-mc-${i}"></div>
-      </div>`;
-  });
-  QUIZ_TRANSLATE.forEach((item, i) => {
-    html += `
-      <div class="quiz-item" data-type="tr" data-idx="${i}">
-        <div class="quiz-q">${QUIZ_MC.length + i + 1}. Dịch nghĩa từ: <em>${item.q}</em></div>
-        <div class="fitb-row">
-          <input class="fitb-input" type="text" placeholder="Gõ nghĩa tiếng Việt..." data-tr-idx="${i}">
-          <button class="btn btn-secondary btn-sm quiz-check" data-kind="tr" data-idx="${i}">Kiểm tra</button>
-        </div>
-        <div class="quiz-feedback" id="quiz-feedback-tr-${i}"></div>
-      </div>`;
-  });
-  el.innerHTML = html;
-
-  el.querySelectorAll(".quiz-play").forEach(btn => {
-    btn.addEventListener("click", (e) => {
-      e.stopPropagation();
-      const audio = new Audio(btn.dataset.src);
-      audio.play().catch(() => {});
-    });
-  });
-
-  el.querySelectorAll('.quiz-item[data-type="mc"]').forEach(item => {
-    const idx = item.dataset.idx;
-    item.querySelectorAll(".quiz-opt:not(.quiz-opt-disabled)").forEach(opt => {
-      opt.addEventListener("click", () => {
-        item.querySelectorAll(".quiz-opt").forEach(o => o.classList.remove("selected"));
-        opt.classList.add("selected");
+      const playBtn = mount.querySelector(".quiz-play");
+      if (playBtn) playBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const audio = new Audio(playBtn.dataset.src);
+        audio.play().catch(() => {});
       });
-    });
-  });
-
-  el.querySelectorAll('.quiz-check[data-kind="mc"]').forEach(btn => {
-    btn.addEventListener("click", () => {
-      const i = btn.dataset.idx;
-      const item = el.querySelector(`.quiz-item[data-type="mc"][data-idx="${i}"]`);
-      const selected = item.querySelector(".quiz-opt.selected");
-      const fb = document.getElementById(`quiz-feedback-mc-${i}`);
-      if (!selected) { fb.textContent = "Hãy chọn một đáp án trước nhé."; fb.className = "quiz-feedback no"; return; }
-      const correct = Number(selected.dataset.opt) === QUIZ_MC[i].answer;
-      window.EQSound && (correct ? window.EQSound.correct() : window.EQSound.wrong());
-      fb.textContent = correct ? "✓ Chính xác!" : "✗ Chưa đúng, thử lại nhé!";
-      fb.className = "quiz-feedback " + (correct ? "ok" : "no");
-    });
-  });
-
-  el.querySelectorAll('.quiz-check[data-kind="tr"]').forEach(btn => {
-    btn.addEventListener("click", () => {
-      const i = btn.dataset.idx;
-      const input = el.querySelector(`.fitb-input[data-tr-idx="${i}"]`);
-      const fb = document.getElementById(`quiz-feedback-tr-${i}`);
-      const correct = normalize(input.value) === normalize(QUIZ_TRANSLATE[i].answer);
-      window.EQSound && (correct ? window.EQSound.correct() : window.EQSound.wrong());
-      fb.textContent = correct ? "✓ Chính xác!" : "✗ Chưa đúng, thử lại nhé!";
-      fb.className = "quiz-feedback " + (correct ? "ok" : "no");
-    });
+      let answered = false;
+      mount.querySelectorAll(".quiz-opt").forEach(opt => {
+        opt.addEventListener("click", () => {
+          if (answered) return;
+          answered = true;
+          const chosen = Number(opt.dataset.opt);
+          const correct = chosen === item.answer;
+          window.EQSound && (correct ? window.EQSound.correct() : window.EQSound.wrong());
+          mount.querySelectorAll(".quiz-opt").forEach(o => o.classList.add("quiz-opt-disabled"));
+          mount.querySelector(`.quiz-opt[data-opt="${item.answer}"]`)?.classList.add("correct");
+          if (!correct) opt.classList.add("incorrect");
+          onAnswered(correct);
+        });
+      });
+    } else {
+      mount.innerHTML = `
+        <div class="quiz-item">
+          <div class="quiz-q">Dịch nghĩa từ: <em>${item.q}</em></div>
+          <div class="fitb-row">
+            <input class="fitb-input" type="text" placeholder="Gõ nghĩa tiếng Việt...">
+            <button class="btn btn-secondary btn-sm" id="quiz-tr-check">Kiểm tra</button>
+          </div>
+          <div class="fitb-feedback" id="quiz-tr-reveal"></div>
+        </div>`;
+      const input = mount.querySelector(".fitb-input");
+      const btn = mount.querySelector("#quiz-tr-check");
+      const reveal = mount.querySelector("#quiz-tr-reveal");
+      function check() {
+        if (btn.disabled) return;
+        const correct = normalize(input.value) === normalize(item.answer);
+        window.EQSound && (correct ? window.EQSound.correct() : window.EQSound.wrong());
+        input.disabled = true;
+        btn.disabled = true;
+        if (!correct) {
+          reveal.textContent = `Đáp án đúng: ${item.answer}`;
+          reveal.className = "fitb-feedback no";
+        } else {
+          reveal.textContent = "";
+        }
+        onAnswered(correct);
+      }
+      btn.addEventListener("click", check);
+      input.addEventListener("keydown", e => { if (e.key === "Enter") check(); });
+      input.focus();
+    }
   });
 }
 

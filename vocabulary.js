@@ -327,15 +327,22 @@ function buildSequentialItems(stageKey, unit) {
 // Generic sequential runner (picture-matching / multiple-choice / missing-word / sentence-shuffle)
 // ============================================================
 function runSequential(host, stageKey, items, onDone) {
+  // Round-based retry: within a round, every wrong answer reveals the
+  // correct answer and moves straight to the next item (no immediate
+  // re-pick). Whatever was answered wrong gets collected into a new
+  // round that runs after the current one finishes. This repeats —
+  // round 2, round 3, ... — until a round passes with zero mistakes.
+  let queue = items;
   let i = 0;
-  let correctCount = 0;
+  let wrongQueue = [];
+  let round = 1;
 
   function renderDots() {
-    return `<div class="runner-dots">${items.map((_, idx) => `<span class="runner-dot ${idx < i ? "done" : idx === i ? "current" : ""}"></span>`).join("")}</div>`;
+    return `<div class="runner-dots">${queue.map((_, idx) => `<span class="runner-dot ${idx < i ? "done" : idx === i ? "current" : ""}"></span>`).join("")}</div>`;
   }
 
   function renderItem() {
-    const item = items[i];
+    const item = queue[i];
     let body = "";
 
     if (stageKey === "picture-matching") {
@@ -367,6 +374,7 @@ function runSequential(host, stageKey, items, onDone) {
 
     host.innerHTML = `
       <div class="runner-card">
+        ${round > 1 ? `<div class="prompt-label" style="margin-bottom:6px;">🔁 Làm lại các câu sai — vòng ${round}</div>` : ""}
         ${renderDots()}
         ${body}
         <div class="runner-feedback" id="runner-feedback"></div>
@@ -394,16 +402,30 @@ function runSequential(host, stageKey, items, onDone) {
     const feedback = document.getElementById("runner-feedback");
     const actions = document.getElementById("runner-actions");
 
+    // Always advances — right or wrong. Wrong items get pushed into
+    // wrongQueue so they come back in the next round.
     function finishAnswer(correct) {
       recordExposure(currentUnit.id, item.word.id, correct);
-      if (correct) correctCount++;
-      feedback.textContent = correct ? "✓ Correct!" : "✗ Try again.";
+      if (!correct) wrongQueue.push(item);
+      feedback.textContent = correct ? "✓ Correct!" : "✗ Chưa đúng — đáp án đúng đã hiện phía trên.";
       feedback.className = "runner-feedback " + (correct ? "ok" : "no");
-      actions.innerHTML = `<button class="btn btn-primary" id="runner-continue">${i === items.length - 1 ? "Hoàn thành" : "Tiếp tục"}</button>`;
+      const isLastOfQueue = i === queue.length - 1;
+      actions.innerHTML = `<button class="btn btn-primary" id="runner-continue">${isLastOfQueue ? "Tiếp tục" : "Câu tiếp theo"}</button>`;
       document.getElementById("runner-continue").addEventListener("click", () => {
         i++;
-        if (i >= items.length) onDone();
-        else renderItem();
+        if (i >= queue.length) {
+          if (wrongQueue.length > 0) {
+            queue = wrongQueue;
+            wrongQueue = [];
+            i = 0;
+            round++;
+            renderItem();
+          } else {
+            onDone();
+          }
+        } else {
+          renderItem();
+        }
       });
     }
 
@@ -411,7 +433,7 @@ function runSequential(host, stageKey, items, onDone) {
       const optSelector = stageKey === "picture-matching" ? ".runner-pic-opt" : ".runner-opt";
       host.querySelectorAll(optSelector).forEach(opt => {
         opt.addEventListener("click", () => {
-          if (opt.dataset.wrong || host.querySelector(`${optSelector}[data-locked="1"]`)) return;
+          if (host.querySelector(`${optSelector}[data-locked="1"]`)) return;
           const chosen = Number(opt.dataset.idx);
           const correct = chosen === item.correctIdx;
 
@@ -438,16 +460,13 @@ function runSequential(host, stageKey, items, onDone) {
           eqRecordAndSave(`${stageKey}-${item.word.id}`, question, chosenLabel, correctLabel, correct);
           window.EQSound && (correct ? window.EQSound.correct() : window.EQSound.wrong());
 
-          if (correct) {
-            host.querySelectorAll(optSelector).forEach(o => o.dataset.locked = "1");
-            opt.classList.add("correct");
-            finishAnswer(true);
-          } else {
-            opt.classList.add("incorrect");
-            opt.dataset.wrong = "1";
-            feedback.textContent = "✗ Try again.";
-            feedback.className = "runner-feedback no";
-          }
+          // Lock all options immediately and always reveal the correct
+          // one, whether the student got it right or not.
+          host.querySelectorAll(optSelector).forEach(o => o.dataset.locked = "1");
+          host.querySelector(`${optSelector}[data-idx="${item.correctIdx}"]`)?.classList.add("correct");
+          if (!correct) opt.classList.add("incorrect");
+
+          finishAnswer(correct);
         });
       });
     } else if (stageKey === "sentence-shuffle") {
@@ -455,6 +474,7 @@ function runSequential(host, stageKey, items, onDone) {
       const pool = document.getElementById("shuffle-pool");
       pool.querySelectorAll(".runner-chip").forEach(chip => {
         chip.addEventListener("click", () => {
+          if (pool.dataset.locked === "1") return;
           // Tapping a word chip speaks it — constant listening practice
           // while building the sentence, word by word.
           speakWord(chip.dataset.word);
@@ -462,15 +482,27 @@ function runSequential(host, stageKey, items, onDone) {
           const clone = document.createElement("span");
           clone.className = "runner-chip";
           clone.textContent = chip.dataset.word;
-          clone.addEventListener("click", () => { clone.remove(); chip.classList.remove("used"); });
+          clone.addEventListener("click", () => {
+            if (pool.dataset.locked === "1") return;
+            clone.remove();
+            chip.classList.remove("used");
+          });
           target.appendChild(clone);
           if (target.children.length === item.tokens.length) {
+            pool.dataset.locked = "1";
             const built = Array.from(target.children).map(c => c.textContent).join(" ");
             const norm = s => s.toLowerCase().replace(/[.?!]/g, "").replace(/\s+/g, " ").trim();
             const correct = norm(built) === norm(item.answer);
             eqRecordAndSave(`sentence-shuffle-${item.word.id}`, item.word.vi, built, item.answer, correct);
             window.EQSound && (correct ? window.EQSound.correct() : window.EQSound.wrong());
-            setTimeout(() => finishAnswer(correct), 250);
+            if (!correct) {
+              const reveal = document.createElement("div");
+              reveal.className = "prompt-label";
+              reveal.style.marginTop = "8px";
+              reveal.textContent = `Đáp án đúng: ${item.answer}`;
+              target.insertAdjacentElement("afterend", reveal);
+            }
+            setTimeout(() => finishAnswer(correct), 400);
           }
         });
       });
