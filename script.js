@@ -1,4 +1,4 @@
-// English Quest — shared sound effects (no audio files needed)
+// English Quest — shared sound effects (plays uploaded mp3 files, falls back to a generated tone if a file fails to load)
 window.EQSound = (function () {
   let ctx;
   function getCtx() {
@@ -19,12 +19,27 @@ window.EQSound = (function () {
     osc.start(c.currentTime + start);
     osc.stop(c.currentTime + start + duration + 0.03);
   }
+  function toneCorrect() {
+    try { tone(660, 0, 0.12, "sine", 0.18); tone(880, 0.09, 0.16, "sine", 0.18); } catch (e) {}
+  }
+  function toneWrong() {
+    try { tone(180, 0, 0.2, "sawtooth", 0.12); } catch (e) {}
+  }
+  function playFile(src, fallback) {
+    try {
+      const audio = new Audio(src);
+      audio.play().catch(() => fallback());
+      audio.addEventListener("error", () => fallback());
+    } catch (e) {
+      fallback();
+    }
+  }
   return {
     correct() {
-      try { tone(660, 0, 0.12, "sine", 0.18); tone(880, 0.09, 0.16, "sine", 0.18); } catch (e) {}
+      playFile("dragon-studio-correct-472358.mp3", toneCorrect);
     },
     wrong() {
-      try { tone(180, 0, 0.2, "sawtooth", 0.12); } catch (e) {}
+      playFile("sfx-wrong.mp3", toneWrong);
     },
   };
 })();
@@ -45,7 +60,6 @@ document.addEventListener("DOMContentLoaded", () => {
     scrim?.classList.add("open");
     toggle?.setAttribute("aria-expanded", "true");
   }
-
   toggle?.addEventListener("click", () => {
     const isOpen = links.classList.contains("open");
     isOpen ? closeNav() : openNav();
