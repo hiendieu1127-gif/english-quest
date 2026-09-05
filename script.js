@@ -1,9 +1,19 @@
-// TẠM THỜI — chỉ để xem user agent, sẽ xoá sau khi xong việc debug
+// TẠM THỜI — kiểm tra giọng đọc có khả dụng không
 (function () {
   var box = document.createElement("div");
-  box.style.cssText = "position:fixed;top:0;left:0;right:0;z-index:99999;background:#000;color:#0f0;font-size:11px;padding:8px;word-break:break-all;";
-  box.textContent = navigator.userAgent;
+  box.style.cssText = "position:fixed;top:0;left:0;right:0;z-index:99999;background:#000;color:#0f0;font-size:12px;padding:8px;word-break:break-all;";
+  function report() {
+    var supported = "speechSynthesis" in window;
+    var voices = supported ? window.speechSynthesis.getVoices() : [];
+    box.textContent = "TTS supported: " + supported + " | voices found: " + voices.length +
+      (voices.length ? " | first: " + voices[0].name : "");
+  }
   document.body.prepend(box);
+  report();
+  if ("speechSynthesis" in window) {
+    window.speechSynthesis.onvoiceschanged = report;
+  }
+  setTimeout(report, 1000);
 })();// English Quest — shared sound effects (plays uploaded mp3 files, falls back to a generated tone if a file fails to load)
 window.EQSound = (function () {
   let ctx;
