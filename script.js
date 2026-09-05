@@ -50,10 +50,12 @@ window.EQSpeak = (function () {
     try {
       if (!text || !("speechSynthesis" in window)) return;
       window.speechSynthesis.cancel();
-      const utter = new SpeechSynthesisUtterance(text);
-      utter.lang = "en-US";
-      utter.rate = 0.9;
-      window.speechSynthesis.speak(utter);
+      setTimeout(() => {
+        const utter = new SpeechSynthesisUtterance(text);
+        utter.lang = "en-US";
+        utter.rate = 0.9;
+        window.speechSynthesis.speak(utter);
+      }, 60);
     } catch (e) {}
   }
   return { speak };
