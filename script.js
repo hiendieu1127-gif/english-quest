@@ -1,19 +1,36 @@
-// TẠM THỜI — kiểm tra giọng đọc có khả dụng không
+// English Quest — if this browser has no text-to-speech at all,
+// nudge the student to open the page in Chrome instead
 (function () {
-  var box = document.createElement("div");
-  box.style.cssText = "position:fixed;top:0;left:0;right:0;z-index:99999;background:#000;color:#0f0;font-size:12px;padding:8px;word-break:break-all;";
-  function report() {
-    var supported = "speechSynthesis" in window;
-    var voices = supported ? window.speechSynthesis.getVoices() : [];
-    box.textContent = "TTS supported: " + supported + " | voices found: " + voices.length +
-      (voices.length ? " | first: " + voices[0].name : "");
-  }
-  document.body.prepend(box);
-  report();
-  if ("speechSynthesis" in window) {
-    window.speechSynthesis.onvoiceschanged = report;
-  }
-  setTimeout(report, 1000);
+  if ("speechSynthesis" in window) return; // TTS already works here, nothing to do
+
+  var banner = document.createElement("div");
+  banner.style.cssText =
+    "position:fixed;top:0;left:0;right:0;z-index:9999;background:#fff3cd;color:#664d03;" +
+    "padding:10px 12px;font-size:14px;display:flex;align-items:center;justify-content:space-between;" +
+    "gap:8px;box-shadow:0 2px 6px rgba(0,0,0,.15);";
+  banner.innerHTML =
+    '<span>🔊 Để nghe giọng đọc, mở bằng Chrome nhé</span>' +
+    '<div style="display:flex;gap:6px;">' +
+    '<button id="open-chrome-btn" style="background:#4285F4;color:#fff;border:none;padding:8px 12px;' +
+    'border-radius:6px;font-size:13px;white-space:nowrap;">Mở Chrome</button>' +
+    '<button id="close-banner-btn" style="background:transparent;color:#664d03;border:none;' +
+    'font-size:18px;padding:0 6px;">×</button></div>';
+  document.body.prepend(banner);
+  document.body.style.paddingTop = banner.offsetHeight + "px";
+
+  document.getElementById("open-chrome-btn").addEventListener("click", function () {
+    var url = window.location.href;
+    var noScheme = url.replace(/^https?:\/\//, "");
+    var intentUrl =
+      "intent://" + noScheme +
+      "#Intent;scheme=https;package=com.android.chrome;S.browser_fallback_url=" +
+      encodeURIComponent(url) + ";end";
+    window.location.href = intentUrl;
+  });
+  document.getElementById("close-banner-btn").addEventListener("click", function () {
+    banner.remove();
+    document.body.style.paddingTop = "";
+  });
 })();// English Quest — shared sound effects (plays uploaded mp3 files, falls back to a generated tone if a file fails to load)
 window.EQSound = (function () {
   let ctx;
