@@ -213,23 +213,23 @@ function runRoundBased(host, items, renderQuestion) {
     }
   }
 
-  function render() {
+    function render() {
     const item = queue[i];
     host.innerHTML = `
       <div class="runner-card">
         ${round > 1 ? `<div class="prompt-label" style="margin-bottom:6px;">🔁 Làm lại các câu sai — vòng ${round}</div>` : ""}
         ${renderDots()}
-        <div id="rb-question"></div>
-        <div class="runner-feedback" id="rb-feedback"></div>
-        <div class="runner-actions" id="rb-actions"></div>
+        <div class="rb-question"></div>
+        <div class="runner-feedback rb-feedback"></div>
+        <div class="runner-actions rb-actions"></div>
       </div>`;
-    renderQuestion(document.getElementById("rb-question"), item, (correct) => {
-      const fb = document.getElementById("rb-feedback");
+    renderQuestion(host.querySelector(".rb-question"), item, (correct) => {
+      const fb = host.querySelector(".rb-feedback");
       fb.textContent = correct ? "✓ Chính xác!" : "✗ Chưa đúng — đáp án đúng đã hiện phía trên.";
       fb.className = "runner-feedback " + (correct ? "ok" : "no");
-      const actions = document.getElementById("rb-actions");
-      actions.innerHTML = `<button class="btn btn-primary" id="rb-continue">Câu tiếp theo</button>`;
-      document.getElementById("rb-continue").addEventListener("click", () => next(correct, item));
+      const actions = host.querySelector(".rb-actions");
+      actions.innerHTML = `<button class="btn btn-primary rb-continue">Câu tiếp theo</button>`;
+      actions.querySelector(".rb-continue").addEventListener("click", () => next(correct, item));
     });
   }
 
