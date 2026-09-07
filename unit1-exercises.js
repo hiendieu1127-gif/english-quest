@@ -66,12 +66,8 @@ const ORDER_DIALOGUE = {
     "It's table tennis.",
     "Table tennis? Oh, I like table tennis too.",
   ],
-  // correct order is the array above, already in order b-a-d-c-e — shuffled for the student below
 };
 
-// Quiz type A: English question, multiple choice (kept in English, as in the workbook)
-// Questions 1-6 = Listening — audio provided by teacher Hien (audio/listening-1.wav ... 6.wav, in the order she sent).
-// Questions 7-14 = Grammar/Sentence Patterns — unchanged, from "Tiếng Anh 5 – Sách bài tập"
 const QUIZ_MC = [
   { q: "My favourite animal is a ___.", audio: "listening-1.wav", opts: ["tiger", "dolphin", "hippo"], answer: 1 },
   { q: "I want to visit my grandparents in the ___.", audio: "listening-2.wav", opts: ["village", "mountains", "city"], answer: 0 },
@@ -89,7 +85,6 @@ const QUIZ_MC = [
   { q: "A: Can you tell me about yourself? B: ___", opts: ["Thank you very much.", "Well, I'm Mary. I live in a town."], answer: 1 },
 ];
 
-// Quiz type B: translate the new word into Vietnamese (typed answer)
 const QUIZ_TRANSLATE = [
   { q: "tiger", answer: "hổ" },
   { q: "hippo", answer: "hà mã" },
@@ -98,7 +93,6 @@ const QUIZ_TRANSLATE = [
   { q: "sandwich", answer: "bánh sandwich" },
 ];
 
-// simple inline-icon set reused from the site's icon style
 const PIC_ICONS = {
   "sandwich": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 12h18M4 12c0-3 3.5-5 8-5s8 2 8 5M4 14h16l-1.5 5h-13L4 14Z" stroke-linejoin="round" stroke-linecap="round"/></svg>',
   "village": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 18l5-8 4 5 2-3 7 6H3Z" stroke-linejoin="round" stroke-linecap="round"/><circle cx="17" cy="6" r="2"/></svg>',
@@ -122,9 +116,6 @@ function shuffle(arr) {
   return a;
 }
 
-// ============================================================
-// Rendering
-// ============================================================
 document.addEventListener("DOMContentLoaded", () => {
   renderReading();
   renderSentenceBySentence();
@@ -171,13 +162,6 @@ function renderFlashcards() {
   });
 }
 
-// ============================================================
-// Round-based one-at-a-time runner, shared shape for FITB and Quiz.
-// A wrong answer reveals the correct answer and moves to the next
-// question. Whatever was answered wrong is collected and re-asked in
-// a new round once the current pass finishes — repeating until a
-// round is completed with zero mistakes.
-// ============================================================
 function runRoundBased(host, items, renderQuestion) {
   let queue = items;
   let i = 0;
@@ -236,11 +220,6 @@ function runRoundBased(host, items, renderQuestion) {
   render();
 }
 
-// ============================================================
-// Fill in the Blank — one at a time, typed answer
-// TTS: does NOT read the sentence up front — only speaks the full
-// completed sentence after the student presses "Kiểm tra".
-// ============================================================
 function runFITBSequential() {
   const host = document.getElementById("fitb-grid");
   if (!host) return;
@@ -273,9 +252,8 @@ function runFITBSequential() {
       } else {
         reveal.textContent = "";
       }
-      // Speak the full completed sentence only now, after checking.
       const fullSentence = item.sentence.replace("______", item.answer);
-      window.EQSpeak && window.EQSpeak(fullSentence);
+      window.EQSpeak && window.EQSpeak.speak(fullSentence);
       onAnswered(correct);
     }
     btn.addEventListener("click", check);
@@ -284,9 +262,6 @@ function runFITBSequential() {
   });
 }
 
-// ============================================================
-// Ordering — TTS speaks each word/tile when the student taps it
-// ============================================================
 function buildOrderItem(container, words, answerText) {
   const wrap = document.createElement("div");
   wrap.className = "order-item";
@@ -310,7 +285,7 @@ function buildOrderItem(container, words, answerText) {
 
   pool.querySelectorAll(".order-chip").forEach(chip => {
     chip.addEventListener("click", () => {
-      window.EQSpeak && window.EQSpeak(chip.dataset.word);
+      window.EQSpeak && window.EQSpeak.speak(chip.dataset.word);
       chip.classList.add("used");
       const clone = document.createElement("span");
       clone.className = "order-chip";
@@ -350,13 +325,6 @@ function renderOrdering() {
   }
 }
 
-// ============================================================
-// Quiz — one at a time, combines multiple-choice + translate items
-// TTS: auto-speaks the question as soon as it appears, so students
-// can listen and then choose/type an answer.
-// Bug fix: wrong-answer feedback now actually shows the correct
-// answer text (previously only added CSS classes with no visible text).
-// ============================================================
 function runQuizSequential() {
   const host = document.getElementById("quiz-list");
   if (!host) return;
@@ -376,7 +344,7 @@ function runQuizSequential() {
           </div>
           <div class="fitb-feedback" id="quiz-mc-reveal"></div>
         </div>`;
-      window.EQSpeak && window.EQSpeak(item.q);
+      window.EQSpeak && window.EQSpeak.speak(item.q);
       const playBtn = mount.querySelector(".quiz-play");
       if (playBtn) playBtn.addEventListener("click", (e) => {
         e.stopPropagation();
@@ -412,7 +380,7 @@ function runQuizSequential() {
           </div>
           <div class="fitb-feedback" id="quiz-tr-reveal"></div>
         </div>`;
-      window.EQSpeak && window.EQSpeak(item.q);
+      window.EQSpeak && window.EQSpeak.speak(item.q);
       const input = mount.querySelector(".fitb-input");
       const btn = mount.querySelector("#quiz-tr-check");
       const reveal = mount.querySelector("#quiz-tr-reveal");
