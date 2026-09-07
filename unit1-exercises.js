@@ -238,6 +238,8 @@ function runRoundBased(host, items, renderQuestion) {
 
 // ============================================================
 // Fill in the Blank — one at a time, typed answer
+// TTS: does NOT read the sentence up front — only speaks the full
+// completed sentence after the student presses "Kiểm tra".
 // ============================================================
 function runFITBSequential() {
   const host = document.getElementById("fitb-grid");
@@ -271,6 +273,9 @@ function runFITBSequential() {
       } else {
         reveal.textContent = "";
       }
+      // Speak the full completed sentence only now, after checking.
+      const fullSentence = item.sentence.replace("______", item.answer);
+      window.EQSpeak && window.EQSpeak(fullSentence);
       onAnswered(correct);
     }
     btn.addEventListener("click", check);
@@ -280,7 +285,7 @@ function runFITBSequential() {
 }
 
 // ============================================================
-// Ordering (unchanged)
+// Ordering — TTS speaks each word/tile when the student taps it
 // ============================================================
 function buildOrderItem(container, words, answerText) {
   const wrap = document.createElement("div");
@@ -305,6 +310,7 @@ function buildOrderItem(container, words, answerText) {
 
   pool.querySelectorAll(".order-chip").forEach(chip => {
     chip.addEventListener("click", () => {
+      window.EQSpeak && window.EQSpeak(chip.dataset.word);
       chip.classList.add("used");
       const clone = document.createElement("span");
       clone.className = "order-chip";
@@ -346,6 +352,10 @@ function renderOrdering() {
 
 // ============================================================
 // Quiz — one at a time, combines multiple-choice + translate items
+// TTS: auto-speaks the question as soon as it appears, so students
+// can listen and then choose/type an answer.
+// Bug fix: wrong-answer feedback now actually shows the correct
+// answer text (previously only added CSS classes with no visible text).
 // ============================================================
 function runQuizSequential() {
   const host = document.getElementById("quiz-list");
@@ -364,7 +374,9 @@ function runQuizSequential() {
           <div class="quiz-opts">
             ${item.opts.map((o, oi) => `<div class="quiz-opt" data-opt="${oi}"><span class="opt-letter">${String.fromCharCode(97 + oi)}</span>${o}</div>`).join("")}
           </div>
+          <div class="fitb-feedback" id="quiz-mc-reveal"></div>
         </div>`;
+      window.EQSpeak && window.EQSpeak(item.q);
       const playBtn = mount.querySelector(".quiz-play");
       if (playBtn) playBtn.addEventListener("click", (e) => {
         e.stopPropagation();
@@ -382,6 +394,11 @@ function runQuizSequential() {
           mount.querySelectorAll(".quiz-opt").forEach(o => o.classList.add("quiz-opt-disabled"));
           mount.querySelector(`.quiz-opt[data-opt="${item.answer}"]`)?.classList.add("correct");
           if (!correct) opt.classList.add("incorrect");
+          const reveal = mount.querySelector("#quiz-mc-reveal");
+          if (!correct) {
+            reveal.textContent = `Đáp án đúng: ${item.opts[item.answer]}`;
+            reveal.className = "fitb-feedback no";
+          }
           onAnswered(correct);
         });
       });
@@ -395,6 +412,7 @@ function runQuizSequential() {
           </div>
           <div class="fitb-feedback" id="quiz-tr-reveal"></div>
         </div>`;
+      window.EQSpeak && window.EQSpeak(item.q);
       const input = mount.querySelector(".fitb-input");
       const btn = mount.querySelector("#quiz-tr-check");
       const reveal = mount.querySelector("#quiz-tr-reveal");
