@@ -1,10 +1,10 @@
+
 // ============================================================
 // Unit 1 — All About Me — Exercise data
 // Source: teacher Hien's slides + "Tiếng Anh 5 – Sách bài tập" (Unit 1, p.4-7)
 // Lines marked "translated by Claude" were not in the source material
 // and were translated to fill a gap — flagged for the teacher to review.
 // ============================================================
-
 const READING_PASSAGE = [
   { en: "My name's Jack.", vi: "Tên tôi là Jack." },
   { en: "I live in a small village in Australia.", vi: "Tôi sống ở một ngôi làng nhỏ ở Úc." },
@@ -17,7 +17,6 @@ const READING_PASSAGE = [
   { en: "My favourite sport is football.", vi: "Môn thể thao yêu thích của tôi là bóng đá." },
 ];
 // all 9 Vietnamese lines above: translated by Claude, not in source — please review
-
 const VOCAB = [
   ["village", "làng"],
   ["Australia", "nước Úc"],
@@ -37,7 +36,6 @@ const VOCAB = [
   ["football", "bóng đá"],
 ];
 // all 16 items above and their meanings come directly from the Reading passage about Jack — no outside vocabulary added
-
 const FITB = [
   { pic: "village", sentence: "Jack lives in a small ______ in Australia.", answer: "village" },
   { pic: "family", sentence: "Jack has two big ______ and one little brother.", answer: "sisters" },
@@ -50,14 +48,12 @@ const FITB = [
   { pic: "football", sentence: "Jack's favourite sport is ______.", answer: "football" },
 ];
 // all 9 items above (sentences + answers) come directly from the Reading passage about Jack
-
 const ORDER_SENTENCES = [
   { words: ["tell", "me", "Can", "you", "about", "yourself"], answer: "Can you tell me about yourself?" },
   { words: ["the", "countryside", "in", "live", "I"], answer: "I live in the countryside." },
   { words: ["your", "colour", "What's", "favourite"], answer: "What's your favourite colour?" },
   { words: ["love", "table", "tennis", "I", "playing"], answer: "I love playing table tennis." },
 ];
-
 const ORDER_DIALOGUE = {
   words: [
     "Can you tell me about yourself?",
@@ -67,7 +63,6 @@ const ORDER_DIALOGUE = {
     "Table tennis? Oh, I like table tennis too.",
   ],
 };
-
 const QUIZ_MC = [
   { q: "My favourite animal is a ___.", audio: "listening-1.wav", opts: ["tiger", "dolphin", "hippo"], answer: 1 },
   { q: "I want to visit my grandparents in the ___.", audio: "listening-2.wav", opts: ["village", "mountains", "city"], answer: 0 },
@@ -84,7 +79,6 @@ const QUIZ_MC = [
   { q: "A: What's your favourite colour? B: ___", opts: ["I like lemonade.", "I like pink."], answer: 1 },
   { q: "A: Can you tell me about yourself? B: ___", opts: ["Thank you very much.", "Well, I'm Mary. I live in a town."], answer: 1 },
 ];
-
 const QUIZ_TRANSLATE = [
   { q: "tiger", answer: "hổ" },
   { q: "hippo", answer: "hà mã" },
@@ -92,7 +86,6 @@ const QUIZ_TRANSLATE = [
   { q: "mountains", answer: "núi" },
   { q: "sandwich", answer: "bánh sandwich" },
 ];
-
 const PIC_ICONS = {
   "sandwich": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 12h18M4 12c0-3 3.5-5 8-5s8 2 8 5M4 14h16l-1.5 5h-13L4 14Z" stroke-linejoin="round" stroke-linecap="round"/></svg>',
   "village": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 18l5-8 4 5 2-3 7 6H3Z" stroke-linejoin="round" stroke-linecap="round"/><circle cx="17" cy="6" r="2"/></svg>',
@@ -103,9 +96,13 @@ const PIC_ICONS = {
   "colour": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 4a8 8 0 1 0 0 16c1.4 0 2-.9 2-1.8 0-.5-.2-.9-.5-1.3-.3-.4-.3-1 .2-1.3.4-.3 1-.3 1.6-.3A4 4 0 0 0 19.5 12 8 8 0 0 0 12 4Z" stroke-linejoin="round"/><circle cx="8.2" cy="11" r="1.1" fill="currentColor" stroke="none"/><circle cx="11" cy="8" r="1.1" fill="currentColor" stroke="none"/></svg>',
   "football": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.3l3 2.2-1.2 3.6h-3.6L9 9.5l3-2.2ZM12 3.5v3.8M12 20.5v-3.7M5 8.3l3 1M19 8.3l-3 1M6.3 17l2.4-2.6M17.7 17l-2.4-2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>',
 };
-
 function normalize(s) {
   return s.trim().toLowerCase().replace(/\s+/g, " ").replace(/[.?!,]/g, "");
+}
+function sanitizeForSpeech(text) {
+  // strip fill-in-the-blank underscores (e.g. "___") before handing text to TTS,
+  // so it doesn't get read aloud as "underscore underscore underscore"
+  return text.replace(/_+/g, "").replace(/\s+([.?!,])/g, "$1").replace(/\s+/g, " ").trim();
 }
 function shuffle(arr) {
   const a = arr.slice();
@@ -115,7 +112,6 @@ function shuffle(arr) {
   }
   return a;
 }
-
 document.addEventListener("DOMContentLoaded", () => {
   renderReading();
   renderSentenceBySentence();
@@ -125,13 +121,11 @@ document.addEventListener("DOMContentLoaded", () => {
   runQuizSequential();
   setupTabs();
 });
-
 function renderReading() {
   const el = document.getElementById("reading-panel-body");
   if (!el) return;
   el.innerHTML = `<div class="reading-card"><p>${READING_PASSAGE.map(s => s.en).join(" ")}</p></div>`;
 }
-
 function renderSentenceBySentence() {
   const el = document.getElementById("sbs-list");
   if (!el) return;
@@ -145,7 +139,6 @@ function renderSentenceBySentence() {
     item.addEventListener("click", () => item.classList.toggle("revealed"));
   });
 }
-
 function renderFlashcards() {
   const el = document.getElementById("flash-grid");
   if (!el) return;
@@ -157,21 +150,21 @@ function renderFlashcards() {
       </div>
     </div>
   `).join("");
-  el.querySelectorAll(".flashcard").forEach(card => {
-    card.addEventListener("click", () => card.classList.toggle("flipped"));
+  el.querySelectorAll(".flashcard").forEach((card, i) => {
+    card.addEventListener("click", () => {
+      card.classList.toggle("flipped");
+      window.EQSpeak && window.EQSpeak.speak(VOCAB[i][0]);
+    });
   });
 }
-
 function runRoundBased(host, items, renderQuestion) {
   let queue = items;
   let i = 0;
   let wrongQueue = [];
   let round = 1;
-
   function renderDots() {
     return `<div class="runner-dots">${queue.map((_, idx) => `<span class="runner-dot ${idx < i ? "done" : idx === i ? "current" : ""}"></span>`).join("")}</div>`;
   }
-
   function next(wasCorrect, item) {
     if (!wasCorrect) wrongQueue.push(item);
     i++;
@@ -196,7 +189,6 @@ function runRoundBased(host, items, renderQuestion) {
       render();
     }
   }
-
     function render() {
     const item = queue[i];
     host.innerHTML = `
@@ -216,10 +208,8 @@ function runRoundBased(host, items, renderQuestion) {
       actions.querySelector(".rb-continue").addEventListener("click", () => next(correct, item));
     });
   }
-
   render();
 }
-
 function runFITBSequential() {
   const host = document.getElementById("fitb-grid");
   if (!host) return;
@@ -239,7 +229,6 @@ function runFITBSequential() {
     const input = mount.querySelector(".fitb-input");
     const btn = mount.querySelector("#fitb-check");
     const reveal = mount.querySelector("#fitb-reveal");
-
     function check() {
       if (btn.disabled) return;
       const correct = normalize(input.value) === normalize(item.answer);
@@ -253,7 +242,7 @@ function runFITBSequential() {
         reveal.textContent = "";
       }
       const fullSentence = item.sentence.replace("______", item.answer);
-      window.EQSpeak && window.EQSpeak.speak(fullSentence);
+      window.EQSpeak && window.EQSpeak.speak(sanitizeForSpeech(fullSentence));
       onAnswered(correct);
     }
     btn.addEventListener("click", check);
@@ -261,7 +250,6 @@ function runFITBSequential() {
     input.focus();
   });
 }
-
 function buildOrderItem(container, words, answerText) {
   const wrap = document.createElement("div");
   wrap.className = "order-item";
@@ -278,11 +266,9 @@ function buildOrderItem(container, words, answerText) {
     </div>
   `;
   container.appendChild(wrap);
-
   const target = wrap.querySelector(".order-target");
   const pool = wrap.querySelector(".order-pool");
   const feedback = wrap.querySelector(".order-feedback");
-
   pool.querySelectorAll(".order-chip").forEach(chip => {
     chip.addEventListener("click", () => {
       window.EQSpeak && window.EQSpeak.speak(chip.dataset.word);
@@ -298,7 +284,6 @@ function buildOrderItem(container, words, answerText) {
       target.appendChild(clone);
     });
   });
-
   wrap.querySelector(".order-check").addEventListener("click", () => {
     const built = Array.from(target.children).map(c => c.textContent).join(" ");
     const correct = normalize(built) === normalize(answerText);
@@ -306,14 +291,12 @@ function buildOrderItem(container, words, answerText) {
     feedback.textContent = correct ? "✓ Đúng rồi!" : "✗ Chưa đúng, thử lại nhé";
     feedback.className = "order-feedback " + (correct ? "ok" : "no");
   });
-
   wrap.querySelector(".order-reset").addEventListener("click", () => {
     target.innerHTML = "";
     pool.querySelectorAll(".order-chip").forEach(c => c.classList.remove("used"));
     feedback.textContent = "";
   });
 }
-
 function renderOrdering() {
   const groupA = document.getElementById("order-group-a");
   const groupB = document.getElementById("order-group-b");
@@ -324,16 +307,13 @@ function renderOrdering() {
     buildOrderItem(groupB, ORDER_DIALOGUE.words, ORDER_DIALOGUE.words.join(" "));
   }
 }
-
 function runQuizSequential() {
   const host = document.getElementById("quiz-list");
   if (!host) return;
-
   const items = [
     ...QUIZ_MC.map(q => ({ kind: "mc", ...q })),
     ...QUIZ_TRANSLATE.map(q => ({ kind: "tr", ...q })),
   ];
-
   runRoundBased(host, items, (mount, item, onAnswered) => {
     if (item.kind === "mc") {
       mount.innerHTML = `
@@ -344,7 +324,7 @@ function runQuizSequential() {
           </div>
           <div class="fitb-feedback" id="quiz-mc-reveal"></div>
         </div>`;
-      window.EQSpeak && window.EQSpeak.speak(item.q);
+      window.EQSpeak && window.EQSpeak.speak(sanitizeForSpeech(item.q));
       const playBtn = mount.querySelector(".quiz-play");
       if (playBtn) playBtn.addEventListener("click", (e) => {
         e.stopPropagation();
@@ -380,7 +360,7 @@ function runQuizSequential() {
           </div>
           <div class="fitb-feedback" id="quiz-tr-reveal"></div>
         </div>`;
-      window.EQSpeak && window.EQSpeak.speak(item.q);
+      window.EQSpeak && window.EQSpeak.speak(sanitizeForSpeech(item.q));
       const input = mount.querySelector(".fitb-input");
       const btn = mount.querySelector("#quiz-tr-check");
       const reveal = mount.querySelector("#quiz-tr-reveal");
@@ -404,7 +384,6 @@ function runQuizSequential() {
     }
   });
 }
-
 function setupTabs() {
   const tabs = document.querySelectorAll(".ex-tab");
   const panels = document.querySelectorAll(".ex-panel");
