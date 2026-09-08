@@ -1,8 +1,8 @@
+
 // English Quest — if this browser has no text-to-speech at all,
 // nudge the student to open the page in Chrome instead
 (function () {
   if ("speechSynthesis" in window) return; // TTS already works here, nothing to do
-
   var banner = document.createElement("div");
   banner.style.cssText =
     "position:fixed;top:0;left:0;right:0;z-index:9999;background:#fff3cd;color:#664d03;" +
@@ -17,7 +17,6 @@
     'font-size:18px;padding:0 6px;">×</button></div>';
   document.body.prepend(banner);
   document.body.style.paddingTop = banner.offsetHeight + "px";
-
   document.getElementById("open-chrome-btn").addEventListener("click", function () {
     var url = window.location.href;
     var noScheme = url.replace(/^https?:\/\//, "");
@@ -31,7 +30,8 @@
     banner.remove();
     document.body.style.paddingTop = "";
   });
-})();// English Quest — shared sound effects (plays uploaded mp3 files, falls back to a generated tone if a file fails to load)
+})();
+// English Quest — shared sound effects (plays uploaded mp3 files, falls back to a generated tone if a file fails to load)
 window.EQSound = (function () {
   let ctx;
   function getCtx() {
@@ -76,30 +76,39 @@ window.EQSound = (function () {
     },
   };
 })();
-
 // English Quest — text-to-speech for vocabulary words (browser built-in voice, no audio files needed)
+// Generation-counter guard: every call to speak() bumps `gen`. Any earlier pending/just-started
+// utterance checks against the latest `gen` and cancels itself if a newer speak() has since been
+// requested — this stops old, queued utterances from firing late and overlapping the current one
+// (a known issue on some Android WebViews where speechSynthesis.cancel() doesn't fully clear the queue).
 window.EQSpeak = (function () {
+  let gen = 0;
   function speak(text) {
     try {
       if (!text || !("speechSynthesis" in window)) return;
+      const myGen = ++gen;
       window.speechSynthesis.cancel();
       setTimeout(() => {
+        if (myGen !== gen) return; // a newer speak() call has already superseded this one
         const utter = new SpeechSynthesisUtterance(text);
         utter.lang = "en-US";
         utter.rate = 0.9;
+        utter.onstart = () => {
+          if (myGen !== gen) {
+            window.speechSynthesis.cancel();
+          }
+        };
         window.speechSynthesis.speak(utter);
       }, 60);
     } catch (e) {}
   }
   return { speak };
 })();
-
 // English Quest — shared behaviour
 document.addEventListener("DOMContentLoaded", () => {
   const toggle = document.querySelector(".nav-toggle");
   const links = document.querySelector(".nav-links");
   const scrim = document.querySelector(".nav-scrim");
-
   function closeNav() {
     links?.classList.remove("open");
     scrim?.classList.remove("open");
@@ -119,7 +128,6 @@ document.addEventListener("DOMContentLoaded", () => {
   window.addEventListener("resize", () => {
     if (window.innerWidth > 900) closeNav();
   });
-
   // Highlight the current page's nav link (also sets its accent color via CSS var)
   const current = document.body.dataset.page;
   document.querySelectorAll(".navlink").forEach((link) => {
@@ -127,7 +135,6 @@ document.addEventListener("DOMContentLoaded", () => {
       link.classList.add("active");
     }
   });
-
   // Animate progress bars into view (placeholder data already in markup)
   document.querySelectorAll(".progress-bar > span").forEach((bar) => {
     const target = bar.style.width;
@@ -136,7 +143,6 @@ document.addEventListener("DOMContentLoaded", () => {
       setTimeout(() => { bar.style.transition = "width .8s ease"; bar.style.width = target; }, 120);
     });
   });
-
   // Simple chip filter demo (visual only — no real filtering logic yet)
   document.querySelectorAll(".filter-row .chip").forEach((chip) => {
     chip.addEventListener("click", () => {
