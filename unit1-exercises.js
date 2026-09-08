@@ -104,6 +104,13 @@ function sanitizeForSpeech(text) {
   // so it doesn't get read aloud as "underscore underscore underscore"
   return text.replace(/_+/g, "").replace(/\s+([.?!,])/g, "$1").replace(/\s+/g, " ").trim();
 }
+function quizSpeechText(item) {
+  // Multiple-choice: read the question, then read out every option so students hear all
+  // the choices too. Translate items have no options, so just read the English word.
+  const q = sanitizeForSpeech(item.q);
+  if (item.kind === "mc") return `${q} ${item.opts.join(". ")}.`;
+  return q;
+}
 function shuffle(arr) {
   const a = arr.slice();
   for (let i = a.length - 1; i > 0; i--) {
@@ -157,11 +164,23 @@ function renderFlashcards() {
     });
   });
 }
-function runRoundBased(host, items, renderQuestion) {
+function runRoundBased(host, items, renderQuestion, onShow) {
   let queue = items;
   let i = 0;
   let wrongQueue = [];
   let round = 1;
+  let currentItem = null;
+  // Only speak a question when its tab is actually the one showing — not at page load,
+  // when every tab's content is pre-rendered behind the scenes but hidden.
+  function maybeSpeak() {
+    if (!onShow || !currentItem) return;
+    const panel = host.closest(".ex-panel");
+    if (panel && panel.classList.contains("active")) onShow(currentItem);
+  }
+  const panelEl = host.closest(".ex-panel");
+  if (panelEl && onShow) {
+    panelEl.addEventListener("eq:panel-shown", maybeSpeak);
+  }
   function renderDots() {
     return `<div class="runner-dots">${queue.map((_, idx) => `<span class="runner-dot ${idx < i ? "done" : idx === i ? "current" : ""}"></span>`).join("")}</div>`;
   }
@@ -191,6 +210,7 @@ function runRoundBased(host, items, renderQuestion) {
   }
     function render() {
     const item = queue[i];
+    currentItem = item;
     host.innerHTML = `
       <div class="runner-card">
         ${round > 1 ? `<div class="prompt-label" style="margin-bottom:6px;">🔁 Làm lại các câu sai — vòng ${round}</div>` : ""}
@@ -207,6 +227,7 @@ function runRoundBased(host, items, renderQuestion) {
       actions.innerHTML = `<button class="btn btn-primary rb-continue">Câu tiếp theo</button>`;
       actions.querySelector(".rb-continue").addEventListener("click", () => next(correct, item));
     });
+    maybeSpeak();
   }
   render();
 }
@@ -324,7 +345,6 @@ function runQuizSequential() {
           </div>
           <div class="fitb-feedback" id="quiz-mc-reveal"></div>
         </div>`;
-      window.EQSpeak && window.EQSpeak.speak(sanitizeForSpeech(item.q));
       const playBtn = mount.querySelector(".quiz-play");
       if (playBtn) playBtn.addEventListener("click", (e) => {
         e.stopPropagation();
@@ -360,7 +380,6 @@ function runQuizSequential() {
           </div>
           <div class="fitb-feedback" id="quiz-tr-reveal"></div>
         </div>`;
-      window.EQSpeak && window.EQSpeak.speak(sanitizeForSpeech(item.q));
       const input = mount.querySelector(".fitb-input");
       const btn = mount.querySelector("#quiz-tr-check");
       const reveal = mount.querySelector("#quiz-tr-reveal");
@@ -382,6 +401,8 @@ function runQuizSequential() {
       input.addEventListener("keydown", e => { if (e.key === "Enter") check(); });
       input.focus();
     }
+  }, (item) => {
+    window.EQSpeak && window.EQSpeak.speak(quizSpeechText(item));
   });
 }
 function setupTabs() {
@@ -392,7 +413,9 @@ function setupTabs() {
       tabs.forEach(t => t.classList.remove("active"));
       panels.forEach(p => p.classList.remove("active"));
       tab.classList.add("active");
-      document.getElementById(tab.dataset.target).classList.add("active");
+      const panel = document.getElementById(tab.dataset.target);
+      panel.classList.add("active");
+      panel.dispatchEvent(new CustomEvent("eq:panel-shown"));
       window.scrollTo({ top: document.querySelector(".ex-tabs").offsetTop - 90, behavior: "smooth" });
     });
   });
