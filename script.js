@@ -1,4 +1,3 @@
-
 // English Quest — if this browser has no text-to-speech at all,
 // nudge the student to open the page in Chrome instead
 (function () {
@@ -18,12 +17,14 @@
   document.body.prepend(banner);
   document.body.style.paddingTop = banner.offsetHeight + "px";
   document.getElementById("open-chrome-btn").addEventListener("click", function () {
-    var url = window.location.href;
-    var noScheme = url.replace(/^https?:\/\//, "");
+    // Always jump to the Units list page (not whatever page the student happened to be on)
+    // so students land somewhere they can pick a Unit right away.
+    var lessonsUrl = window.location.origin + window.location.pathname.replace(/[^/]*$/, "") + "lessons.html";
+    var noScheme = lessonsUrl.replace(/^https?:\/\//, "");
     var intentUrl =
       "intent://" + noScheme +
       "#Intent;scheme=https;package=com.android.chrome;S.browser_fallback_url=" +
-      encodeURIComponent(url) + ";end";
+      encodeURIComponent(lessonsUrl) + ";end";
     window.location.href = intentUrl;
   });
   document.getElementById("close-banner-btn").addEventListener("click", function () {
