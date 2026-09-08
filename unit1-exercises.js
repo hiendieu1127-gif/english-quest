@@ -1,4 +1,3 @@
-
 // ============================================================
 // Unit 1 — All About Me — Exercise data
 // Source: teacher Hien's slides + "Tiếng Anh 5 – Sách bài tập" (Unit 1, p.4-7)
@@ -105,11 +104,16 @@ function sanitizeForSpeech(text) {
   return text.replace(/_+/g, "").replace(/\s+([.?!,])/g, "$1").replace(/\s+/g, " ").trim();
 }
 function quizSpeechText(item) {
-  // Multiple-choice: read the question, then read out every option so students hear all
-  // the choices too. Translate items have no options, so just read the English word.
-  const q = sanitizeForSpeech(item.q);
-  if (item.kind === "mc") return `${q} ${item.opts.join(". ")}.`;
-  return q;
+  // Translate items (15-19): no options, just read the English word.
+  if (item.kind === "tr") return sanitizeForSpeech(item.q);
+  // Items with a real recorded audio clip (the "Nghe" button): only read the question text —
+  // the audio clip itself carries the answer, so don't also speak the options.
+  if (item.audio) return sanitizeForSpeech(item.q);
+  // Items with no audio: read the full sentence with the correct answer filled into the blank,
+  // e.g. "My friend lives ___ the city." + answer "in" -> "My friend lives in the city."
+  const answerText = item.opts[item.answer];
+  const filled = item.q.includes("___") ? item.q.replace(/_+/g, answerText) : `${item.q} ${answerText}`;
+  return sanitizeForSpeech(filled);
 }
 function shuffle(arr) {
   const a = arr.slice();
