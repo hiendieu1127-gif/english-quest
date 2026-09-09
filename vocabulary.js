@@ -118,12 +118,18 @@ function eqTotalItems(unit) {
     .reduce((sum, key) => sum + buildSequentialItems(key, unit).length, 0);
 }
 
+// Serialize saves so concurrent Firestore writes always resolve in the
+// order they were called — otherwise a slow network can let an older
+// (smaller) answer set finish AFTER a newer one and silently overwrite
+// it, losing already-answered questions from the saved result.
+let saveQueue = Promise.resolve();
+
 function eqRecordAndSave(key, question, studentAnswer, correctAnswer, correct) {
   eqAnswers[key] = { question, studentAnswer, correctAnswer, correct };
   if (!window.EQResults || !eqStudent || !currentUnit) return;
   const values = Object.values(eqAnswers);
   const correctCount = values.filter(a => a.correct).length;
-  window.EQResults.saveResult({
+  const payload = {
     student: eqStudent,
     unitId: currentUnit.id,
     unitLabel: eqUnitLabel(currentUnit),
@@ -131,7 +137,8 @@ function eqRecordAndSave(key, question, studentAnswer, correctAnswer, correct) {
     correct: correctCount,
     total: eqTotalItems(currentUnit),
     answers: values,
-  }).catch(() => {});
+  };
+  saveQueue = saveQueue.then(() => window.EQResults.saveResult(payload).catch(() => {}));
 }
 
 function shuffle(arr) {
