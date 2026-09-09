@@ -49,6 +49,7 @@
       renderBanner();
       window.dispatchEvent(new CustomEvent("eq-student-changed", { detail: { name } }));
     }
+    return getName();
   }
 
   // Public API used by vocabulary.js / unit1-exercises.js
@@ -61,6 +62,18 @@
       let name = getName();
       if (!name) promptForName();
       return getName();
+    },
+    // For shared-device situations: if a name is already saved, asks the
+    // student to confirm it's still them ("Bạn có phải là X không?")
+    // instead of silently reusing whatever name was saved last. "Không"
+    // forces a fresh name entry. If no name is saved yet, behaves like
+    // ensureName(). Call this at the start of each Unit/section.
+    confirmStudent() {
+      const name = getName();
+      if (!name) return promptForName();
+      const isStillThem = window.confirm(`Bạn có phải là ${name} không?`);
+      if (isStillThem) return name;
+      return promptForName();
     },
   };
 
