@@ -95,6 +95,43 @@ const PIC_ICONS = {
   "colour": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 4a8 8 0 1 0 0 16c1.4 0 2-.9 2-1.8 0-.5-.2-.9-.5-1.3-.3-.4-.3-1 .2-1.3.4-.3 1-.3 1.6-.3A4 4 0 0 0 19.5 12 8 8 0 0 0 12 4Z" stroke-linejoin="round"/><circle cx="8.2" cy="11" r="1.1" fill="currentColor" stroke="none"/><circle cx="11" cy="8" r="1.1" fill="currentColor" stroke="none"/></svg>',
   "football": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.3l3 2.2-1.2 3.6h-3.6L9 9.5l3-2.2ZM12 3.5v3.8M12 20.5v-3.7M5 8.3l3 1M19 8.3l-3 1M6.3 17l2.4-2.6M17.7 17l-2.4-2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>',
 };
+
+// ============================================================
+// Results saving — mirrors the same pattern used in vocabulary.js,
+// including the saveQueue serialization fix (so rapid answers can't
+// let an older/smaller write finish after a newer/bigger one and
+// overwrite it on a slow connection). Only Fill in the Blank + Quiz
+// count toward the saved score (28 items: 9 FITB + 14 Quiz-MC + 5
+// Quiz-translate); Reading, Vocabulary/Flashcards, and Sentence
+// Ordering stay practice-only and are not saved.
+// ============================================================
+const UNIT_ID = "unit1";
+const UNIT_LABEL = "Unit 1: All About Me";
+let eqStudent = "";
+let eqAnswers = {};
+let saveQueue = Promise.resolve();
+
+function eqTotalItems() {
+  return FITB.length + QUIZ_MC.length + QUIZ_TRANSLATE.length;
+}
+
+function eqRecordAndSave(key, question, studentAnswer, correctAnswer, correct) {
+  eqAnswers[key] = { question, studentAnswer, correctAnswer, correct };
+  if (!window.EQResults || !eqStudent) return;
+  const values = Object.values(eqAnswers);
+  const correctCount = values.filter(a => a.correct).length;
+  const payload = {
+    student: eqStudent,
+    unitId: UNIT_ID,
+    unitLabel: UNIT_LABEL,
+    section: "exercises",
+    correct: correctCount,
+    total: eqTotalItems(),
+    answers: values,
+  };
+  saveQueue = saveQueue.then(() => window.EQResults.saveResult(payload).catch(() => {}));
+}
+
 function normalize(s) {
   return s.trim().toLowerCase().replace(/\s+/g, " ").replace(/[.?!,]/g, "");
 }
@@ -124,6 +161,15 @@ function shuffle(arr) {
   return a;
 }
 document.addEventListener("DOMContentLoaded", () => {
+  eqStudent = window.EQStudent ? window.EQStudent.confirmStudent() : "";
+  if (window.EQResults && eqStudent) {
+    window.EQResults.markInProgress({
+      student: eqStudent,
+      unitId: UNIT_ID,
+      unitLabel: UNIT_LABEL,
+      section: "exercises",
+    }).catch(() => {});
+  }
   renderReading();
   renderSentenceBySentence();
   renderFlashcards();
@@ -268,6 +314,7 @@ function runFITBSequential() {
       }
       const fullSentence = item.sentence.replace("______", item.answer);
       window.EQSpeak && window.EQSpeak.speak(sanitizeForSpeech(fullSentence));
+      eqRecordAndSave(`fitb-${item.sentence}`, item.sentence, input.value, item.answer, correct);
       onAnswered(correct);
     }
     btn.addEventListener("click", check);
@@ -371,6 +418,7 @@ function runQuizSequential() {
             reveal.textContent = `Đáp án đúng: ${item.opts[item.answer]}`;
             reveal.className = "fitb-feedback no";
           }
+          eqRecordAndSave(`mc-${item.q}`, item.q, item.opts[chosen], item.opts[item.answer], correct);
           onAnswered(correct);
         });
       });
@@ -399,6 +447,7 @@ function runQuizSequential() {
         } else {
           reveal.textContent = "";
         }
+        eqRecordAndSave(`tr-${item.q}`, item.q, input.value, item.answer, correct);
         onAnswered(correct);
       }
       btn.addEventListener("click", check);
