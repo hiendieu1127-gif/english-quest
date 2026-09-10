@@ -253,7 +253,7 @@ function onStageComplete(stageKey) {
         <p>${isLast ? "Chị đã hoàn thành hết các bài trong Unit này." : "Sẵn sàng cho dạng bài tiếp theo chưa?"}</p>
         <div class="runner-actions">
           ${isLast
-            ? `<button class="btn btn-primary" id="btn-back-units">Quay lại danh sách Unit</button>`
+            ? `<button class="btn btn-primary" id="btn-go-exercises">Tiếp tục sang phần Exercise &rarr;</button><button class="btn btn-secondary" id="btn-back-units">Quay lại danh sách Unit</button>`
             : `<button class="btn btn-primary" id="btn-next-stage">Dạng bài tiếp theo &rarr;</button>`}
         </div>
       </div>
@@ -262,6 +262,10 @@ function onStageComplete(stageKey) {
   if (nextBtn) nextBtn.addEventListener("click", () => renderStage(currentStageIdx + 1));
   const backBtn = document.getElementById("btn-back-units");
   if (backBtn) backBtn.addEventListener("click", backToUnits);
+  const goExercisesBtn = document.getElementById("btn-go-exercises");
+  if (goExercisesBtn) goExercisesBtn.addEventListener("click", () => {
+    window.location.href = `${currentUnit.id}-exercises.html`;
+  });
 }
 
 // ============================================================
