@@ -85,6 +85,17 @@ async function saveResult({ student, unitId, unitLabel, section, correct, total,
   return { correct, total, percent };
 }
 
+// ---------- read ----------
+// Fetch a single student+unit+section result doc (used by unit1-exercises.js
+// to check whether Vocabulary is already completed before swapping the
+// "Xong rồi!" message). Returns null if no doc exists yet.
+async function getResult({ student, unitId, section }) {
+  const studentKey = slugify(student);
+  const id = resultId(studentKey, unitId, section);
+  const snap = await getDoc(doc(db, "results", id));
+  return snap.exists() ? snap.data() : null;
+}
+
 // ---------- read (Teacher Dashboard) ----------
 async function getAllResults() {
   const snap = await getDocs(collection(db, "results"));
@@ -93,7 +104,7 @@ async function getAllResults() {
 
 window.EQResults = {
   getStudentName, setStudentName,
-  markInProgress, saveResult,
+  markInProgress, saveResult, getResult,
   getAllResults,
   slugify,
 };
