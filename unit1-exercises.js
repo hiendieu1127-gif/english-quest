@@ -132,6 +132,43 @@ function eqRecordAndSave(key, question, studentAnswer, correctAnswer, correct) {
   saveQueue = saveQueue.then(() => window.EQResults.saveResult(payload).catch(() => {}));
 }
 
+// True once every scored item (9 FITB + 14 Quiz-MC + 5 Quiz-translate = 28)
+// has been answered at least once, regardless of correct/incorrect.
+function eqExerciseFullyAnswered() {
+  return Object.keys(eqAnswers).length >= eqTotalItems();
+}
+
+// Renders the normal "Xong rồi!" completion card for a finished round
+// (Fill in the Blank or Quiz). If every scored item across the whole
+// Exercises section has now been answered, also checks whether this
+// student already completed Vocabulary for this unit — if so, swaps
+// the message to let them know their score is saved and will be
+// reviewed by the teacher.
+async function renderExerciseComplete(host) {
+  host.innerHTML = `
+    <div class="runner-card">
+      <div class="stage-complete">
+        <div class="badge-circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <h3>Xong rồi!</h3>
+        <p>Chị đã hoàn thành hết các câu trong phần này.</p>
+      </div>
+    </div>`;
+  if (!eqExerciseFullyAnswered() || !window.EQResults || !eqStudent || !window.EQResults.getResult) return;
+  try {
+    const vocabResult = await window.EQResults.getResult({
+      student: eqStudent,
+      unitId: UNIT_ID,
+      section: "vocabulary",
+    });
+    if (vocabResult && vocabResult.status === "completed") {
+      const p = host.querySelector(".stage-complete p");
+      if (p) p.textContent = "Điểm đã được lưu, teacher Hiền sẽ kiểm tra.";
+    }
+  } catch (e) {
+    // silent — the default "Xong rồi!" message above already rendered
+  }
+}
+
 function normalize(s) {
   return s.trim().toLowerCase().replace(/\s+/g, " ").replace(/[.?!,]/g, "");
 }
@@ -214,7 +251,7 @@ function renderFlashcards() {
     });
   });
 }
-function runRoundBased(host, items, renderQuestion, onShow) {
+function runRoundBased(host, items, renderQuestion, onShow, onComplete) {
   let queue = items;
   let i = 0;
   let wrongQueue = [];
@@ -244,6 +281,8 @@ function runRoundBased(host, items, renderQuestion, onShow) {
         i = 0;
         round++;
         render();
+      } else if (onComplete) {
+        onComplete(host);
       } else {
         host.innerHTML = `
           <div class="runner-card">
@@ -320,7 +359,7 @@ function runFITBSequential() {
     btn.addEventListener("click", check);
     input.addEventListener("keydown", e => { if (e.key === "Enter") check(); });
     input.focus();
-  });
+  }, null, renderExerciseComplete);
 }
 function buildOrderItem(container, words, answerText) {
   const wrap = document.createElement("div");
@@ -456,7 +495,7 @@ function runQuizSequential() {
     }
   }, (item) => {
     window.EQSpeak && window.EQSpeak.speak(quizSpeechText(item));
-  });
+  }, renderExerciseComplete);
 }
 function setupTabs() {
   const tabs = document.querySelectorAll(".ex-tab");
