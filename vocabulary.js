@@ -251,9 +251,9 @@ function onStageComplete(stageKey) {
         <div class="badge-circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
         <h3>Xong rồi!</h3>
         <p>${isLast ? "Chị đã hoàn thành hết các bài trong Unit này." : "Sẵn sàng cho dạng bài tiếp theo chưa?"}</p>
-        <div class="runner-actions">
+        <div class="runner-actions" ${isLast ? 'style="flex-direction:column;align-items:stretch;"' : ""}>
           ${isLast
-            ? `<button class="btn btn-primary" id="btn-go-exercises">Tiếp tục sang phần Exercise &rarr;</button><button class="btn btn-secondary" id="btn-back-units">Quay lại danh sách Unit</button>`
+            ? `<button class="btn btn-primary" id="btn-go-exercises" style="width:100%;white-space:normal;">Tiếp tục sang phần Exercise &rarr;</button><button class="btn btn-secondary" id="btn-back-units" style="width:100%;white-space:normal;">Quay lại danh sách Unit</button>`
             : `<button class="btn btn-primary" id="btn-next-stage">Dạng bài tiếp theo &rarr;</button>`}
         </div>
       </div>
