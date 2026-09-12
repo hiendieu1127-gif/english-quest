@@ -15,17 +15,17 @@ const VOCAB_UNITS = [
       // Tap Pairs — from slides 2 & 3 (13 words)
       { id: "g7u1-go-upstairs", en: "go upstairs", vi: "đi lên lầu", stages: ["tap-pairs"] },
       { id: "g7u1-make-it-yourself", en: "make it yourself", vi: "tự làm lấy", stages: ["tap-pairs"] },
-      { id: "g7u1-doll", en: "doll (n)", vi: "búp bê", stages: ["tap-pairs"] },
+      { id: "g7u1-doll", en: "doll", vi: "búp bê", stages: ["tap-pairs"] },
       { id: "g7u1-dollhouse", en: "dollhouse", vi: "nhà búp bê", stages: ["tap-pairs"] },
-      { id: "g7u1-build", en: "build (v)", vi: "xây dựng", stages: ["tap-pairs"] },
-      { id: "g7u1-cardboard", en: "cardboard (n)", vi: "bìa giấy cứng", stages: ["tap-pairs"] },
-      { id: "g7u1-glue", en: "glue (n)", vi: "keo dán", stages: ["tap-pairs"] },
-      { id: "g7u1-creativity", en: "creativity (n)", vi: "sự sáng tạo", stages: ["tap-pairs"] },
+      { id: "g7u1-build", en: "build", vi: "xây dựng", stages: ["tap-pairs"] },
+      { id: "g7u1-cardboard", en: "cardboard", vi: "bìa giấy cứng", stages: ["tap-pairs"] },
+      { id: "g7u1-glue", en: "glue", vi: "keo dán", stages: ["tap-pairs"] },
+      { id: "g7u1-creativity", en: "creativity", vi: "sự sáng tạo", stages: ["tap-pairs"] },
       { id: "g7u1-horse-riding", en: "horse riding", vi: "cưỡi ngựa", stages: ["tap-pairs"] },
-      { id: "g7u1-rather", en: "rather (adv)", vi: "khá", stages: ["tap-pairs"] },
-      { id: "g7u1-unusual", en: "unusual (adj)", vi: "hiếm, lạ thường", stages: ["tap-pairs"] },
-      { id: "g7u1-common", en: "common (adj)", vi: "phổ biến", stages: ["tap-pairs"] },
-      { id: "g7u1-would-love-to", en: "would love to + V", vi: "yêu thích làm cái gì đó", stages: ["tap-pairs"] },
+      { id: "g7u1-rather", en: "rather", vi: "khá", stages: ["tap-pairs"] },
+      { id: "g7u1-unusual", en: "unusual", vi: "hiếm, lạ thường", stages: ["tap-pairs"] },
+      { id: "g7u1-common", en: "common", vi: "phổ biến", stages: ["tap-pairs"] },
+      { id: "g7u1-would-love-to", en: "would love to", vi: "yêu thích làm cái gì đó", stages: ["tap-pairs"] },
 
       // Picture Matching — from slides 4 & 5 (11 words)
       // NOTE for Hien: real photos not uploaded yet — replace each icon
@@ -41,30 +41,28 @@ const VOCAB_UNITS = [
       { id: "g7u1-go-swimming", en: "go swimming", vi: "đi bơi", icon: "img/vocab-g7-u1-go-swimming.jpg", stages: ["picture-matching"] },
       { id: "g7u1-do-judo", en: "do judo", vi: "tập judo", icon: "img/vocab-g7-u1-do-judo.jpg", stages: ["picture-matching"] },
       { id: "g7u1-do-yoga", en: "do yoga", vi: "tập yoga", icon: "img/vocab-g7-u1-do-yoga.jpg", stages: ["picture-matching"] },
-      // "collect dolls" is left out of every stage for now — no photo
-      // sent yet. Send one and Claude will add it back into Picture Matching.
-      { id: "g7u1-collect-dolls", en: "collect dolls", vi: "sưu tập búp bê", stages: [] },
+      { id: "g7u1-collect-dolls", en: "collect dolls", vi: "sưu tập búp bê", icon: "img/vocab-g7-u1-collect-dolls.jpg", stages: ["picture-matching"] },
 
       // Multiple Choice / Missing Word / Sentence Shuffle — from slides 6, 7 & 8
       // (17 words; example sentences written by Claude at a medium level,
       // themed around a family gardening story, per Hien's request)
-      { id: "g7u1-divide-into", en: "divide (sth) into (sth)", vi: "phân chia cái gì thành...", example: "We divided the garden into four small parts.", blank: "divided", stages: ["multiple-choice", "missing-word"], viFull: "Chúng tôi chia khu vườn thành bốn phần nhỏ.", viBlanked: "Chúng tôi ___ khu vườn thành bốn phần nhỏ." },
-      { id: "g7u1-belong-to", en: "belong to (sth)/(sb)", vi: "thuộc về cái gì/ai", example: "This part of the garden belongs to me.", blank: "belongs to", stages: ["multiple-choice", "missing-word"], viFull: "Phần vườn này thuộc về tôi.", viBlanked: "Phần vườn này ___ tôi." },
+      { id: "g7u1-divide-into", en: "divide something into something", vi: "phân chia cái gì thành...", example: "We divided the garden into four small parts.", blank: "divided", stages: ["multiple-choice", "missing-word"], viFull: "Chúng tôi chia khu vườn thành bốn phần nhỏ.", viBlanked: "Chúng tôi ___ khu vườn thành bốn phần nhỏ." },
+      { id: "g7u1-belong-to", en: "belong to somebody or something", vi: "thuộc về cái gì/ai", example: "This part of the garden belongs to me.", blank: "belongs to", stages: ["multiple-choice", "missing-word"], viFull: "Phần vườn này thuộc về tôi.", viBlanked: "Phần vườn này ___ tôi." },
       { id: "g7u1-outdoor-activity", en: "outdoor activity", vi: "hoạt động ngoài trời", example: "Gardening is a fun outdoor activity.", blank: "outdoor activity", stages: ["multiple-choice", "missing-word"], viFull: "Làm vườn là một hoạt động ngoài trời thú vị.", viBlanked: "Làm vườn là một ___ thú vị." },
-      { id: "g7u1-even-for", en: "even for ...", vi: "thậm chí đối với", example: "This job is hard, even for adults.", blank: "even for", stages: ["multiple-choice", "missing-word"], viFull: "Công việc này khó, thậm chí đối với người lớn.", viBlanked: "Công việc này khó, ___ người lớn." },
-      { id: "g7u1-insect", en: "insect (n)", vi: "côn trùng", example: "We found many insects in the garden.", blank: "insects", stages: ["multiple-choice", "missing-word"], viFull: "Chúng tôi tìm thấy nhiều côn trùng trong vườn.", viBlanked: "Chúng tôi tìm thấy nhiều ___ trong vườn." },
-      { id: "g7u1-bug", en: "bug (n)", vi: "bọ", example: "A small bug was sitting on a leaf.", blank: "bug", stages: ["multiple-choice", "missing-word"], viFull: "Một con bọ nhỏ đang đậu trên một chiếc lá.", viBlanked: "Một con ___ nhỏ đang đậu trên một chiếc lá." },
-      { id: "g7u1-learn-to", en: "learn to + V", vi: "học cách làm...", example: "Gardening helps children learn to take care of plants.", blank: "learn to", stages: ["multiple-choice", "missing-word"], viFull: "Làm vườn giúp trẻ em học cách chăm sóc cây cối.", viBlanked: "Làm vườn giúp trẻ em ___ chăm sóc cây cối." },
-      { id: "g7u1-patient", en: "patient (adj)", vi: "kiên nhẫn", example: "You need to be patient when you grow plants.", blank: "patient", stages: ["multiple-choice", "missing-word"], viFull: "Bạn cần kiên nhẫn khi trồng cây.", viBlanked: "Bạn cần ___ khi trồng cây." },
+      { id: "g7u1-even-for", en: "even for", vi: "thậm chí đối với", example: "This job is hard, even for adults.", blank: "even for", stages: ["multiple-choice", "missing-word"], viFull: "Công việc này khó, thậm chí đối với người lớn.", viBlanked: "Công việc này khó, ___ người lớn." },
+      { id: "g7u1-insect", en: "insect", vi: "côn trùng", example: "We found many insects in the garden.", blank: "insects", stages: ["multiple-choice", "missing-word"], viFull: "Chúng tôi tìm thấy nhiều côn trùng trong vườn.", viBlanked: "Chúng tôi tìm thấy nhiều ___ trong vườn." },
+      { id: "g7u1-bug", en: "bug", vi: "bọ", example: "A small bug was sitting on a leaf.", blank: "bug", stages: ["multiple-choice", "missing-word"], viFull: "Một con bọ nhỏ đang đậu trên một chiếc lá.", viBlanked: "Một con ___ nhỏ đang đậu trên một chiếc lá." },
+      { id: "g7u1-learn-to", en: "learn to", vi: "học cách làm...", example: "Gardening helps children learn to take care of plants.", blank: "learn to", stages: ["multiple-choice", "missing-word"], viFull: "Làm vườn giúp trẻ em học cách chăm sóc cây cối.", viBlanked: "Làm vườn giúp trẻ em ___ chăm sóc cây cối." },
+      { id: "g7u1-patient", en: "patient", vi: "kiên nhẫn", example: "You need to be patient when you grow plants.", blank: "patient", stages: ["multiple-choice", "missing-word"], viFull: "Bạn cần kiên nhẫn khi trồng cây.", viBlanked: "Bạn cần ___ khi trồng cây." },
       { id: "g7u1-take-on-responsibility", en: "take on responsibility", vi: "đảm nhận trách nhiệm", example: "Each child had to take on responsibility for a small garden.", blank: "take on responsibility", stages: ["multiple-choice", "missing-word"], viFull: "Mỗi đứa trẻ phải đảm nhận trách nhiệm với một khu vườn nhỏ.", viBlanked: "Mỗi đứa trẻ phải ___ với một khu vườn nhỏ." },
-      { id: "g7u1-grow-to", en: "grow to ...", vi: "phát triển thành", example: "A small seed can grow to become a big tree.", blank: "grow to", stages: ["multiple-choice", "missing-word"], viFull: "Một hạt giống nhỏ có thể phát triển thành một cây to.", viBlanked: "Một hạt giống nhỏ có thể ___ một cây to." },
-      { id: "g7u1-maturity", en: "maturity (n)", vi: "trưởng thành", example: "It takes months for a plant to reach maturity.", blank: "maturity", stages: ["multiple-choice", "missing-word"], viFull: "Phải mất nhiều tháng để một cái cây trưởng thành.", viBlanked: "Phải mất nhiều tháng để một cái cây đạt đến ___." },
-      { id: "g7u1-water", en: "water (v)", vi: "tưới nước", example: "We watered the plants every morning.", blank: "watered", stages: ["multiple-choice", "missing-word"], viFull: "Chúng tôi tưới cây mỗi sáng.", viBlanked: "Chúng tôi ___ cây mỗi sáng." },
-      { id: "g7u1-die", en: "die (v)", vi: "chết", example: "The plant died because nobody watered it.", blank: "died", stages: ["multiple-choice", "missing-word"], viFull: "Cái cây đã chết vì không ai tưới nó.", viBlanked: "Cái cây đã ___ vì không ai tưới nó." },
+      { id: "g7u1-grow-to", en: "grow to", vi: "phát triển thành", example: "A small seed can grow to become a big tree.", blank: "grow to", stages: ["multiple-choice", "missing-word"], viFull: "Một hạt giống nhỏ có thể phát triển thành một cây to.", viBlanked: "Một hạt giống nhỏ có thể ___ một cây to." },
+      { id: "g7u1-maturity", en: "maturity", vi: "trưởng thành", example: "It takes months for a plant to reach maturity.", blank: "maturity", stages: ["multiple-choice", "missing-word"], viFull: "Phải mất nhiều tháng để một cái cây trưởng thành.", viBlanked: "Phải mất nhiều tháng để một cái cây đạt đến ___." },
+      { id: "g7u1-water", en: "water", vi: "tưới nước", example: "We watered the plants every morning.", blank: "watered", stages: ["multiple-choice", "missing-word"], viFull: "Chúng tôi tưới cây mỗi sáng.", viBlanked: "Chúng tôi ___ cây mỗi sáng." },
+      { id: "g7u1-die", en: "die", vi: "chết", example: "The plant died because nobody watered it.", blank: "died", stages: ["multiple-choice", "missing-word"], viFull: "Cái cây đã chết vì không ai tưới nó.", viBlanked: "Cái cây đã ___ vì không ai tưới nó." },
       { id: "g7u1-valuable-lesson", en: "valuable lesson", vi: "bài học giá trị", example: "Gardening taught me a valuable lesson.", blank: "valuable lesson", stages: ["multiple-choice", "missing-word"], viFull: "Làm vườn đã dạy tôi một bài học giá trị.", viBlanked: "Làm vườn đã dạy tôi một ___." },
-      { id: "g7u1-responsibility", en: "responsibility (n)", vi: "trách nhiệm", example: "Taking care of a garden is a big responsibility.", blank: "responsibility", stages: ["multiple-choice", "missing-word"], viFull: "Chăm sóc một khu vườn là một trách nhiệm lớn.", viBlanked: "Chăm sóc một khu vườn là một ___ lớn." },
+      { id: "g7u1-responsibility", en: "responsibility", vi: "trách nhiệm", example: "Taking care of a garden is a big responsibility.", blank: "responsibility", stages: ["multiple-choice", "missing-word"], viFull: "Chăm sóc một khu vườn là một trách nhiệm lớn.", viBlanked: "Chăm sóc một khu vườn là một ___ lớn." },
       { id: "g7u1-join-in", en: "join in", vi: "tham gia vào", example: "Would you like to join in our garden club?", blank: "join in", stages: ["multiple-choice", "missing-word"], viFull: "Bạn có muốn tham gia câu lạc bộ làm vườn của chúng tôi không?", viBlanked: "Bạn có muốn ___ câu lạc bộ làm vườn của chúng tôi không?" },
-      { id: "g7u1-love-ving", en: "love + Ving", vi: "yêu thích làm cái gì", example: "I love gardening every weekend.", blank: "love gardening", stages: ["multiple-choice", "missing-word"], viFull: "Tôi thích làm vườn vào mỗi cuối tuần.", viBlanked: "Tôi ___ vào mỗi cuối tuần." },
+      { id: "g7u1-love-ving", en: "love doing something", vi: "yêu thích làm cái gì", example: "I love gardening every weekend.", blank: "love gardening", stages: ["multiple-choice", "missing-word"], viFull: "Tôi thích làm vườn vào mỗi cuối tuần.", viBlanked: "Tôi ___ vào mỗi cuối tuần." },
     ],
   },
 ];
@@ -380,7 +378,11 @@ function runSequential(host, stageKey, items, onDone) {
         </div>` : ""}`;
     } else if (stageKey === "sentence-shuffle") {
       body = `
-        <div class="runner-prompt"><div class="prompt-label">Sắp xếp thành câu đúng</div><div class="prompt-main">${item.word.vi}</div></div>
+        <div class="runner-prompt">
+          <div class="prompt-label">Sắp xếp thành câu đúng</div>
+          <div class="prompt-main">${item.word.vi}</div>
+          <button class="btn btn-ghost btn-sm" id="btn-hear-sentence" type="button">🔊 Nghe câu</button>
+        </div>
         <div class="runner-target" id="shuffle-target"></div>
         <div class="runner-pool" id="shuffle-pool">
           ${shuffle(item.tokens).map((w, wi) => `<span class="runner-chip" data-word="${w.replace(/"/g, "&quot;")}" data-pool-idx="${wi}">${w}</span>`).join("")}
@@ -401,15 +403,28 @@ function runSequential(host, stageKey, items, onDone) {
         <div class="runner-actions" id="runner-actions"></div>
       </div>`;
 
+    // Picture Matching / Multiple Choice: hearing the target word IS the
+    // question, so auto-play it and let the student tap to hear it again.
     if (stageKey === "picture-matching" || stageKey === "multiple-choice") {
       speakWord(item.word.en);
-    } else if (stageKey === "missing-word") {
-      speakWord(item.word.en);
+      const promptEl = document.getElementById("prompt-speak");
+      if (promptEl) {
+        promptEl.style.cursor = "pointer";
+        promptEl.addEventListener("click", () => speakWord(item.word.en));
+      }
     }
-    const promptEl = document.getElementById("prompt-speak");
-    if (promptEl) {
-      promptEl.style.cursor = "pointer";
-      promptEl.addEventListener("click", () => speakWord(item.word.en));
+
+    // Missing Word: stay silent until the student has answered — playing
+    // the target word here would give the answer away before they pick.
+    // (See finishAnswer() for the post-answer playback of the full sentence.)
+
+    // Sentence Shuffle: play the full correct sentence once up front so
+    // students can build the sentence by ear, with a button to replay it
+    // as many times as they like.
+    if (stageKey === "sentence-shuffle") {
+      speakWord(item.answer);
+      const hearBtn = document.getElementById("btn-hear-sentence");
+      if (hearBtn) hearBtn.addEventListener("click", () => speakWord(item.answer));
     }
 
     // Translate button (Missing Word & Sentence Shuffle): shows the
@@ -449,6 +464,10 @@ function runSequential(host, stageKey, items, onDone) {
       feedback.className = "runner-feedback " + (correct ? "ok" : "no");
       window.EQMascot && window.EQMascot.show("mascot-box", correct ? "correct" : "wrong");
       revealFullTranslation();
+      // Missing Word: only now (after the student has answered) do we
+      // read the correct sentence aloud — and read the whole sentence,
+      // not just the single missing word.
+      if (stageKey === "missing-word" && item.word.example) speakWord(item.word.example);
       const isLastOfQueue = i === queue.length - 1;
       actions.innerHTML = `<button class="btn btn-primary" id="runner-continue">${isLastOfQueue ? "Tiếp tục" : "Câu tiếp theo"}</button>`;
       document.getElementById("runner-continue").addEventListener("click", () => {
@@ -491,7 +510,8 @@ function runSequential(host, stageKey, items, onDone) {
             question = item.sentence;
             chosenLabel = item.opts[chosen];
             correctLabel = item.opts[item.correctIdx];
-            speakWord(item.opts[chosen]);
+            // No audio here — finishAnswer() reads the full correct
+            // sentence aloud once the student has answered.
           }
 
           eqRecordAndSave(`${stageKey}-${item.word.id}`, question, chosenLabel, correctLabel, correct);
