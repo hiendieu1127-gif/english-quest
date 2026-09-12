@@ -245,6 +245,7 @@ function onStageComplete(stageKey) {
   renderStepper();
   const host = document.getElementById("runner-host");
   const isLast = currentStageIdx === STAGES.length - 1;
+  window.EQMascot && window.EQMascot.show("mascot-box", isLast ? "complete_unit" : "complete_exercise");
   host.innerHTML = `
     <div class="runner-card">
       <div class="stage-complete">
@@ -420,6 +421,7 @@ function runSequential(host, stageKey, items, onDone) {
       if (!correct) wrongQueue.push(item);
       feedback.textContent = correct ? "✓ Correct!" : "✗ Chưa đúng — đáp án đúng đã hiện phía trên.";
       feedback.className = "runner-feedback " + (correct ? "ok" : "no");
+      window.EQMascot && window.EQMascot.show("mascot-box", correct ? "correct" : "wrong");
       const isLastOfQueue = i === queue.length - 1;
       actions.innerHTML = `<button class="btn btn-primary" id="runner-continue">${isLastOfQueue ? "Tiếp tục" : "Câu tiếp theo"}</button>`;
       document.getElementById("runner-continue").addEventListener("click", () => {
@@ -572,6 +574,7 @@ function renderTapPairs(host, unit, onDone) {
     if (selectedLeft && selectedRight) {
       const isMatch = selectedLeft.dataset.id === selectedRight.dataset.id;
       window.EQSound && (isMatch ? window.EQSound.correct() : window.EQSound.wrong());
+      window.EQMascot && window.EQMascot.show("mascot-box", isMatch ? "correct" : "wrong");
       if (isMatch) {
         selectedLeft.classList.remove("selected");
         selectedRight.classList.remove("selected");
