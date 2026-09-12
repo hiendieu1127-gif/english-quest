@@ -380,7 +380,6 @@ function runSequential(host, stageKey, items, onDone) {
       body = `
         <div class="runner-prompt">
           <div class="prompt-label">Sắp xếp thành câu đúng</div>
-          <div class="prompt-main">${item.word.vi}</div>
           <button class="btn btn-ghost btn-sm" id="btn-hear-sentence" type="button">🔊 Nghe câu</button>
         </div>
         <div class="runner-target" id="shuffle-target"></div>
@@ -427,16 +426,14 @@ function runSequential(host, stageKey, items, onDone) {
       if (hearBtn) hearBtn.addEventListener("click", () => speakWord(item.answer));
     }
 
-    // Translate button (Missing Word & Sentence Shuffle): shows the
-    // blanked Vietnamese sentence before answering (still makes the
-    // student think), then flips to the full Vietnamese translation
-    // automatically once the question is answered.
+    // Translate button (Missing Word & Sentence Shuffle): shows the full
+    // Vietnamese translation right away, any time it's tapped.
     const translateBtn = document.getElementById("btn-translate");
     if (translateBtn) {
       translateBtn.addEventListener("click", () => {
         const box = document.getElementById("translate-text");
         box.style.display = "block";
-        box.textContent = box.dataset.revealed === "1" ? item.word.viFull : item.word.viBlanked;
+        box.textContent = item.word.viFull;
       });
     }
 
