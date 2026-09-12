@@ -145,6 +145,7 @@ function eqExerciseFullyAnswered() {
 // the message to let them know their score is saved and will be
 // reviewed by the teacher.
 async function renderExerciseComplete(host) {
+  window.EQMascot && window.EQMascot.show("mascot-box", "complete_exercise");
   host.innerHTML = `
     <div class="runner-card">
       <div class="stage-complete">
@@ -163,6 +164,7 @@ async function renderExerciseComplete(host) {
     if (vocabResult && vocabResult.status === "completed") {
       const p = host.querySelector(".stage-complete p");
       if (p) p.textContent = "Điểm đã được lưu, teacher Hiền sẽ kiểm tra.";
+      window.EQMascot && window.EQMascot.show("mascot-box", "complete_welldone");
     }
   } catch (e) {
     // silent — the default "Xong rồi!" message above already rendered
@@ -312,6 +314,7 @@ function runRoundBased(host, items, renderQuestion, onShow, onComplete) {
       const fb = host.querySelector(".rb-feedback");
       fb.textContent = correct ? "✓ Chính xác!" : "✗ Chưa đúng — đáp án đúng đã hiện phía trên.";
       fb.className = "runner-feedback " + (correct ? "ok" : "no");
+      window.EQMascot && window.EQMascot.show("mascot-box", correct ? "correct" : "wrong");
       const actions = host.querySelector(".rb-actions");
       actions.innerHTML = `<button class="btn btn-primary rb-continue">Câu tiếp theo</button>`;
       actions.querySelector(".rb-continue").addEventListener("click", () => next(correct, item));
@@ -399,6 +402,7 @@ function buildOrderItem(container, words, answerText) {
     const built = Array.from(target.children).map(c => c.textContent).join(" ");
     const correct = normalize(built) === normalize(answerText);
     window.EQSound && (correct ? window.EQSound.correct() : window.EQSound.wrong());
+    window.EQMascot && window.EQMascot.show("mascot-box", correct ? "correct" : "wrong");
     feedback.textContent = correct ? "✓ Đúng rồi!" : "✗ Chưa đúng, thử lại nhé";
     feedback.className = "order-feedback " + (correct ? "ok" : "no");
   });
