@@ -304,4 +304,283 @@ function buildSequentialItems(stageKey, unit) {
   if (stageKey === "missing-word") {
     const pool = wordsForStage.filter(w => w.example && w.blank && w.example.toLowerCase().includes(w.blank.toLowerCase()));
     return pool.map((w, i) => {
-      const blanked =
+      const blanked = w.example.replace(new RegExp(w.blank.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i"), "___");
+      const distractors = sample(pool, 2, i).map(di => pool[di].blank);
+      const correctPos = Math.floor(Math.random() * 3);
+      const opts = [];
+      let di = 0;
+      for (let p = 0; p < 3; p++) {
+        if (p === correctPos) opts.push(w.blank);
+        else { opts.push(distractors[di]); di++; }
+      }
+      return { word: w, sentence: blanked, opts, correctIdx: correctPos };
+    });
+  }
+
+  if (stageKey === "sentence-shuffle") {
+    return unit.words.filter(w => w.example).map(w => ({
+      word: w,
+      tokens: tokenize(w.example),
+      answer: w.example,
+    }));
+  }
+
+  return [];
+}
+
+// ============================================================
+// Generic sequential runner (picture-matching / multiple-choice / missing-word / sentence-shuffle)
+// ============================================================
+function runSequential(host, stageKey, items, onDone) {
+  let queue = items;
+  let i = 0;
+  let wrongQueue = [];
+  let round = 1;
+
+  function renderDots() {
+    return `<div class="runner-dots">${queue.map((_, idx) => `<span class="runner-dot ${idx < i ? "done" : idx === i ? "current" : ""}"></span>`).join("")}</div>`;
+  }
+
+  function renderItem() {
+    const item = queue[i];
+    let body = "";
+
+    if (stageKey === "picture-matching") {
+      body = `
+        <div class="runner-prompt"><div class="prompt-label">Chọn hình đúng</div><div class="prompt-main prompt-speak" id="prompt-speak">🔊 ${item.word.en}</div></div>
+        <div class="runner-pics">
+          ${item.opts.map((o, oi) => `<div class="runner-pic-opt" data-idx="${oi}">${o.icon ? `<img src="${o.icon}" alt="${o.en}" style="width:100%;height:100%;object-fit:cover;border-radius:12px;">` : ""}</div>`).join("")}
+        </div>`;
+    } else if (stageKey === "multiple-choice") {
+      body = `
+        <div class="runner-prompt"><div class="prompt-label">Chọn nghĩa đúng</div><div class="prompt-main prompt-speak" id="prompt-speak">🔊 What does "${item.word.en}" mean?</div></div>
+        <div class="runner-options">
+          ${item.opts.map((o, oi) => `<div class="runner-opt" data-idx="${oi}"><span class="opt-letter">${String.fromCharCode(65 + oi)}</span>${o}</div>`).join("")}
+        </div>`;
+    } else if (stageKey === "missing-word") {
+      body = `
+        <div class="runner-prompt"><div class="prompt-label">Chọn từ còn thiếu</div><div class="prompt-main prompt-sentence prompt-speak" id="prompt-speak">🔊 ${item.sentence.replace("___", '<span class="blank">&nbsp;</span>')}</div></div>
+        <div class="runner-options">
+          ${item.opts.map((o, oi) => `<div class="runner-opt" data-idx="${oi}"><span class="opt-letter">${String.fromCharCode(65 + oi)}</span>${o}</div>`).join("")}
+        </div>`;
+    } else if (stageKey === "sentence-shuffle") {
+      body = `
+        <div class="runner-prompt"><div class="prompt-label">Sắp xếp thành câu đúng</div><div class="prompt-main">${item.word.vi}</div></div>
+        <div class="runner-target" id="shuffle-target"></div>
+        <div class="runner-pool" id="shuffle-pool">
+          ${shuffle(item.tokens).map((w, wi) => `<span class="runner-chip" data-word="${w.replace(/"/g, "&quot;")}" data-pool-idx="${wi}">${w}</span>`).join("")}
+        </div>`;
+    }
+
+    host.innerHTML = `
+      <div class="runner-card">
+        ${round > 1 ? `<div class="prompt-label" style="margin-bottom:6px;">🔁 Làm lại các câu sai — vòng ${round}</div>` : ""}
+        ${renderDots()}
+        ${body}
+        <div class="runner-feedback" id="runner-feedback"></div>
+        <div class="runner-actions" id="runner-actions"></div>
+      </div>`;
+
+    if (stageKey === "picture-matching" || stageKey === "multiple-choice") {
+      speakWord(item.word.en);
+    } else if (stageKey === "missing-word") {
+      speakWord(item.word.en);
+    }
+    const promptEl = document.getElementById("prompt-speak");
+    if (promptEl) {
+      promptEl.style.cursor = "pointer";
+      promptEl.addEventListener("click", () => speakWord(item.word.en));
+    }
+
+    wireItem(item);
+  }
+
+  function wireItem(item) {
+    const feedback = document.getElementById("runner-feedback");
+    const actions = document.getElementById("runner-actions");
+
+    function finishAnswer(correct) {
+      recordExposure(currentUnit.id, item.word.id, correct);
+      if (!correct) wrongQueue.push(item);
+      feedback.textContent = correct ? "✓ Correct!" : "✗ Chưa đúng — đáp án đúng đã hiện phía trên.";
+      feedback.className = "runner-feedback " + (correct ? "ok" : "no");
+      window.EQMascot && window.EQMascot.show("mascot-box", correct ? "correct" : "wrong");
+      const isLastOfQueue = i === queue.length - 1;
+      actions.innerHTML = `<button class="btn btn-primary" id="runner-continue">${isLastOfQueue ? "Tiếp tục" : "Câu tiếp theo"}</button>`;
+      document.getElementById("runner-continue").addEventListener("click", () => {
+        i++;
+        if (i >= queue.length) {
+          if (wrongQueue.length > 0) {
+            queue = wrongQueue;
+            wrongQueue = [];
+            i = 0;
+            round++;
+            renderItem();
+          } else {
+            onDone();
+          }
+        } else {
+          renderItem();
+        }
+      });
+    }
+
+    if (stageKey === "picture-matching" || stageKey === "multiple-choice" || stageKey === "missing-word") {
+      const optSelector = stageKey === "picture-matching" ? ".runner-pic-opt" : ".runner-opt";
+      host.querySelectorAll(optSelector).forEach(opt => {
+        opt.addEventListener("click", () => {
+          if (host.querySelector(`${optSelector}[data-locked="1"]`)) return;
+          const chosen = Number(opt.dataset.idx);
+          const correct = chosen === item.correctIdx;
+
+          let question, chosenLabel, correctLabel;
+          if (stageKey === "picture-matching") {
+            question = `Picture for "${item.word.en}"`;
+            chosenLabel = item.opts[chosen].en;
+            correctLabel = item.word.en;
+            speakWord(item.opts[chosen].en);
+          } else if (stageKey === "multiple-choice") {
+            question = `What does "${item.word.en}" mean?`;
+            chosenLabel = item.opts[chosen];
+            correctLabel = item.opts[item.correctIdx];
+          } else {
+            question = item.sentence;
+            chosenLabel = item.opts[chosen];
+            correctLabel = item.opts[item.correctIdx];
+            speakWord(item.opts[chosen]);
+          }
+
+          eqRecordAndSave(`${stageKey}-${item.word.id}`, question, chosenLabel, correctLabel, correct);
+          window.EQSound && (correct ? window.EQSound.correct() : window.EQSound.wrong());
+
+          host.querySelectorAll(optSelector).forEach(o => o.dataset.locked = "1");
+          host.querySelector(`${optSelector}[data-idx="${item.correctIdx}"]`)?.classList.add("correct");
+          if (!correct) opt.classList.add("incorrect");
+
+          finishAnswer(correct);
+        });
+      });
+    } else if (stageKey === "sentence-shuffle") {
+      const target = document.getElementById("shuffle-target");
+      const pool = document.getElementById("shuffle-pool");
+      pool.querySelectorAll(".runner-chip").forEach(chip => {
+        chip.addEventListener("click", () => {
+          if (pool.dataset.locked === "1") return;
+          speakWord(chip.dataset.word);
+          chip.classList.add("used");
+          const clone = document.createElement("span");
+          clone.className = "runner-chip";
+          clone.textContent = chip.dataset.word;
+          clone.addEventListener("click", () => {
+            if (pool.dataset.locked === "1") return;
+            clone.remove();
+            chip.classList.remove("used");
+          });
+          target.appendChild(clone);
+          if (target.children.length === item.tokens.length) {
+            pool.dataset.locked = "1";
+            const built = Array.from(target.children).map(c => c.textContent).join(" ");
+            const norm = s => s.toLowerCase().replace(/[.?!]/g, "").replace(/\s+/g, " ").trim();
+            const correct = norm(built) === norm(item.answer);
+            eqRecordAndSave(`sentence-shuffle-${item.word.id}`, item.word.vi, built, item.answer, correct);
+            window.EQSound && (correct ? window.EQSound.correct() : window.EQSound.wrong());
+            if (!correct) {
+              const reveal = document.createElement("div");
+              reveal.className = "prompt-label";
+              reveal.style.marginTop = "8px";
+              reveal.textContent = `Đáp án đúng: ${item.answer}`;
+              target.insertAdjacentElement("afterend", reveal);
+            }
+            setTimeout(() => finishAnswer(correct), 400);
+          }
+        });
+      });
+    }
+  }
+
+  renderItem();
+}
+
+// ============================================================
+// Tap Pairs (whole board — all pairs on one screen)
+// ============================================================
+function renderTapPairs(host, unit, onDone) {
+  const words = unit.words.filter(w => w.stages && w.stages.includes("tap-pairs"));
+  const leftItems = words.map(w => ({ id: w.id, text: w.en }));
+  const rightItems = shuffle(words.map(w => ({ id: w.id, text: w.vi })));
+  const leftShuffled = shuffle(leftItems);
+
+  host.innerHTML = `
+    <div class="runner-card">
+      <div class="runner-prompt"><div class="prompt-label">Chạm để ghép cặp đúng</div></div>
+      <div class="pairs-board">
+        <div class="pairs-col" id="pairs-left"></div>
+        <div class="pairs-col" id="pairs-right"></div>
+      </div>
+      <div class="runner-feedback" id="pairs-feedback"></div>
+      <div class="runner-actions" id="pairs-actions"></div>
+    </div>`;
+
+  const leftCol = document.getElementById("pairs-left");
+  const rightCol = document.getElementById("pairs-right");
+  leftCol.innerHTML = leftShuffled.map(x => `<div class="pair-tile" data-id="${x.id}" data-side="l">${x.text}</div>`).join("");
+  rightCol.innerHTML = rightItems.map(x => `<div class="pair-tile" data-id="${x.id}" data-side="r">${x.text}</div>`).join("");
+
+  let selectedLeft = null, selectedRight = null;
+  let matched = 0;
+
+  function tileClick(e) {
+    const tile = e.currentTarget;
+    if (tile.classList.contains("matched")) return;
+    const side = tile.dataset.side;
+
+    if (side === "l") {
+      speakWord(tile.textContent);
+      if (selectedLeft) selectedLeft.classList.remove("selected");
+      selectedLeft = tile;
+      tile.classList.add("selected");
+    } else {
+      if (selectedRight) selectedRight.classList.remove("selected");
+      selectedRight = tile;
+      tile.classList.add("selected");
+    }
+
+    if (selectedLeft && selectedRight) {
+      const isMatch = selectedLeft.dataset.id === selectedRight.dataset.id;
+      window.EQSound && (isMatch ? window.EQSound.correct() : window.EQSound.wrong());
+      window.EQMascot && window.EQMascot.show("mascot-box", isMatch ? "correct" : "wrong");
+      if (isMatch) {
+        selectedLeft.classList.remove("selected");
+        selectedRight.classList.remove("selected");
+        selectedLeft.classList.add("matched");
+        selectedRight.classList.add("matched");
+        recordExposure(currentUnit.id, selectedLeft.dataset.id, true);
+        matched++;
+        selectedLeft = null; selectedRight = null;
+        if (matched === leftShuffled.length) {
+          document.getElementById("pairs-feedback").textContent = "✓ Ghép hết rồi!";
+          document.getElementById("pairs-feedback").className = "runner-feedback ok";
+          document.getElementById("pairs-actions").innerHTML = `<button class="btn btn-primary" id="pairs-continue">Tiếp tục</button>`;
+          document.getElementById("pairs-continue").addEventListener("click", onDone);
+        }
+      } else {
+        const l = selectedLeft, r = selectedRight;
+        l.classList.add("shake"); r.classList.add("shake");
+        setTimeout(() => {
+          l.classList.remove("selected", "shake");
+          r.classList.remove("selected", "shake");
+        }, 350);
+        selectedLeft = null; selectedRight = null;
+      }
+    }
+  }
+
+  host.querySelectorAll(".pair-tile").forEach(t => t.addEventListener("click", tileClick));
+}
+
+// ============================================================
+document.addEventListener("DOMContentLoaded", () => {
+  if (!document.getElementById("unit-select-grid")) return; // not on vocabulary page
+  renderUnitSelect();
+  document.getElementById("btn-back-to-units")?.addEventListener("click", (e) => { e.preventDefault(); backToUnits(); });
+});
