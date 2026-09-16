@@ -13,7 +13,7 @@ const EQ_UNITS = [
     title: "Hobbies",
     status: "in-progress",
     vocabulary: "vocabulary-g7.html",
-    grammar: null,
+    grammar: "unit1-grammar-g7.html",
     exercises: null,
   },
   { id: 2, title: "Healthy Living", status: "not-started", vocabulary: null, grammar: null, exercises: null },
