@@ -1,11 +1,15 @@
 // ============================================================
 // Vocabulary (Khối 7) — interactive learning path
-// Same engine as vocabulary.js (Grade 5) — only VOCAB_UNITS data
+// Same engine as vocabulary.js (Grade 5) — only VOCAB_UNITS_G7 data
 // and the localStorage key differ, so Grade 7 progress never mixes
 // with Grade 5 progress.
+//
+// NOTE: uses `var` (not `const`) so this becomes a real `window`
+// property — teacher-dashboard.js auto-discovers every grade's
+// catalog this way, matching the VOCAB_UNITS_G<N> naming pattern.
 // ============================================================
 
-const VOCAB_UNITS = [
+var VOCAB_UNITS_G7 = [
   {
     id: "g7-unit1",
     number: 1,
@@ -41,11 +45,6 @@ const VOCAB_UNITS = [
       { id: "g7u1-collect-dolls", en: "collect dolls", vi: "sưu tập búp bê", icon: "img/vocab-g7-u1-collect-dolls.jpg", stages: ["picture-matching"] },
 
       // Multiple Choice / Missing Word / Sentence Shuffle — from slides 6, 7 & 8
-      // Split: Missing Word only uses the first 6 (divide-into..insect, plus
-      // gardening above); Sentence Shuffle uses a different 6
-      // (take-on-responsibility..valuable-lesson), each broken into
-      // phrase "chunks" (not single words) for the word bank. All 18
-      // still appear in Multiple Choice.
       { id: "g7u1-divide-into", en: "divide something into something", vi: "phân chia cái gì thành...", example: "We divided the garden into four small parts.", blank: "divided", stages: ["multiple-choice", "missing-word"], viFull: "Chúng tôi chia khu vườn thành bốn phần nhỏ.", viBlanked: "Chúng tôi ___ khu vườn thành bốn phần nhỏ." },
       { id: "g7u1-belong-to", en: "belong to somebody or something", vi: "thuộc về cái gì/ai", example: "This part of the garden belongs to me.", blank: "belongs to", stages: ["multiple-choice", "missing-word"], viFull: "Phần vườn này thuộc về tôi.", viBlanked: "Phần vườn này ___ tôi." },
       { id: "g7u1-outdoor-activity", en: "outdoor activity", vi: "hoạt động ngoài trời", example: "Gardening is a fun outdoor activity.", blank: "outdoor activity", stages: ["multiple-choice", "missing-word"], viFull: "Làm vườn là một hoạt động ngoài trời thú vị.", viBlanked: "Làm vườn là một ___ thú vị." },
@@ -166,7 +165,7 @@ function tokenize(sentence) {
 function renderUnitSelect() {
   const grid = document.getElementById("unit-select-grid");
   if (!grid) return;
-  grid.innerHTML = VOCAB_UNITS.map(unit => {
+  grid.innerHTML = VOCAB_UNITS_G7.map(unit => {
     const mastered = getMasteredCount(unit);
     const total = unit.words.length;
     const pct = Math.round((mastered / total) * 100);
@@ -187,7 +186,7 @@ function renderUnitSelect() {
 }
 
 function openUnit(unitId) {
-  currentUnit = VOCAB_UNITS.find(u => u.id === unitId);
+  currentUnit = VOCAB_UNITS_G7.find(u => u.id === unitId);
   if (!currentUnit) return;
   currentStageIdx = 0;
   Object.keys(stageDone).forEach(k => delete stageDone[k]);
@@ -211,7 +210,7 @@ function openUnit(unitId) {
 function backToUnits() {
   document.getElementById("unit-select-view").classList.remove("hidden");
   document.getElementById("path-view").classList.remove("active");
-  renderUnitSelect(); // refresh progress bars
+  renderUnitSelect();
 }
 
 function renderStepper() {
@@ -402,8 +401,6 @@ function runSequential(host, stageKey, items, onDone) {
         <div class="runner-actions" id="runner-actions"></div>
       </div>`;
 
-    // Picture Matching / Multiple Choice: hearing the target word IS the
-    // question, so auto-play it and let the student tap to hear it again.
     if (stageKey === "picture-matching" || stageKey === "multiple-choice") {
       speakWord(item.word.en);
       const promptEl = document.getElementById("prompt-speak");
@@ -413,24 +410,12 @@ function runSequential(host, stageKey, items, onDone) {
       }
     }
 
-    // Missing Word: stay silent until the student has answered — playing
-    // the target word here would give the answer away before they pick.
-    // (See finishAnswer() for the post-answer playback of the full sentence.)
-
-    // Sentence Shuffle: play the full correct sentence once up front so
-    // students can build the sentence by ear, with a button to replay it
-    // as many times as they like.
     if (stageKey === "sentence-shuffle") {
       speakWord(item.answer);
       const hearBtn = document.getElementById("btn-hear-sentence");
       if (hearBtn) hearBtn.addEventListener("click", () => speakWord(item.answer));
     }
 
-    // Translate button:
-    // - Missing Word: shows the blanked translation before answering (so
-    //   it doesn't give the answer away), full translation once answered.
-    // - Sentence Shuffle: always shows the full translation, any time —
-    //   students are meant to use it as a hint while ordering the chunks.
     const translateBtn = document.getElementById("btn-translate");
     if (translateBtn) {
       translateBtn.addEventListener("click", () => {
@@ -460,195 +445,3 @@ function runSequential(host, stageKey, items, onDone) {
     const actions = document.getElementById("runner-actions");
     const translateBox = document.getElementById("translate-text");
     if (translateBox && item.word.viFull) translateBox.dataset.viFull = item.word.viFull;
-
-    function finishAnswer(correct) {
-      recordExposure(currentUnit.id, item.word.id, correct);
-      if (!correct) wrongQueue.push(item);
-      feedback.textContent = correct ? "✓ Correct!" : "✗ Chưa đúng — đáp án đúng đã hiện phía trên.";
-      feedback.className = "runner-feedback " + (correct ? "ok" : "no");
-      window.EQMascot && window.EQMascot.show("mascot-box", correct ? "correct" : "wrong");
-      revealFullTranslation();
-      // Missing Word: only now (after the student has answered) do we
-      // read the correct sentence aloud — and read the whole sentence,
-      // not just the single missing word.
-      if (stageKey === "missing-word" && item.word.example) speakWord(item.word.example);
-      const isLastOfQueue = i === queue.length - 1;
-      actions.innerHTML = `<button class="btn btn-primary" id="runner-continue">${isLastOfQueue ? "Tiếp tục" : "Câu tiếp theo"}</button>`;
-      document.getElementById("runner-continue").addEventListener("click", () => {
-        i++;
-        if (i >= queue.length) {
-          if (wrongQueue.length > 0) {
-            queue = wrongQueue;
-            wrongQueue = [];
-            i = 0;
-            round++;
-            renderItem();
-          } else {
-            onDone();
-          }
-        } else {
-          renderItem();
-        }
-      });
-    }
-
-    if (stageKey === "picture-matching" || stageKey === "multiple-choice" || stageKey === "missing-word") {
-      const optSelector = stageKey === "picture-matching" ? ".runner-pic-opt" : ".runner-opt";
-      host.querySelectorAll(optSelector).forEach(opt => {
-        opt.addEventListener("click", () => {
-          if (host.querySelector(`${optSelector}[data-locked="1"]`)) return;
-          const chosen = Number(opt.dataset.idx);
-          const correct = chosen === item.correctIdx;
-
-          let question, chosenLabel, correctLabel;
-          if (stageKey === "picture-matching") {
-            question = `Picture for "${item.word.en}"`;
-            chosenLabel = item.opts[chosen].en;
-            correctLabel = item.word.en;
-            speakWord(item.opts[chosen].en);
-          } else if (stageKey === "multiple-choice") {
-            question = `What does "${item.word.en}" mean?`;
-            chosenLabel = item.opts[chosen];
-            correctLabel = item.opts[item.correctIdx];
-          } else {
-            question = item.sentence;
-            chosenLabel = item.opts[chosen];
-            correctLabel = item.opts[item.correctIdx];
-            // No audio here — finishAnswer() reads the full correct
-            // sentence aloud once the student has answered.
-          }
-
-          eqRecordAndSave(`${stageKey}-${item.word.id}`, question, chosenLabel, correctLabel, correct);
-          window.EQSound && (correct ? window.EQSound.correct() : window.EQSound.wrong());
-
-          host.querySelectorAll(optSelector).forEach(o => o.dataset.locked = "1");
-          host.querySelector(`${optSelector}[data-idx="${item.correctIdx}"]`)?.classList.add("correct");
-          if (!correct) opt.classList.add("incorrect");
-
-          finishAnswer(correct);
-        });
-      });
-    } else if (stageKey === "sentence-shuffle") {
-      const target = document.getElementById("shuffle-target");
-      const pool = document.getElementById("shuffle-pool");
-      pool.querySelectorAll(".runner-chip").forEach(chip => {
-        chip.addEventListener("click", () => {
-          if (pool.dataset.locked === "1") return;
-          speakWord(chip.dataset.word);
-          chip.classList.add("used");
-          const clone = document.createElement("span");
-          clone.className = "runner-chip";
-          clone.textContent = chip.dataset.word;
-          clone.addEventListener("click", () => {
-            if (pool.dataset.locked === "1") return;
-            clone.remove();
-            chip.classList.remove("used");
-          });
-          target.appendChild(clone);
-          if (target.children.length === item.tokens.length) {
-            pool.dataset.locked = "1";
-            const built = Array.from(target.children).map(c => c.textContent).join(" ");
-            const norm = s => s.toLowerCase().replace(/[.?!]/g, "").replace(/\s+/g, " ").trim();
-            const correct = norm(built) === norm(item.answer);
-            eqRecordAndSave(`sentence-shuffle-${item.word.id}`, item.word.vi, built, item.answer, correct);
-            window.EQSound && (correct ? window.EQSound.correct() : window.EQSound.wrong());
-            if (!correct) {
-              const reveal = document.createElement("div");
-              reveal.className = "prompt-label";
-              reveal.style.marginTop = "8px";
-              reveal.textContent = `Đáp án đúng: ${item.answer}`;
-              target.insertAdjacentElement("afterend", reveal);
-            }
-            setTimeout(() => finishAnswer(correct), 400);
-          }
-        });
-      });
-    }
-  }
-
-  renderItem();
-}
-
-// ============================================================
-// Tap Pairs (whole board — all pairs on one screen)
-// ============================================================
-function renderTapPairs(host, unit, onDone) {
-  const words = unit.words.filter(w => w.stages && w.stages.includes("tap-pairs"));
-  const leftItems = words.map(w => ({ id: w.id, text: w.en }));
-  const rightItems = shuffle(words.map(w => ({ id: w.id, text: w.vi })));
-  const leftShuffled = shuffle(leftItems);
-
-  host.innerHTML = `
-    <div class="runner-card">
-      <div class="runner-prompt"><div class="prompt-label">Chạm để ghép cặp đúng</div></div>
-      <div class="pairs-board">
-        <div class="pairs-col" id="pairs-left"></div>
-        <div class="pairs-col" id="pairs-right"></div>
-      </div>
-      <div class="runner-feedback" id="pairs-feedback"></div>
-      <div class="runner-actions" id="pairs-actions"></div>
-    </div>`;
-
-  const leftCol = document.getElementById("pairs-left");
-  const rightCol = document.getElementById("pairs-right");
-  leftCol.innerHTML = leftShuffled.map(x => `<div class="pair-tile" data-id="${x.id}" data-side="l">${x.text}</div>`).join("");
-  rightCol.innerHTML = rightItems.map(x => `<div class="pair-tile" data-id="${x.id}" data-side="r">${x.text}</div>`).join("");
-
-  let selectedLeft = null, selectedRight = null;
-  let matched = 0;
-
-  function tileClick(e) {
-    const tile = e.currentTarget;
-    if (tile.classList.contains("matched")) return;
-    const side = tile.dataset.side;
-
-    if (side === "l") {
-      speakWord(tile.textContent);
-      if (selectedLeft) selectedLeft.classList.remove("selected");
-      selectedLeft = tile;
-      tile.classList.add("selected");
-    } else {
-      if (selectedRight) selectedRight.classList.remove("selected");
-      selectedRight = tile;
-      tile.classList.add("selected");
-    }
-
-    if (selectedLeft && selectedRight) {
-      const isMatch = selectedLeft.dataset.id === selectedRight.dataset.id;
-      window.EQSound && (isMatch ? window.EQSound.correct() : window.EQSound.wrong());
-      window.EQMascot && window.EQMascot.show("mascot-box", isMatch ? "correct" : "wrong");
-      if (isMatch) {
-        selectedLeft.classList.remove("selected");
-        selectedRight.classList.remove("selected");
-        selectedLeft.classList.add("matched");
-        selectedRight.classList.add("matched");
-        recordExposure(currentUnit.id, selectedLeft.dataset.id, true);
-        matched++;
-        selectedLeft = null; selectedRight = null;
-        if (matched === leftShuffled.length) {
-          document.getElementById("pairs-feedback").textContent = "✓ Ghép hết rồi!";
-          document.getElementById("pairs-feedback").className = "runner-feedback ok";
-          document.getElementById("pairs-actions").innerHTML = `<button class="btn btn-primary" id="pairs-continue">Tiếp tục</button>`;
-          document.getElementById("pairs-continue").addEventListener("click", onDone);
-        }
-      } else {
-        const l = selectedLeft, r = selectedRight;
-        l.classList.add("shake"); r.classList.add("shake");
-        setTimeout(() => {
-          l.classList.remove("selected", "shake");
-          r.classList.remove("selected", "shake");
-        }, 350);
-        selectedLeft = null; selectedRight = null;
-      }
-    }
-  }
-
-  host.querySelectorAll(".pair-tile").forEach(t => t.addEventListener("click", tileClick));
-}
-
-// ============================================================
-document.addEventListener("DOMContentLoaded", () => {
-  if (!document.getElementById("unit-select-grid")) return; // not on vocabulary page
-  renderUnitSelect();
-  document.getElementById("btn-back-to-units")?.addEventListener("click", (e) => { e.preventDefault(); backToUnits(); });
-});
