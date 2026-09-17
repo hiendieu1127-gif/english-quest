@@ -220,9 +220,6 @@ function runGrammarMC() {
               </div>`).join("")}
           </div>
           <div class="fitb-feedback" id="grammar-mc-reveal"></div>
-          <div class="fitb-row" id="grammar-mc-next-row" style="display:none; margin-top:10px;">
-            <button type="button" class="btn btn-primary btn-sm" id="grammar-mc-next-btn">Next question →</button>
-          </div>
         </div>
       </div>`;
 
@@ -265,21 +262,21 @@ function runGrammarMC() {
         }
         eqRecordAndSave(`mc-${item.en}`, item.en, item.opts[chosen], item.opts[item.answer], correct);
 
-        // Audio plays in the background, but the student doesn't have to wait for it —
-        // they can tap "Next question" as soon as they're ready.
+        // Wait for the audio to actually finish before moving to the next question
+        // (instead of a fixed setTimeout that could fire before/after the real speech).
         const spokenText = sanitizeForSpeech(item.en.replace(/___/g, item.opts[item.answer].split("; ").join(" ")));
-        window.EQSpeak && window.EQSpeak.speak(spokenText);
-
         let moved = false;
         function goNext() {
           if (moved) return;
           moved = true;
           next(correct, item);
         }
-        const nextRow = host.querySelector("#grammar-mc-next-row");
-        const nextBtn = host.querySelector("#grammar-mc-next-btn");
-        nextRow.style.display = "flex";
-        nextBtn.addEventListener("click", goNext);
+        if (window.EQSpeak) {
+          window.EQSpeak.speak(spokenText, goNext);
+          setTimeout(goNext, 6000); // safety net in case TTS silently fails on some device
+        } else {
+          setTimeout(goNext, 400);
+        }
       });
     });
   }
