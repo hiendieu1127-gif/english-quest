@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unit 1 Exercises · English Quest</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="unit1-exercises.css">
+<style>
+  /* Small additions only for this page — reuses the shared classes everywhere else */
+  .eq-crumb-row { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:16px; }
+  .eq-crumb { background:#fff; border:1px solid #ddd; border-radius:999px; padding:6px 14px; font-size:.85rem; font-weight:700; cursor:pointer; opacity:.6; }
+  .eq-crumb.active { opacity:1; border-color: var(--page-color); color: var(--page-color); }
+  .eq-back-link { display:inline-block; margin-bottom:14px; font-size:.9rem; text-decoration:underline; cursor:pointer; color: var(--page-color); background:none; border:none; padding:0; }
+  .reading-passage mark { background: #cfe8ff; padding:0 2px; border-radius:3px; }
+  .vocab-list { display:flex; flex-direction:column; gap:8px; }
+  .vocab-item { background:#fff; border:1px solid #e2e2e2; border-radius:12px; padding:12px 14px; cursor:pointer; }
+  .vocab-item .vocab-en { font-weight:800; }
+  .vocab-item .vocab-vi { display:none; margin-top:6px; color:#555; }
+  .vocab-item.open .vocab-vi { display:block; }
+  .match-wrap { display:flex; gap:18px; flex-wrap:wrap; }
+  .match-col { flex:1; min-width:220px; display:flex; flex-direction:column; gap:8px; }
+  .match-btn { text-align:left; background:#fff; border:2px solid #e2e2e2; border-radius:12px; padding:10px 12px; cursor:pointer; font-weight:700; }
+  .match-btn.selected { border-color:#5b7cfa; }
+  .match-btn.correct { border-color:#3fae4f; background:#eafbea; cursor:default; }
+  .match-btn.wrong-flash { border-color:#e05c5c; background:#fdeaea; }
+  .match-b-vi { display:block; font-weight:400; font-size:.85rem; color:#666; margin-top:4px; }
+  .tf-item { background:#fff; border:1px solid #e2e2e2; border-radius:12px; padding:14px; margin-bottom:12px; }
+  .tf-vi { color:#666; font-size:.88rem; margin:6px 0 10px; }
+  .tf-btn-row { display:flex; gap:8px; }
+  .tf-btn { border:2px solid #e2e2e2; background:#fff; border-radius:10px; padding:8px 16px; font-weight:800; cursor:pointer; }
+  .tf-btn.selected-correct { border-color:#3fae4f; background:#eafbea; }
+  .tf-btn.selected-wrong { border-color:#e05c5c; background:#fdeaea; }
+  .sentence-answer-strip { min-height:52px; border:2px dashed #ccc; border-radius:12px; padding:10px; display:flex; flex-wrap:wrap; gap:8px; margin:12px 0; }
+  .sentence-chunks { display:flex; flex-wrap:wrap; gap:8px; }
+  .sentence-chunk { background:#fff; border:2px solid #e2e2e2; border-radius:10px; padding:8px 12px; cursor:pointer; text-align:center; }
+  .sentence-chunk .chunk-vi { display:block; font-size:.75rem; color:#888; font-weight:400; }
+  .sentence-chunk.used { opacity:.35; pointer-events:none; }
+  .sentence-chunk.placed { background:#eef2ff; border-color:#5b7cfa; }
+</style>
+</head>
+<body data-page="lessons" style="--page-color: var(--c-exercises);">
+  <header class="site-header">
+    <nav class="container nav-row" aria-label="Main navigation">
+      <a class="brand" href="index.html">
+        <span class="brand-mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 5.5C4 4.7 4.7 4 5.5 4H12v16H5.5A1.5 1.5 0 0 1 4 18.5v-13Z" stroke-linejoin="round"/><path d="M20 5.5c0-.8-.7-1.5-1.5-1.5H12v16h6.5a1.5 1.5 0 0 0 1.5-1.5v-13Z" stroke-linejoin="round"/></svg></span>
+        English Quest
+      </a>
+      <button class="nav-toggle" aria-label="Open menu" aria-expanded="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke-linecap="round"/></svg>
+      </button>
+      <ul class="nav-links">
+        <li><a class="navlink" href="unit-g7.html?u=1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 5.5C4 4.7 4.7 4 5.5 4H12v16H5.5A1.5 1.5 0 0 1 4 18.5v-13Z" stroke-linejoin="round"/><path d="M20 5.5c0-.8-.7-1.5-1.5-1.5H12v16h6.5a1.5 1.5 0 0 0 1.5-1.5v-13Z" stroke-linejoin="round"/></svg><span>Unit 1</span></a></li>
+      </ul>
+    </nav>
+  </header>
+  <div class="nav-scrim"></div>
+
+  <main>
+    <section class="page-hero">
+      <div class="container">
+        <span class="eyebrow" style="border-color: var(--page-color);"><a href="unit-g7.html?u=1" style="color:inherit;">Unit 1: Hobbies</a></span>
+        <h1 style="margin-bottom:4px;">Exercises</h1>
+        <p>Reading, Vocabulary, Match A with B, True/False, Make sentences.</p>
+      </div>
+    </section>
+
+    <section class="section" style="padding-top:10px;">
+      <div class="container">
+        <div class="eq-crumb-row" id="eq-crumb-row">
+          <button class="eq-crumb" data-target="panel-reading">Reading</button>
+          <button class="eq-crumb" data-target="panel-vocab">Vocabulary</button>
+          <button class="eq-crumb" data-target="panel-match">Match A with B</button>
+          <button class="eq-crumb" data-target="panel-tf">True/False</button>
+          <button class="eq-crumb" data-target="panel-sentences">Make sentences</button>
+        </div>
+
+        <div id="mascot-box" class="mascot-box"></div>
+
+        <div class="ex-panel active" id="panel-reading">
+          <div class="runner-card">
+            <p class="reading-card reading-passage" id="reading-text" style="line-height:2;"></p>
+            <button type="button" class="btn btn-secondary btn-sm" id="reading-to-vocab-btn" style="margin-top:12px;">Xem từ vựng mới →</button>
+          </div>
+        </div>
+
+        <div class="ex-panel" id="panel-vocab">
+          <button type="button" class="eq-back-link" data-target="panel-reading">← Quay lại Reading để tìm ý</button>
+          <div class="runner-card">
+            <p style="margin-top:0; font-size:.9rem; color:#666;">Bấm vào từ để nghe và xem nghĩa.</p>
+            <div class="vocab-list" id="vocab-list"></div>
+          </div>
+        </div>
+
+        <div class="ex-panel" id="panel-match">
+          <button type="button" class="eq-back-link" data-target="panel-reading">← Quay lại Reading để tìm ý</button>
+          <div class="runner-card">
+            <div class="quiz-q" style="margin-bottom:12px;">Match each word in A with its meaning in B.</div>
+            <div class="match-wrap" id="match-wrap"></div>
+            <div class="fitb-feedback" id="match-feedback"></div>
+          </div>
+        </div>
+
+        <div class="ex-panel" id="panel-tf">
+          <button type="button" class="eq-back-link" data-target="panel-reading">← Quay lại Reading để tìm ý</button>
+          <div class="runner-card">
+            <div class="quiz-q" style="margin-bottom:4px;">Write T (True), F (False), or NI (No Information).</div>
+            <p style="font-size:.85rem; color:#666; margin-top:0;">T = Đúng &nbsp;·&nbsp; F = Sai &nbsp;·&nbsp; NI = Không có thông tin</p>
+            <div id="tf-list"></div>
+          </div>
+        </div>
+
+        <div class="ex-panel" id="panel-sentences">
+          <div class="runner-card">
+            <div class="quiz-q" style="margin-bottom:8px;">Make sentences — sắp xếp các cụm từ thành câu đúng.</div>
+            <div id="sentence-runner"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <div class="footer-brand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 5.5C4 4.7 4.7 4 5.5 4H12v16H5.5A1.5 1.5 0 0 1 4 18.5v-13Z" stroke-linejoin="round"/><path d="M20 5.5c0-.8-.7-1.5-1.5-1.5H12v16h6.5a1.5 1.5 0 0 0 1.5-1.5v-13Z" stroke-linejoin="round"/></svg> English Quest</div>
+          <p style="max-width:32ch; font-size:.9rem; opacity:.85;">A friendly place for Grade 7 students to read, play, and practise English every week.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Learn</h4>
+          <ul>
+            <li><a href="unit-g7.html?u=1">Unit 1</a></li>
+            <li><a href="lessons-g7.html">Lessons</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>You</h4>
+          <ul>
+            <li><a href="lessons.html">Đổi khối</a></li>
+            <li><a href="index.html">Home</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; 2026 English Quest &mdash; a class website by teacher Hien.</span>
+      </div>
+    </div>
+  </footer>
+
+<script src="script.js?v=2"></script>
+<script src="student-gate.js"></script>
+<script type="module" src="results-service.js"></script>
+<script src="unit1-exercises-g7.js"></script>
+<script src="mascot.js"></script>
+</body>
+</html>
