@@ -14,7 +14,7 @@ const EQ_UNITS = [
     status: "in-progress",
     vocabulary: "vocabulary-g7.html",
     grammar: "unit1-grammar-g7.html",
-    exercises: null,
+    exercises: "unit1-exercises-g7.html",
   },
   { id: 2, title: "Healthy Living", status: "not-started", vocabulary: null, grammar: null, exercises: null },
   { id: 3, title: "Community Service", status: "not-started", vocabulary: null, grammar: null, exercises: null },
