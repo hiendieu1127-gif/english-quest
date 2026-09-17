@@ -185,9 +185,15 @@ function runGrammarMC() {
             <div class="stage-complete">
               <div class="badge-circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
               <h3>Xong rồi!</h3>
-              <p>Chị đã hoàn thành hết phần Trắc nghiệm.</p>
+              <p>Em đã hoàn thành hết phần Multiple Choice.</p>
+              <button type="button" class="btn btn-primary" id="grammar-mc-continue" style="margin-top:12px;">Tiếp tục sang Fill in the Blank →</button>
             </div>
           </div>`;
+        const continueBtn = host.querySelector("#grammar-mc-continue");
+        continueBtn.addEventListener("click", () => {
+          const fitbTab = document.querySelector('.ex-tab[data-target="panel-fitb"]');
+          fitbTab && fitbTab.click();
+        });
       }
     } else {
       render();
@@ -254,9 +260,23 @@ function runGrammarMC() {
           fullEl.textContent = item.viFull;
           fullEl.style.display = "block";
         }
-        window.EQSpeak && window.EQSpeak.speak(sanitizeForSpeech(item.en.replace(/___/g, item.opts[item.answer].split("; ").join(" "))));
         eqRecordAndSave(`mc-${item.en}`, item.en, item.opts[chosen], item.opts[item.answer], correct);
-        setTimeout(() => next(correct, item), 400);
+
+        // Wait for the audio to actually finish before moving to the next question
+        // (instead of a fixed setTimeout that could fire before/after the real speech).
+        const spokenText = sanitizeForSpeech(item.en.replace(/___/g, item.opts[item.answer].split("; ").join(" ")));
+        let moved = false;
+        function goNext() {
+          if (moved) return;
+          moved = true;
+          next(correct, item);
+        }
+        if (window.EQSpeak) {
+          window.EQSpeak.speak(spokenText, goNext);
+          setTimeout(goNext, 6000); // safety net in case TTS silently fails on some device
+        } else {
+          setTimeout(goNext, 400);
+        }
       });
     });
   }
