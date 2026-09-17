@@ -82,15 +82,21 @@ window.EQSound = (function () {
 // utterance checks against the latest `gen` and cancels itself if a newer speak() has since been
 // requested — this stops old, queued utterances from firing late and overlapping the current one
 // (a known issue on some Android WebViews where speechSynthesis.cancel() doesn't fully clear the queue).
+// speak(text, onEnd) — onEnd (optional) fires once the utterance actually finishes speaking
+// (or immediately, in a few fallback cases), so callers can wait for the real audio to end
+// instead of guessing with a fixed setTimeout.
 window.EQSpeak = (function () {
   let gen = 0;
-  function speak(text) {
+  function speak(text, onEnd) {
     try {
-      if (!text || !("speechSynthesis" in window)) return;
+      if (!text || !("speechSynthesis" in window)) {
+        onEnd && onEnd();
+        return;
+      }
       const myGen = ++gen;
       window.speechSynthesis.cancel();
       setTimeout(() => {
-        if (myGen !== gen) return; // a newer speak() call has already superseded this one
+        if (myGen !== gen) { onEnd && onEnd(); return; }
         const utter = new SpeechSynthesisUtterance(text);
         utter.lang = "en-US";
         utter.rate = 0.9;
@@ -99,9 +105,17 @@ window.EQSpeak = (function () {
             window.speechSynthesis.cancel();
           }
         };
+        utter.onend = () => {
+          if (myGen === gen) onEnd && onEnd();
+        };
+        utter.onerror = () => {
+          if (myGen === gen) onEnd && onEnd();
+        };
         window.speechSynthesis.speak(utter);
       }, 60);
-    } catch (e) {}
+    } catch (e) {
+      onEnd && onEnd();
+    }
   }
   return { speak };
 })();
