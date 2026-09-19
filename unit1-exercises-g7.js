@@ -20,7 +20,7 @@ const READING_HTML =
   "loves sewing. After sewing for two years, she can now <mark>sew</mark> beautiful doll " +
   "clothes. Those are the reasons why you should have hobbies.";
 
-// ---- Vocabulary (practice only, tap to hear + reveal meaning) ----
+// ---- Vocabulary (practice only, tap to hear + flip for meaning) ----
 const VOCAB_ITEMS = [
   { en: "hobby", vi: "sở thích" },
   { en: "beneficial", vi: "có ích, hữu ích" },
@@ -36,7 +36,7 @@ const VOCAB_ITEMS = [
   { en: "sew", vi: "may, khâu" },
 ];
 
-// ---- Match A with B (5 pairs) — column A has audio, column B always shows its VN translation ----
+// ---- Match A with B (5 items) — shown one at a time as multiple choice ----
 const MATCH_ITEMS = [
   { id: 1, a: "beneficial", b: "helpful or useful", bVi: "có ích hoặc hữu ích" },
   { id: 2, a: "pandemics", b: "diseases throughout the whole country or the whole world", bVi: "dịch bệnh lan rộng khắp một quốc gia hoặc toàn thế giới" },
@@ -74,7 +74,7 @@ const TF_ITEMS = [
   },
 ];
 
-// ---- Make sentences — sentence ordering, chunks shuffled, VN translation shown per chunk ----
+// ---- Make sentences — sentence ordering, chunks shuffled, VN meaning hidden behind "Dịch" ----
 const SENTENCES = [
   {
     id: 1,
@@ -170,6 +170,14 @@ function shuffle(arr) {
   return a;
 }
 
+function renderDots(current, total) {
+  let dots = "";
+  for (let idx = 0; idx < total; idx++) {
+    dots += `<span class="runner-dot ${idx < current ? "done" : idx === current ? "current" : ""}"></span>`;
+  }
+  return `<div class="runner-dots">${dots}</div>`;
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   eqStudent = window.EQStudent ? window.EQStudent.confirmStudent() : "";
   if (window.EQResults && eqStudent) {
@@ -196,98 +204,104 @@ function renderReading() {
   toVocabBtn && toVocabBtn.addEventListener("click", () => switchPanel("panel-vocab"));
 }
 
-// ---- Vocabulary (practice only, tap word → audio + reveal meaning) ----
+// ---- Vocabulary (practice only): 3-column flip-card grid, always with audio ----
 function renderVocab() {
-  const host = document.getElementById("vocab-list");
+  const host = document.getElementById("vocab-grid");
   if (!host) return;
   host.innerHTML = VOCAB_ITEMS.map((v, idx) => `
-    <div class="vocab-item" data-idx="${idx}">
-      <span class="vocab-en">🔊 ${v.en}</span>
-      <div class="vocab-vi">${v.vi}</div>
+    <div class="vocab-card" data-idx="${idx}">
+      <div class="vocab-front">🔊 ${v.en}<span class="vocab-hint">chạm để nghe &amp; xem nghĩa</span></div>
+      <div class="vocab-back">${v.vi}</div>
     </div>`).join("");
-  host.querySelectorAll(".vocab-item").forEach((item) => {
-    item.addEventListener("click", () => {
-      const idx = Number(item.dataset.idx);
-      const word = VOCAB_ITEMS[idx];
-      window.EQSpeak && window.EQSpeak.speak(word.en);
-      item.classList.toggle("open");
+  host.querySelectorAll(".vocab-card").forEach((card) => {
+    card.addEventListener("click", () => {
+      const idx = Number(card.dataset.idx);
+      window.EQSpeak && window.EQSpeak.speak(VOCAB_ITEMS[idx].en);
+      card.classList.toggle("flipped");
     });
   });
 }
 
-// ---- Match A with B (scored: 5) ----
+// ---- Match A with B (scored: 5) — one definition at a time, pick the matching word ----
 function renderMatch() {
   const host = document.getElementById("match-wrap");
   if (!host) return;
-  const bOrder = shuffle(MATCH_ITEMS);
+  const total = MATCH_ITEMS.length;
+  let i = 0;
 
-  host.innerHTML = `
-    <div class="match-col" id="match-col-a">
-      ${MATCH_ITEMS.map(m => `<button type="button" class="match-btn" data-id="${m.id}">${m.a}</button>`).join("")}
-    </div>
-    <div class="match-col" id="match-col-b">
-      ${bOrder.map(m => `<button type="button" class="match-btn" data-id="${m.id}">${m.b}<span class="match-b-vi">${m.bVi}</span></button>`).join("")}
-    </div>`;
+  function render() {
+    const item = MATCH_ITEMS[i];
+    const others = MATCH_ITEMS.filter(m => m.id !== item.id).map(m => m.a);
+    const options = shuffle([item.a, ...shuffle(others).slice(0, 3)]);
+    const letters = ["A", "B", "C", "D"];
 
-  const feedback = document.getElementById("match-feedback");
-  let selectedA = null;
-  const matched = new Set();
-  const firstTryWrong = new Set(); // ids where the student got it wrong at least once before matching
+    host.innerHTML = `
+      <div class="runner-card">
+        ${renderDots(i, total)}
+        <div class="mcq-def">${item.b}</div>
+        <div class="mcq-def-vi">${item.bVi}</div>
+        <div class="mcq-options" id="mcq-options">
+          ${options.map((opt, idx) => `<button type="button" class="mcq-option" data-word="${opt}"><span class="mcq-letter">${letters[idx]}</span>${opt}</button>`).join("")}
+        </div>
+        <div class="fitb-feedback" id="match-feedback"></div>
+      </div>`;
 
-  const aButtons = host.querySelectorAll("#match-col-a .match-btn");
-  const bButtons = host.querySelectorAll("#match-col-b .match-btn");
+    let answered = false;
+    const optionButtons = host.querySelectorAll(".mcq-option");
+    const feedback = document.getElementById("match-feedback");
 
-  aButtons.forEach(btn => {
-    btn.addEventListener("click", () => {
-      const id = Number(btn.dataset.id);
-      if (matched.has(id)) return;
-      aButtons.forEach(b => b.classList.remove("selected"));
-      btn.classList.add("selected");
-      selectedA = id;
-      window.EQSpeak && window.EQSpeak.speak(MATCH_ITEMS.find(m => m.id === id).a);
+    optionButtons.forEach(btn => {
+      btn.addEventListener("click", () => {
+        if (answered) return;
+        answered = true;
+        const chosen = btn.dataset.word;
+        const correct = chosen === item.a;
+
+        optionButtons.forEach(b => {
+          b.disabled = true;
+          if (b.dataset.word === item.a) b.classList.add("correct");
+        });
+        if (!correct) btn.classList.add("wrong");
+
+        window.EQSpeak && window.EQSpeak.speak(item.a);
+        window.EQSound && (correct ? window.EQSound.correct() : window.EQSound.wrong());
+        window.EQMascot && window.EQMascot.show("mascot-box", correct ? "correct" : "wrong");
+
+        feedback.textContent = correct ? "✓ Chính xác!" : `Đáp án đúng: ${item.a}`;
+        feedback.className = correct ? "fitb-feedback ok" : "fitb-feedback no";
+        eqRecordAndSave(`match-${item.id}`, item.b, chosen, item.a, correct);
+
+        setTimeout(() => {
+          i++;
+          if (i >= total) {
+            window.EQMascot && window.EQMascot.show("mascot-box", "complete_exercise");
+            host.innerHTML = `
+              <div class="runner-card">
+                <div class="stage-complete">
+                  <div class="badge-circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+                  <h3>Xong rồi!</h3>
+                  <p>Em đã hoàn thành phần Match A with B.</p>
+                </div>
+              </div>`;
+          } else {
+            render();
+          }
+        }, 1200);
+      });
     });
-  });
-
-  bButtons.forEach(btn => {
-    btn.addEventListener("click", () => {
-      const bId = Number(btn.dataset.id);
-      if (selectedA === null) return;
-      if (matched.has(bId)) return;
-      const correct = selectedA === bId;
-      if (correct) {
-        matched.add(bId);
-        const aBtn = host.querySelector(`#match-col-a .match-btn[data-id="${bId}"]`);
-        aBtn && aBtn.classList.add("correct");
-        aBtn && aBtn.classList.remove("selected");
-        btn.classList.add("correct");
-        window.EQSound && window.EQSound.correct();
-        window.EQMascot && window.EQMascot.show("mascot-box", "correct");
-        eqRecordAndSave(`match-${bId}`, MATCH_ITEMS.find(m => m.id === bId).a, "matched", MATCH_ITEMS.find(m => m.id === bId).b, !firstTryWrong.has(bId));
-        selectedA = null;
-        if (matched.size === MATCH_ITEMS.length) {
-          feedback.textContent = "✓ Hoàn thành phần Match A with B!";
-          feedback.className = "fitb-feedback ok";
-          window.EQMascot && window.EQMascot.show("mascot-box", "complete_exercise");
-        }
-      } else {
-        firstTryWrong.add(selectedA);
-        btn.classList.add("wrong-flash");
-        window.EQSound && window.EQSound.wrong();
-        window.EQMascot && window.EQMascot.show("mascot-box", "wrong");
-        setTimeout(() => btn.classList.remove("wrong-flash"), 500);
-      }
-    });
-  });
+  }
+  render();
 }
 
-// ---- True / False / No Information (scored: 5) ----
+// ---- True / False / No Information (scored: 5) — meaning hidden behind "Dịch" ----
 function renderTrueFalse() {
   const host = document.getElementById("tf-list");
   if (!host) return;
   host.innerHTML = TF_ITEMS.map((t, idx) => `
     <div class="tf-item" data-idx="${idx}">
       <div>${idx + 1}. ${t.en}</div>
-      <div class="tf-vi">${t.vi}</div>
+      <button type="button" class="eq-translate-btn" data-idx="${idx}">🔤 Dịch</button>
+      <div class="tf-vi" id="tf-vi-${idx}" style="display:none;">${t.vi}</div>
       <div class="tf-btn-row">
         <button type="button" class="tf-btn" data-choice="T">T</button>
         <button type="button" class="tf-btn" data-choice="F">F</button>
@@ -295,6 +309,16 @@ function renderTrueFalse() {
       </div>
       <div class="fitb-feedback" id="tf-feedback-${idx}"></div>
     </div>`).join("");
+
+  host.querySelectorAll(".eq-translate-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const idx = Number(btn.dataset.idx);
+      const viEl = document.getElementById(`tf-vi-${idx}`);
+      const showing = viEl.style.display !== "none";
+      viEl.style.display = showing ? "none" : "block";
+      btn.textContent = showing ? "🔤 Dịch" : "🔤 Ẩn nghĩa";
+    });
+  });
 
   host.querySelectorAll(".tf-item").forEach((item) => {
     const idx = Number(item.dataset.idx);
@@ -321,15 +345,11 @@ function renderTrueFalse() {
   });
 }
 
-// ---- Make sentences (scored: 4, round-based one sentence at a time) ----
+// ---- Make sentences (scored: 4, one at a time) — meaning hidden behind "Dịch" ----
 function runSentences() {
   const host = document.getElementById("sentence-runner");
   if (!host) return;
   let i = 0;
-
-  function renderDots() {
-    return `<div class="runner-dots">${SENTENCES.map((_, idx) => `<span class="runner-dot ${idx < i ? "done" : idx === i ? "current" : ""}"></span>`).join("")}</div>`;
-  }
 
   function render() {
     const item = SENTENCES[i];
@@ -337,8 +357,9 @@ function runSentences() {
 
     host.innerHTML = `
       <div class="runner-card">
-        ${renderDots()}
+        ${renderDots(i, SENTENCES.length)}
         <div class="quiz-item">
+          <button type="button" class="eq-translate-btn" id="sentence-translate">🔤 Dịch</button>
           <div class="sentence-answer-strip" id="sentence-strip"></div>
           <div class="sentence-chunks" id="sentence-pool">
             ${shuffled.map(c => `<div class="sentence-chunk" data-orig="${c.origIdx}">${c.en}<span class="chunk-vi">${c.vi}</span></div>`).join("")}
@@ -354,8 +375,14 @@ function runSentences() {
     const strip = host.querySelector("#sentence-strip");
     const pool = host.querySelector("#sentence-pool");
     const feedback = host.querySelector("#sentence-feedback");
+    const translateBtn = host.querySelector("#sentence-translate");
     let placed = [];
     let checked = false;
+
+    translateBtn.addEventListener("click", () => {
+      const showing = pool.classList.toggle("show-vi");
+      translateBtn.textContent = showing ? "🔤 Ẩn nghĩa" : "🔤 Dịch";
+    });
 
     function renderStrip() {
       strip.innerHTML = placed.map(c => `<div class="sentence-chunk placed">${c.en}</div>`).join("");
