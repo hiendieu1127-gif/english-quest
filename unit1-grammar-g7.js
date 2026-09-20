@@ -352,6 +352,16 @@ function renderFitbPassage() {
       checkBtn.disabled = true;
       // if translation panel is open, upgrade it to the full version automatically
       if (viQuestionEl.style.display !== "none") viQuestionEl.textContent = FITB_VI_FULL;
+      // show the button to move on to Exercises (only once)
+      if (!host.querySelector("#grammar-fitb-continue")) {
+        const contWrap = document.createElement("div");
+        contWrap.style.marginTop = "14px";
+        contWrap.innerHTML = `<button type="button" class="btn btn-primary" id="grammar-fitb-continue" style="width:100%;white-space:normal;">Em đã hoàn thành hết phần Grammar. Tiếp tục sang phần Exercise &rarr;</button>`;
+        feedback.insertAdjacentElement("afterend", contWrap);
+        document.getElementById("grammar-fitb-continue").addEventListener("click", () => {
+          window.location.href = "unit1-exercises-g7.html";
+        });
+      }
     } else {
       feedback.textContent = `Đã đúng ${doneCount}/${totalBlanks} — sửa lại các ô màu đỏ rồi kiểm tra lại nhé.`;
       feedback.className = "fitb-feedback no";
