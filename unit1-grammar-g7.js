@@ -115,6 +115,9 @@ function eqTotalItems() {
 }
 
 function eqRecordAndSave(key, question, studentAnswer, correctAnswer, correct) {
+  // Only the FIRST attempt is scored. Retry rounds ("làm lại các câu sai") are
+  // practice only, so they must never overwrite the first answer's result.
+  if (eqAnswers[key]) return;
   eqAnswers[key] = { question, studentAnswer, correctAnswer, correct };
   if (!window.EQResults || !eqStudent) return;
   const values = Object.values(eqAnswers);
