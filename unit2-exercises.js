@@ -150,7 +150,7 @@ const ORDER_ITEMS = [
 // ============================================================
 
 // ---- 5a) Listen and circle ("Track 3") — recording + answers confirmed by Hien ----
-// One recording (unit2-track3.mp3) holds both questions. The part only shows up (and is
+// One recording (track-3.mp3, uploaded to the repo root) holds both questions. The part only shows up (and is
 // only counted in the total) while every item has an `answer` ("a" / "b" / "c").
 const LISTEN_ITEMS = [
   {
@@ -158,7 +158,7 @@ const LISTEN_ITEMS = [
     stem: "My address is ___ Oxford Street.",
     options: [{ key: "a", text: "fifty" }, { key: "b", text: "sixteen" }, { key: "c", text: "ninety" }],
     answer: "b", // sixteen (confirmed by Hien)
-    audio: "unit2-track3.mp3",
+    audio: "track-3.mp3",
     listenFull: true,
     noTranslate: true,
   },
@@ -167,7 +167,7 @@ const LISTEN_ITEMS = [
     stem: "He lives at ___ Green Street.",
     options: [{ key: "a", text: "fifteen" }, { key: "b", text: "sixty" }, { key: "c", text: "ninety" }],
     answer: "a", // fifteen (confirmed by Hien)
-    audio: "unit2-track3.mp3",
+    audio: "track-3.mp3",
     listenFull: true,
     noTranslate: true,
   },
