@@ -190,11 +190,11 @@ function showSectionComplete(host, message, hasNext, mascotType) {
         <div class="badge-circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
         <h3>Xong rồi!</h3>
         <p>${message}</p>
-        ${hasNext ? `<p style="color:#6b6b76;margin-top:4px;">Sẵn sàng cho dạng bài tiếp theo chưa?</p><button type="button" class="btn btn-primary" id="section-next-btn" style="margin-top:14px;">Dạng bài tiếp theo →</button>` : ""}
+        ${hasNext ? `<p style="color:#6b6b76;margin-top:4px;">Sẵn sàng cho dạng bài tiếp theo chưa?</p><button type="button" class="btn btn-primary section-next-btn" style="margin-top:14px;">Dạng bài tiếp theo →</button>` : ""}
       </div>
     </div>`;
   if (hasNext) {
-    const btn = document.getElementById("section-next-btn");
+    const btn = host.querySelector(".section-next-btn");
     btn && btn.addEventListener("click", () => {
       const activePanel = document.querySelector(".ex-panel.active");
       const crumbs = Array.from(document.querySelectorAll(".eq-crumb"));
