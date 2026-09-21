@@ -483,10 +483,20 @@ function runSentenceRound(items, round) {
     });
 
     function renderStrip() {
-      strip.innerHTML = placed.map(c => `<div class="sentence-chunk placed">${c.en}</div>`).join("");
-      strip.querySelectorAll(".sentence-chunk.placed").forEach((el, idx) => {
+      strip.innerHTML = placed.map(p => `<div class="sentence-chunk placed" data-orig="${p.origIdx}" title="Chạm để bỏ ra">${p.en}</div>`).join("");
+      strip.querySelectorAll(".sentence-chunk.placed").forEach(el => {
         el.addEventListener("click", () => {
+          // Tapping a placed chunk sends it back to the pool (undo just that
+          // one), instead of forcing a full "Làm lại" reset for one mistake.
+          if (checked) return;
+          const origIdx = Number(el.dataset.orig);
+          const idx = placed.findIndex(p => p.origIdx === origIdx);
+          if (idx === -1) return;
           speakChunk(placed[idx].en);
+          placed.splice(idx, 1);
+          const poolEl = pool.querySelector(`.sentence-chunk[data-orig="${origIdx}"]`);
+          poolEl && poolEl.classList.remove("used");
+          renderStrip();
         });
       });
     }
@@ -496,7 +506,7 @@ function runSentenceRound(items, round) {
         if (checked || chunkEl.classList.contains("used")) return;
         const origIdx = Number(chunkEl.dataset.orig);
         speakChunk(item.chunks[origIdx].en);
-        placed.push(item.chunks[origIdx]);
+        placed.push({ origIdx, en: item.chunks[origIdx].en, vi: item.chunks[origIdx].vi });
         chunkEl.classList.add("used");
         renderStrip();
       });
