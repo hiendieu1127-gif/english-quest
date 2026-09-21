@@ -166,3 +166,44 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 });
+
+// English Quest — the "English Quest" logo/brand no longer navigates straight to
+// index.html; tapping it opens a small "Khối 5 / Khối 7" dropdown instead, on
+// every page site-wide. Self-contained (inline styles), no CSS file edit needed.
+document.addEventListener("DOMContentLoaded", () => {
+  const brand = document.querySelector(".brand");
+  if (!brand) return;
+
+  brand.style.position = "relative";
+
+  const menu = document.createElement("div");
+  menu.className = "brand-menu";
+  menu.style.cssText =
+    "position:absolute;top:100%;left:0;margin-top:10px;background:#fff;border:1px solid #e2e2e2;" +
+    "border-radius:14px;box-shadow:0 10px 28px rgba(0,0,0,.14);padding:8px;min-width:150px;" +
+    "display:none;z-index:60;";
+  menu.innerHTML =
+    '<a href="lessons-g5.html" style="display:block;padding:10px 14px;border-radius:10px;' +
+    'font-weight:800;color:#222;text-decoration:none;font-size:.95rem;">Khối 5</a>' +
+    '<a href="lessons-g7.html" style="display:block;padding:10px 14px;border-radius:10px;' +
+    'font-weight:800;color:#222;text-decoration:none;font-size:.95rem;">Khối 7</a>';
+  menu.querySelectorAll("a").forEach((a) => {
+    a.addEventListener("mouseenter", () => { a.style.background = "#f3f4ff"; });
+    a.addEventListener("mouseleave", () => { a.style.background = "transparent"; });
+  });
+  brand.appendChild(menu);
+
+  function closeBrandMenu() { menu.style.display = "none"; }
+  function toggleBrandMenu() {
+    menu.style.display = menu.style.display === "block" ? "none" : "block";
+  }
+
+  brand.addEventListener("click", (e) => {
+    e.preventDefault();
+    toggleBrandMenu();
+  });
+  document.addEventListener("click", (e) => {
+    if (!brand.contains(e.target)) closeBrandMenu();
+  });
+  window.addEventListener("resize", closeBrandMenu);
+});
