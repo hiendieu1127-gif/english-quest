@@ -174,7 +174,15 @@ document.addEventListener("DOMContentLoaded", () => {
   const brand = document.querySelector(".brand");
   if (!brand) return;
 
-  brand.style.position = "relative";
+  // Wrap the brand link in a plain <span> so the dropdown menu (with its own
+  // <a> links) sits as a SIBLING, not a child, of the "brand" <a> tag.
+  // Nested <a> tags are invalid HTML — browsers swallow clicks on the inner
+  // links and route them to the outer link instead, which was why tapping
+  // "Khối 5"/"Khối 7" did nothing.
+  const wrapper = document.createElement("span");
+  wrapper.style.cssText = "position:relative;display:inline-flex;";
+  brand.parentNode.insertBefore(wrapper, brand);
+  wrapper.appendChild(brand);
 
   const menu = document.createElement("div");
   menu.className = "brand-menu";
@@ -191,7 +199,7 @@ document.addEventListener("DOMContentLoaded", () => {
     a.addEventListener("mouseenter", () => { a.style.background = "#f3f4ff"; });
     a.addEventListener("mouseleave", () => { a.style.background = "transparent"; });
   });
-  brand.appendChild(menu);
+  wrapper.appendChild(menu);
 
   function closeBrandMenu() { menu.style.display = "none"; }
   function toggleBrandMenu() {
@@ -203,7 +211,7 @@ document.addEventListener("DOMContentLoaded", () => {
     toggleBrandMenu();
   });
   document.addEventListener("click", (e) => {
-    if (!brand.contains(e.target)) closeBrandMenu();
+    if (!wrapper.contains(e.target)) closeBrandMenu();
   });
   window.addEventListener("resize", closeBrandMenu);
 });
