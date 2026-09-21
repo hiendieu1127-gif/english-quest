@@ -181,6 +181,16 @@ function renderDots(current, total) {
   return `<div class="runner-dots">${dots}</div>`;
 }
 
+// Sanitize text before handing it to the browser's TTS: a bare "I" (the whole
+// chunk, trimmed) gets misread as "capital I" (spelled-out letter) instead of
+// the pronoun. "aye" is a homophone of "I" that speaks correctly. Only the
+// spoken text changes — what's shown on screen is never touched.
+function speakChunk(text) {
+  if (!window.EQSpeak) return;
+  const spoken = text.trim() === "I" ? "aye" : text;
+  window.EQSpeak.speak(spoken);
+}
+
 // ---- Shared "section complete" screen (Xong rồi! + optional "next section" button) ----
 function showSectionComplete(host, message, hasNext, mascotType) {
   window.EQMascot && window.EQMascot.show("mascot-box", mascotType || "complete_exercise");
@@ -242,7 +252,7 @@ function renderVocab() {
   host.querySelectorAll(".vocab-card").forEach((card) => {
     card.addEventListener("click", () => {
       const idx = Number(card.dataset.idx);
-      window.EQSpeak && window.EQSpeak.speak(VOCAB_ITEMS[idx].en);
+      speakChunk(VOCAB_ITEMS[idx].en);
       card.classList.toggle("flipped");
     });
   });
@@ -302,7 +312,7 @@ function runMatchRound(items, round) {
         });
         if (!correct) btn.classList.add("wrong");
 
-        window.EQSpeak && window.EQSpeak.speak(item.a);
+        speakChunk(item.a);
         window.EQSound && (correct ? window.EQSound.correct() : window.EQSound.wrong());
         window.EQMascot && window.EQMascot.show("mascot-box", correct ? "correct" : "wrong");
 
@@ -476,7 +486,7 @@ function runSentenceRound(items, round) {
       strip.innerHTML = placed.map(c => `<div class="sentence-chunk placed">${c.en}</div>`).join("");
       strip.querySelectorAll(".sentence-chunk.placed").forEach((el, idx) => {
         el.addEventListener("click", () => {
-          window.EQSpeak && window.EQSpeak.speak(placed[idx].en);
+          speakChunk(placed[idx].en);
         });
       });
     }
@@ -485,7 +495,7 @@ function runSentenceRound(items, round) {
       chunkEl.addEventListener("click", () => {
         if (checked || chunkEl.classList.contains("used")) return;
         const origIdx = Number(chunkEl.dataset.orig);
-        window.EQSpeak && window.EQSpeak.speak(item.chunks[origIdx].en);
+        speakChunk(item.chunks[origIdx].en);
         placed.push(item.chunks[origIdx]);
         chunkEl.classList.add("used");
         renderStrip();
@@ -506,10 +516,22 @@ function runSentenceRound(items, round) {
       const correct = built === item.answer;
       window.EQSound && (correct ? window.EQSound.correct() : window.EQSound.wrong());
       window.EQMascot && window.EQMascot.show("mascot-box", correct ? "correct" : "wrong");
-      feedback.innerHTML = correct
-        ? `✓ Chính xác!<br><strong>${item.answer}</strong><br>${item.answerVi}`
-        : `Chưa đúng.<br>Đáp án đúng: <strong>${item.answer}</strong><br>${item.answerVi}`;
-      feedback.className = correct ? "fitb-feedback ok" : "fitb-feedback no";
+
+      // Answer sentence + its VN translation are always shown as plain dark
+      // text on their own left-aligned lines, so they line up with each
+      // other regardless of the "Chưa đúng."/"Đáp án đúng:" line above them.
+      if (correct) {
+        feedback.innerHTML =
+          `<span style="color:#3fae4f;font-weight:700;">✓ Chính xác!</span>` +
+          `<div style="color:#222;font-weight:800;margin-top:6px;">${item.answer}</div>` +
+          `<div style="color:#666;margin-top:2px;">${item.answerVi}</div>`;
+      } else {
+        feedback.innerHTML =
+          `<span style="color:#e05c5c;font-weight:700;">Chưa đúng. Đáp án đúng:</span>` +
+          `<div style="color:#222;font-weight:800;margin-top:6px;">${item.answer}</div>` +
+          `<div style="color:#666;margin-top:2px;">${item.answerVi}</div>`;
+      }
+      feedback.className = "fitb-feedback";
 
       if (round === 1) eqRecordAndSave(`sentence-${item.id}`, "Sentence " + item.id, built, item.answer, correct);
       if (!correct) wrongItems.push(item);
