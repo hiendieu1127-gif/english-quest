@@ -262,21 +262,19 @@ function runGrammarMC() {
         }
         eqRecordAndSave(`mc-${item.en}`, item.en, item.opts[chosen], item.opts[item.answer], correct);
 
-        // Wait for the audio to actually finish before moving to the next question
-        // (instead of a fixed setTimeout that could fire before/after the real speech).
+        // Play the pronunciation audio, but always wait for a manual
+        // "Tiếp theo →" tap before moving on — so students have time to
+        // read the correct answer if they got it wrong (no auto-advance).
         const spokenText = sanitizeForSpeech(item.en.replace(/___/g, item.opts[item.answer].split("; ").join(" ")));
-        let moved = false;
-        function goNext() {
-          if (moved) return;
-          moved = true;
-          next(correct, item);
-        }
-        if (window.EQSpeak) {
-          window.EQSpeak.speak(spokenText, goNext);
-          setTimeout(goNext, 6000); // safety net in case TTS silently fails on some device
-        } else {
-          setTimeout(goNext, 400);
-        }
+        window.EQSpeak && window.EQSpeak.speak(spokenText);
+
+        const nextBtn = document.createElement("button");
+        nextBtn.type = "button";
+        nextBtn.className = "btn btn-primary btn-sm";
+        nextBtn.textContent = "Tiếp theo →";
+        nextBtn.style.marginTop = "14px";
+        reveal.insertAdjacentElement("afterend", nextBtn);
+        nextBtn.addEventListener("click", () => next(correct, item));
       });
     });
   }
