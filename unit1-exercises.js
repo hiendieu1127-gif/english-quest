@@ -151,7 +151,7 @@ async function renderExerciseComplete(host) {
       <div class="stage-complete">
         <div class="badge-circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
         <h3>Xong rồi!</h3>
-        <p>Chị đã hoàn thành hết các câu trong phần này.</p>
+        <p>Em đã hoàn thành hết các câu trong phần này.</p>
       </div>
     </div>`;
   if (!eqExerciseFullyAnswered() || !window.EQResults || !eqStudent || !window.EQResults.getResult) return;
@@ -291,7 +291,7 @@ function runRoundBased(host, items, renderQuestion, onShow, onComplete) {
             <div class="stage-complete">
               <div class="badge-circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
               <h3>Xong rồi!</h3>
-              <p>Chị đã hoàn thành hết các câu trong phần này.</p>
+              <p>Em đã hoàn thành hết các câu trong phần này.</p>
             </div>
           </div>`;
       }
