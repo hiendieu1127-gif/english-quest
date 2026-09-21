@@ -248,4 +248,306 @@ function renderVocab() {
   });
 }
 
-// ---- Match A with B (scored: 5) — one definition at a time, pick the
+// ---- Match A with B (scored: 5) — one definition at a time, pick the matching word ----
+// Wrong answers automatically come back in a "Vòng 2" retry round (practice only, not re-scored).
+// Advancing to the next question requires a manual "Tiếp theo →" tap (no timer).
+function renderMatch() {
+  const host = document.getElementById("match-wrap");
+  if (!host) return;
+  runMatchRound(MATCH_ITEMS, 1);
+}
+
+function runMatchRound(items, round) {
+  const host = document.getElementById("match-wrap");
+  if (!host) return;
+  const total = items.length;
+  let i = 0;
+  const wrongItems = [];
+
+  function render() {
+    const item = items[i];
+    const others = MATCH_ITEMS.filter(m => m.id !== item.id).map(m => m.a);
+    const options = shuffle([item.a, ...shuffle(others).slice(0, 3)]);
+    const letters = ["A", "B", "C", "D"];
+    const header = round > 1
+      ? `<div style="background:#fff3cd;color:#8a6b00;font-weight:700;padding:10px 16px;border-radius:12px;margin-bottom:14px;text-align:center;">🔄 Làm lại câu sai — Vòng ${round}</div>`
+      : "";
+
+    host.innerHTML = `
+      <div class="runner-card">
+        ${header}
+        ${renderDots(i, total)}
+        <div class="mcq-def">${item.b}</div>
+        <div class="mcq-def-vi">${item.bVi}</div>
+        <div class="mcq-options" id="mcq-options">
+          ${options.map((opt, idx) => `<button type="button" class="mcq-option" data-word="${opt}"><span class="mcq-letter">${letters[idx]}</span>${opt}</button>`).join("")}
+        </div>
+        <div class="fitb-feedback" id="match-feedback"></div>
+      </div>`;
+
+    let answered = false;
+    const optionButtons = host.querySelectorAll(".mcq-option");
+    const feedback = document.getElementById("match-feedback");
+
+    optionButtons.forEach(btn => {
+      btn.addEventListener("click", () => {
+        if (answered) return;
+        answered = true;
+        const chosen = btn.dataset.word;
+        const correct = chosen === item.a;
+
+        optionButtons.forEach(b => {
+          b.disabled = true;
+          if (b.dataset.word === item.a) b.classList.add("correct");
+        });
+        if (!correct) btn.classList.add("wrong");
+
+        window.EQSpeak && window.EQSpeak.speak(item.a);
+        window.EQSound && (correct ? window.EQSound.correct() : window.EQSound.wrong());
+        window.EQMascot && window.EQMascot.show("mascot-box", correct ? "correct" : "wrong");
+
+        feedback.textContent = correct ? "✓ Chính xác!" : `Đáp án đúng: ${item.a}`;
+        feedback.className = correct ? "fitb-feedback ok" : "fitb-feedback no";
+
+        if (round === 1) eqRecordAndSave(`match-${item.id}`, item.b, chosen, item.a, correct);
+        if (!correct) wrongItems.push(item);
+
+        const nextBtn = document.createElement("button");
+        nextBtn.type = "button";
+        nextBtn.className = "btn btn-primary btn-sm";
+        nextBtn.textContent = "Tiếp theo →";
+        nextBtn.style.marginTop = "14px";
+        feedback.insertAdjacentElement("afterend", nextBtn);
+        nextBtn.addEventListener("click", () => {
+          i++;
+          if (i >= total) {
+            if (wrongItems.length > 0) {
+              runMatchRound(wrongItems, round + 1);
+            } else {
+              showSectionComplete(host, "Em đã hoàn thành phần Match A with B.", true, "complete_exercise");
+            }
+          } else {
+            render();
+          }
+        });
+      });
+    });
+  }
+  render();
+}
+
+// ---- True / False / No Information (scored: 5) — meaning hidden behind "Dịch" ----
+// Wrong answers automatically come back in a "Vòng 2" retry round (practice only, not re-scored).
+function renderTrueFalse() {
+  const host = document.getElementById("tf-list");
+  if (!host) return;
+  runTFRound(TF_ITEMS.map((t, idx) => ({ ...t, origIdx: idx })), 1);
+}
+
+function runTFRound(items, round) {
+  const host = document.getElementById("tf-list");
+  if (!host) return;
+  const total = items.length;
+  let answeredCount = 0;
+  const wrongItems = [];
+  const header = round > 1
+    ? `<div style="background:#fff3cd;color:#8a6b00;font-weight:700;padding:10px 16px;border-radius:12px;margin-bottom:14px;text-align:center;">🔄 Làm lại câu sai — Vòng ${round}</div>`
+    : "";
+
+  host.innerHTML = header + items.map((t, idx) => `
+    <div class="tf-item" data-idx="${idx}">
+      <div>${idx + 1}. ${t.en}</div>
+      <button type="button" class="eq-translate-btn" data-idx="${idx}">🔤 Dịch</button>
+      <div class="tf-vi" id="tf-vi-${idx}" style="display:none;">${t.vi}</div>
+      <div class="tf-btn-row">
+        <button type="button" class="tf-btn" data-choice="T">T</button>
+        <button type="button" class="tf-btn" data-choice="F">F</button>
+        <button type="button" class="tf-btn" data-choice="NI">NI</button>
+      </div>
+      <div class="fitb-feedback" id="tf-feedback-${idx}"></div>
+    </div>`).join("");
+
+  if (round > 1) host.scrollIntoView({ behavior: "smooth", block: "start" });
+
+  host.querySelectorAll(".eq-translate-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const idx = Number(btn.dataset.idx);
+      const viEl = document.getElementById(`tf-vi-${idx}`);
+      const showing = viEl.style.display !== "none";
+      viEl.style.display = showing ? "none" : "block";
+      btn.textContent = showing ? "🔤 Dịch" : "🔤 Ẩn nghĩa";
+    });
+  });
+
+  host.querySelectorAll(".tf-item").forEach((itemEl) => {
+    const idx = Number(itemEl.dataset.idx);
+    const t = items[idx];
+    let answered = false;
+    itemEl.querySelectorAll(".tf-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        if (answered) return;
+        answered = true;
+        const choice = btn.dataset.choice;
+        const correct = choice === t.answer;
+        itemEl.querySelectorAll(".tf-btn").forEach(b => {
+          if (b.dataset.choice === t.answer) b.classList.add("selected-correct");
+        });
+        if (!correct) btn.classList.add("selected-wrong");
+        window.EQSound && (correct ? window.EQSound.correct() : window.EQSound.wrong());
+        window.EQMascot && window.EQMascot.show("mascot-box", correct ? "correct" : "wrong");
+        const feedback = document.getElementById(`tf-feedback-${idx}`);
+        feedback.textContent = correct ? "✓ Chính xác!" : `Đáp án đúng: ${t.answer}`;
+        feedback.className = correct ? "fitb-feedback ok" : "fitb-feedback no";
+
+        if (round === 1) eqRecordAndSave(`tf-${t.origIdx}`, t.en, choice, t.answer, correct);
+        if (!correct) wrongItems.push(t);
+
+        answeredCount++;
+        if (answeredCount === total) {
+          setTimeout(() => {
+            if (wrongItems.length > 0) {
+              runTFRound(wrongItems, round + 1);
+            } else {
+              showSectionComplete(host, "Em đã hoàn thành phần True/False.", true, "complete_exercise");
+            }
+          }, 900);
+        }
+      });
+    });
+  });
+}
+
+// ---- Make sentences (scored: 4, one at a time) — meaning hidden behind "Dịch" ----
+// Wrong answers automatically come back in a "Vòng 2" retry round (practice only, not re-scored).
+// Advancing to the next sentence requires a manual "Tiếp theo →" tap (no timer).
+function runSentences() {
+  const host = document.getElementById("sentence-runner");
+  if (!host) return;
+  runSentenceRound(SENTENCES, 1);
+}
+
+function runSentenceRound(items, round) {
+  const host = document.getElementById("sentence-runner");
+  if (!host) return;
+  const total = items.length;
+  let i = 0;
+  const wrongItems = [];
+
+  function render() {
+    const item = items[i];
+    const shuffled = shuffle(item.chunks.map((c, idx) => ({ ...c, origIdx: idx })));
+    const header = round > 1
+      ? `<div style="background:#fff3cd;color:#8a6b00;font-weight:700;padding:10px 16px;border-radius:12px;margin-bottom:14px;text-align:center;">🔄 Làm lại câu sai — Vòng ${round}</div>`
+      : "";
+
+    host.innerHTML = `
+      <div class="runner-card">
+        ${header}
+        ${renderDots(i, total)}
+        <div class="quiz-item">
+          <button type="button" class="eq-translate-btn" id="sentence-translate">🔤 Dịch</button>
+          <div class="sentence-answer-strip" id="sentence-strip"></div>
+          <div class="sentence-chunks" id="sentence-pool">
+            ${shuffled.map(c => `<div class="sentence-chunk" data-orig="${c.origIdx}">${c.en}<span class="chunk-vi">${c.vi}</span></div>`).join("")}
+          </div>
+          <div class="fitb-row" style="margin-top:14px;">
+            <button class="btn btn-secondary btn-sm" id="sentence-reset">Làm lại</button>
+            <button class="btn btn-primary btn-sm" id="sentence-check">Kiểm tra</button>
+          </div>
+          <div class="fitb-feedback" id="sentence-feedback"></div>
+        </div>
+      </div>`;
+
+    const strip = host.querySelector("#sentence-strip");
+    const pool = host.querySelector("#sentence-pool");
+    const feedback = host.querySelector("#sentence-feedback");
+    const translateBtn = host.querySelector("#sentence-translate");
+    const resetBtn = host.querySelector("#sentence-reset");
+    const checkBtn = host.querySelector("#sentence-check");
+    let placed = [];
+    let checked = false;
+
+    translateBtn.addEventListener("click", () => {
+      const showing = pool.classList.toggle("show-vi");
+      translateBtn.textContent = showing ? "🔤 Ẩn nghĩa" : "🔤 Dịch";
+    });
+
+    function renderStrip() {
+      strip.innerHTML = placed.map(c => `<div class="sentence-chunk placed">${c.en}</div>`).join("");
+    }
+
+    pool.querySelectorAll(".sentence-chunk").forEach(chunkEl => {
+      chunkEl.addEventListener("click", () => {
+        if (checked || chunkEl.classList.contains("used")) return;
+        const origIdx = Number(chunkEl.dataset.orig);
+        placed.push(item.chunks[origIdx]);
+        chunkEl.classList.add("used");
+        renderStrip();
+      });
+    });
+
+    resetBtn.addEventListener("click", () => {
+      if (checked) return;
+      placed = [];
+      pool.querySelectorAll(".sentence-chunk").forEach(c => c.classList.remove("used"));
+      renderStrip();
+    });
+
+    checkBtn.addEventListener("click", () => {
+      if (checked) return;
+      checked = true;
+      const built = placed.map(c => c.en).join(" ");
+      const correct = built === item.answer;
+      window.EQSound && (correct ? window.EQSound.correct() : window.EQSound.wrong());
+      window.EQMascot && window.EQMascot.show("mascot-box", correct ? "correct" : "wrong");
+      feedback.innerHTML = correct
+        ? `✓ Chính xác!<br><strong>${item.answer}</strong><br>${item.answerVi}`
+        : `Chưa đúng.<br>Đáp án đúng: <strong>${item.answer}</strong><br>${item.answerVi}`;
+      feedback.className = correct ? "fitb-feedback ok" : "fitb-feedback no";
+
+      if (round === 1) eqRecordAndSave(`sentence-${item.id}`, "Sentence " + item.id, built, item.answer, correct);
+      if (!correct) wrongItems.push(item);
+
+      resetBtn.disabled = true;
+      checkBtn.disabled = true;
+
+      const nextBtn = document.createElement("button");
+      nextBtn.type = "button";
+      nextBtn.className = "btn btn-primary btn-sm";
+      nextBtn.textContent = "Tiếp theo →";
+      nextBtn.style.marginTop = "14px";
+      feedback.insertAdjacentElement("afterend", nextBtn);
+      nextBtn.addEventListener("click", () => {
+        i++;
+        if (i >= total) {
+          if (wrongItems.length > 0) {
+            runSentenceRound(wrongItems, round + 1);
+          } else {
+            showSectionComplete(host, "Em đã hoàn thành hết phần Exercises của Unit 1.", false, "complete_unit");
+          }
+        } else {
+          render();
+        }
+      });
+    });
+  }
+  render();
+}
+
+// ---- Breadcrumb-style navigation between the 5 sections ----
+function switchPanel(targetId) {
+  document.querySelectorAll(".ex-panel").forEach(p => p.classList.remove("active"));
+  document.getElementById(targetId).classList.add("active");
+  document.querySelectorAll(".eq-crumb").forEach(c => c.classList.toggle("active", c.dataset.target === targetId));
+  window.scrollTo({ top: document.getElementById("eq-crumb-row").offsetTop - 90, behavior: "smooth" });
+}
+
+function setupCrumbNav() {
+  document.querySelectorAll(".eq-crumb").forEach(c => {
+    c.addEventListener("click", () => switchPanel(c.dataset.target));
+  });
+  document.querySelectorAll(".eq-back-link").forEach(link => {
+    link.addEventListener("click", () => switchPanel(link.dataset.target));
+  });
+  switchPanel("panel-reading");
+}
