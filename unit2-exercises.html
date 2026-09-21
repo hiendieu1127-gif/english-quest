@@ -1,1 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unit 2 Exercises · English Quest</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="unit1-exercises.css">
+<style>
+  /* Small additions only for this page — reuses the shared classes everywhere else */
 
+  /* --- Numbered tab nav (bigger font, numbered circle, matches the old Grade 5 style) --- */
+  .eq-crumb-row { display:flex; flex-wrap:wrap; gap:10px; margin-bottom:16px; }
+  .eq-crumb {
+    display:flex; align-items:center; gap:9px;
+    background:#fff; border:1px solid #ddd; border-radius:999px;
+    padding:8px 18px 8px 8px; font-size:1rem; font-weight:700;
+    cursor:pointer; opacity:.62;
+  }
+  .eq-crumb-num {
+    width:28px; height:28px; border-radius:50%; flex-shrink:0;
+    background:#ececec; color:#888; font-size:.9rem; font-weight:800;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .eq-crumb.active { opacity:1; border-color: var(--page-color); color: var(--page-color); }
+  .eq-crumb.active .eq-crumb-num { background: var(--page-color); color:#fff; }
+  .eq-back-link { display:inline-block; margin-bottom:14px; font-size:.9rem; text-decoration:underline; cursor:pointer; color: var(--page-color); background:none; border:none; padding:0; }
+  .reading-passage mark { background: #cfe8ff; padding:0 2px; border-radius:3px; }
+
+  /* --- Vocabulary: 3-column flip-card grid, always with audio --- */
+  .vocab-grid { display:grid; grid-template-columns: repeat(3, 1fr); gap:12px; }
+  @media (max-width: 640px) { .vocab-grid { grid-template-columns: repeat(2, 1fr); } }
+  .vocab-card {
+    background:#fff; border:1px solid #e2e2e2; border-radius:14px;
+    padding:16px 10px; text-align:center; cursor:pointer;
+    min-height:96px; display:flex; align-items:center; justify-content:center;
+  }
+  .vocab-card.flipped { background:#fff7e6; border-color:#f5b942; }
+  .vocab-card .vocab-front { font-weight:800; line-height:1.35; }
+  .vocab-card .vocab-hint { display:block; font-size:.7rem; color:#999; font-weight:400; margin-top:4px; }
+  .vocab-card .vocab-back { display:none; }
+  .vocab-card.flipped .vocab-front { display:none; }
+  .vocab-card.flipped .vocab-back { display:block; font-weight:700; color:#7a5b00; }
+
+  /* --- Match A with B → one-at-a-time multiple choice, mobile-friendly --- */
+  .mcq-def { font-size:1.08rem; font-weight:800; margin-bottom:2px; text-align:center; }
+  .mcq-def-vi { color:#666; font-size:.9rem; margin-bottom:16px; text-align:center; }
+  .eq-instruction { font-size:1.02rem; font-weight:800; color:#222; margin:0 0 12px; }
+  .mcq-options { display:grid; grid-template-columns: 1fr 1fr; gap:10px; }
+  @media (max-width: 480px) { .mcq-options { grid-template-columns: 1fr; } }
+  .mcq-option {
+    display:flex; align-items:center; gap:9px; text-align:left;
+    background:#fff; border:2px solid #e2e2e2; border-radius:12px;
+    padding:12px 14px; font-weight:700; cursor:pointer;
+  }
+  .mcq-option .mcq-letter {
+    width:26px; height:26px; border-radius:50%; background:#eee; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center; font-size:.82rem; font-weight:800;
+  }
+  .mcq-option.correct { border-color:#3fae4f; background:#eafbea; }
+  .mcq-option.wrong { border-color:#e05c5c; background:#fdeaea; }
+  .mcq-option[disabled] { cursor:default; color:#222; }
+
+  /* --- Shared "Dịch" (translate-on-demand) button --- */
+  .eq-translate-btn {
+    display:inline-flex; align-items:center; gap:6px;
+    background:#eef2ff; border:1px solid #c7d2ff; color:#5b7cfa;
+    border-radius:999px; padding:6px 14px; font-size:.85rem; font-weight:800;
+    cursor:pointer; margin:6px 0 10px;
+  }
+
+  /* --- True / False --- */
+  .tf-item { background:#fff; border:1px solid #e2e2e2; border-radius:12px; padding:14px; margin-bottom:12px; }
+  .tf-vi { color:#666; font-size:.88rem; margin:0 0 10px; }
+  .tf-btn-row { display:flex; gap:8px; }
+  .tf-btn { border:2px solid #e2e2e2; background:#fff; border-radius:10px; padding:8px 16px; font-weight:800; cursor:pointer; }
+  .tf-btn.selected-correct { border-color:#3fae4f; background:#eafbea; }
+  .tf-btn.selected-wrong { border-color:#e05c5c; background:#fdeaea; }
+
+  /* --- Make sentences --- */
+  .sentence-answer-strip { min-height:52px; border:2px dashed #ccc; border-radius:12px; padding:10px; display:flex; flex-wrap:wrap; gap:8px; margin:12px 0; }
+  .sentence-chunks { display:flex; flex-wrap:wrap; gap:8px; }
+  .sentence-chunk { background:#fff; border:2px solid #e2e2e2; border-radius:10px; padding:8px 12px; cursor:pointer; text-align:center; }
+  .sentence-chunk .chunk-vi { display:none; font-size:.75rem; color:#888; font-weight:400; }
+  .sentence-chunks.show-vi .sentence-chunk .chunk-vi { display:block; }
+  .sentence-chunk.used { opacity:.35; pointer-events:none; }
+  .sentence-chunk.placed { background:#eef2ff; border-color:#5b7cfa; }
+  /* --- Fill in the Blank / Quiz: a/b/c choice list, same look as the Match options --- */
+  .q-stem { font-size:1.05rem; font-weight:800; line-height:1.5; margin:0 0 4px; }
+  .q-stem .q-blank { display:inline-block; min-width:56px; border-bottom:3px solid #bbb; text-align:center; color:#5b7cfa; }
+  .q-vi { color:#666; font-size:.9rem; margin:0 0 10px; }
+  .q-vi div { margin-top:2px; }
+  .q-options { display:grid; grid-template-columns: 1fr; gap:10px; margin-top:10px; }
+  .q-listen-btn {
+    display:inline-flex; align-items:center; gap:6px;
+    background:#fff7e6; border:1px solid #f5b942; color:#7a5b00;
+    border-radius:999px; padding:6px 14px; font-size:.85rem; font-weight:800;
+    cursor:pointer; margin:6px 8px 10px 0;
+  }
+  .q-audio { display:block; width:100%; max-width:420px; margin:6px 0 8px; }
+  .q-part-tag { display:inline-block; background:#eef2ff; color:#5b7cfa; font-weight:800; font-size:.8rem; padding:4px 12px; border-radius:999px; margin-bottom:10px; }
+  .q-pic { display:block; width:150px; max-width:60%; height:auto; border-radius:14px; border:1px solid #e2e2e2; margin:4px auto 12px; }
+  .cw-row { display:flex; align-items:center; gap:8px; flex-wrap:wrap; justify-content:center; margin:6px 0 4px; font-size:1.15rem; font-weight:800; }
+  .cw-letter { display:inline-flex; align-items:center; justify-content:center; min-width:30px; height:38px; padding:0 8px; background:#eef2ff; color:#5b7cfa; border-radius:8px; }
+  .cw-word { display:inline-flex; align-items:center; gap:6px; white-space:nowrap; }
+  .cw-input { width:7.5em; font-size:1.05rem; font-weight:700; padding:8px 10px; border:2px solid #e2e2e2; border-radius:10px; text-transform:lowercase; }
+  .cw-input:focus { outline:none; border-color: var(--page-color); }
+  .cw-input.ok { border-color:#3fae4f; background:#eafbea; }
+  .cw-input.no { border-color:#e05c5c; background:#fdeaea; }
+
+  /* --- Match and read aloud: Tap Pairs (two columns, tap left = hear it, then tap its partner) --- */
+  .pairs-board { display:grid; grid-template-columns: 1fr 1fr; gap:14px; margin-top:6px; }
+  .pairs-col { display:flex; flex-direction:column; gap:10px; }
+  .pair-tile {
+    background:#fff; border:2px solid #e2e2e2; border-radius:12px;
+    padding:12px 10px; font-weight:700; text-align:center; cursor:pointer; line-height:1.35;
+  }
+  .pair-tile.selected { border-color:#5b7cfa; background:#eef2ff; }
+  .pair-tile.matched { border-color:#3fae4f; background:#eafbea; color:#1a7a3e; cursor:default; pointer-events:none; }
+  .pair-tile.shake { border-color:#e05c5c; background:#fdeaea; animation: eqPairShake .3s ease; }
+  @keyframes eqPairShake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-5px)} 75%{transform:translateX(5px)} }
+  /* --- Progress dots + "Xong rồi!" screen (these live in vocabulary.css on other pages) --- */
+  .runner-dots { display:flex; gap:6px; justify-content:center; align-items:center; margin:0 0 14px; }
+  .runner-dot { width:8px; height:8px; border-radius:50%; background:#ddd; }
+  .runner-dot.current { background:#5b7cfa; width:22px; border-radius:4px; }
+  .runner-dot.done { background:#3fae4f; }
+  .stage-complete { text-align:center; padding:20px 0; }
+  .stage-complete .badge-circle { width:64px; height:64px; border-radius:50%; background:#3fae4f; color:#fff; display:flex; align-items:center; justify-content:center; margin:0 auto 12px; }
+  .stage-complete .badge-circle svg { width:38px; height:38px; }
+  .stage-complete h3 { margin-bottom:6px; }
+  .stage-complete p { margin-bottom:6px; }
+</style>
+</head>
+<body data-page="lessons" style="--page-color: var(--c-exercises);">
+  <header class="site-header">
+    <nav class="container nav-row" aria-label="Main navigation">
+      <a class="brand" href="index.html">
+        <span class="brand-mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 5.5C4 4.7 4.7 4 5.5 4H12v16H5.5A1.5 1.5 0 0 1 4 18.5v-13Z" stroke-linejoin="round"/><path d="M20 5.5c0-.8-.7-1.5-1.5-1.5H12v16h6.5a1.5 1.5 0 0 0 1.5-1.5v-13Z" stroke-linejoin="round"/></svg></span>
+        English Quest
+      </a>
+      <button class="nav-toggle" aria-label="Open menu" aria-expanded="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke-linecap="round"/></svg>
+      </button>
+      <ul class="nav-links">
+        <li><a class="navlink" href="unit-g5.html?u=2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 5.5C4 4.7 4.7 4 5.5 4H12v16H5.5A1.5 1.5 0 0 1 4 18.5v-13Z" stroke-linejoin="round"/><path d="M20 5.5c0-.8-.7-1.5-1.5-1.5H12v16h6.5a1.5 1.5 0 0 0 1.5-1.5v-13Z" stroke-linejoin="round"/></svg><span>Unit 2</span></a></li>
+      </ul>
+    </nav>
+  </header>
+  <div class="nav-scrim"></div>
+
+  <main>
+    <section class="page-hero">
+      <div class="container">
+        <span class="eyebrow" style="border-color: var(--page-color);"><a href="unit-g5.html?u=2" style="color:inherit;">Unit 2: Our Homes</a></span>
+        <h1 style="margin-bottom:4px;">Exercises</h1>
+        <p>Reading, Vocabulary, Fill in the Blank, Sentence Ordering, Quiz.</p>
+      </div>
+    </section>
+
+    <section class="section" style="padding-top:10px;">
+      <div class="container">
+        <div class="eq-crumb-row" id="eq-crumb-row">
+          <button class="eq-crumb" data-target="panel-reading"><span class="eq-crumb-num">1</span>Reading</button>
+          <button class="eq-crumb" data-target="panel-vocab"><span class="eq-crumb-num">2</span>Vocabulary</button>
+          <button class="eq-crumb" data-target="panel-fitb"><span class="eq-crumb-num">3</span>Fill in the Blank</button>
+          <button class="eq-crumb" data-target="panel-order"><span class="eq-crumb-num">4</span>Sentence Ordering</button>
+          <button class="eq-crumb" data-target="panel-quiz"><span class="eq-crumb-num">5</span>Quiz</button>
+        </div>
+
+        <div id="mascot-box" class="mascot-box"></div>
+
+        <div class="ex-panel active" id="panel-reading">
+          <div class="runner-card">
+            <p class="eq-instruction">Đọc đoạn văn. Những từ tô màu là từ mới của bài.</p>
+            <p class="reading-card reading-passage" id="reading-text" style="line-height:2;"></p>
+            <button type="button" class="eq-translate-btn" id="reading-translate-btn">🔤 Dịch</button>
+            <div class="tf-vi" id="reading-vi" style="display:none; line-height:1.7;"></div>
+            <div>
+              <button type="button" class="btn btn-secondary btn-sm" id="reading-to-vocab-btn" style="margin-top:12px;">Xem từ vựng mới →</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="ex-panel" id="panel-vocab">
+          <button type="button" class="eq-back-link" data-target="panel-reading">← Quay lại Reading để tìm ý</button>
+          <div class="runner-card">
+            <p class="eq-instruction">Chạm vào thẻ để nghe và xem nghĩa.</p>
+            <div class="vocab-grid" id="vocab-grid"></div>
+            <div>
+              <button type="button" class="btn btn-secondary btn-sm" id="vocab-to-fitb-btn" style="margin-top:14px;">Làm bài Fill in the Blank →</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="ex-panel" id="panel-fitb">
+          <button type="button" class="eq-back-link" data-target="panel-reading">← Quay lại Reading để tìm ý</button>
+          <div class="runner-card">
+            <p class="eq-instruction">Đọc đoạn văn rồi chọn đáp án đúng.</p>
+            <div id="fitb-wrap"></div>
+          </div>
+        </div>
+
+        <div class="ex-panel" id="panel-order">
+          <div class="runner-card">
+            <p class="eq-instruction">Sentence Ordering — chạm các cụm từ theo đúng thứ tự để tạo thành câu.</p>
+            <div id="order-wrap"></div>
+          </div>
+        </div>
+
+        <div class="ex-panel" id="panel-quiz">
+          <div class="runner-card">
+            <div id="quiz-wrap"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <div class="footer-brand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 5.5C4 4.7 4.7 4 5.5 4H12v16H5.5A1.5 1.5 0 0 1 4 18.5v-13Z" stroke-linejoin="round"/><path d="M20 5.5c0-.8-.7-1.5-1.5-1.5H12v16h6.5a1.5 1.5 0 0 0 1.5-1.5v-13Z" stroke-linejoin="round"/></svg> English Quest</div>
+          <p style="max-width:32ch; font-size:.9rem; opacity:.85;">A friendly place for Grade 5 students to read, play, and practise English every week.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Learn</h4>
+          <ul>
+            <li><a href="unit-g5.html?u=2">Unit 2</a></li>
+            <li><a href="lessons-g5.html">Lessons</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>You</h4>
+          <ul>
+            <li><a href="lessons.html">Đổi khối</a></li>
+            <li><a href="index.html">Home</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; 2026 English Quest &mdash; a class website by teacher Hien.</span>
+      </div>
+    </div>
+  </footer>
+
+<script src="script.js?v=2"></script>
+<script src="student-gate.js"></script>
+<script type="module" src="results-service.js"></script>
+<script src="unit2-exercises.js"></script>
+<script src="mascot.js"></script>
+</body>
+</html>
