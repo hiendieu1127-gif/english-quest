@@ -360,7 +360,7 @@ function buildSequentialItems(stageKey, unit) {
 
   if (stageKey === "multiple-choice") {
     const pool = wordsForStage;
-    return pool.map((w, i) => {
+    return shuffle(pool.map((w, i) => {
       const distractors = pickDistractors(pool, i, 2).map(di => pool[di]);
       const correctPos = Math.floor(Math.random() * 3);
       const opts = [];
@@ -370,7 +370,7 @@ function buildSequentialItems(stageKey, unit) {
         else { opts.push(distractors[di].vi); di++; }
       }
       return { word: w, opts, correctIdx: correctPos };
-    });
+    }));
   }
 
   if (stageKey === "missing-word") {
@@ -467,7 +467,9 @@ function runSequential(host, stageKey, items, onDone) {
       </div>`;
 
     if (stageKey === "missing-word") {
-      const spoken = item.sentence.replace("___", "blank");
+      // sentence (blank read as "blank") + the answer choices: "A, great. B, this. C, about."
+      const spoken = item.sentence.replace("___", "blank") + " " +
+        item.opts.map((o, oi) => `${String.fromCharCode(65 + oi)}, ${o}.`).join(" ");
       speakWord(spoken);
       const promptEl = document.getElementById("prompt-speak");
       if (promptEl) {
