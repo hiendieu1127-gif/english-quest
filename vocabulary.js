@@ -2,11 +2,17 @@
 // Vocabulary — interactive learning path
 // Data-driven: adding a new unit = adding one object to VOCAB_UNITS_G5.
 // Each word has a `stages` array saying which stage(s) it belongs to
-// (tap-pairs / picture-matching / multiple-choice / missing-word).
-// Sentence Shuffle is the one exception: it still just uses any word
-// that has an `example` sentence, regardless of stage tag.
-// Picture Matching also needs an `icon`; Missing Word also needs an
-// `example` containing the phrase to blank out.
+// (tap-pairs / picture-matching / multiple-choice / missing-word /
+// sentence-shuffle).
+// Picture Matching also needs an `icon` (+ optional `note` shown after
+// answering); Missing Word needs `example` + `blank` (+ optional
+// `viFull` / `viBlanked` for the 🌐 Dịch button); Sentence Shuffle needs
+// `example` (+ optional `chunks`, `viFull`).
+// Optional `group` (e.g. "numbers", "this-that"): wrong answers are taken
+// from the same group first.
+// Optional unit flag `hasExercises: false` hides the "sang phần Exercise"
+// button on the last screen until that unit's Exercises page exists.
+// Deep link: vocabulary.html?unit=unit2 opens that unit directly.
 //
 // NOTE: uses `var` (not `const`) so this becomes a real `window`
 // property — teacher-dashboard.js auto-discovers every grade's
@@ -47,11 +53,66 @@ var VOCAB_UNITS_G5 = [
       { id: "kitten", en: "kitten", vi: "mèo con", stages: ["multiple-choice"] },
       { id: "pets", en: "pets", vi: "thú cưng", stages: ["multiple-choice"] },
 
-      // Missing Word — 4 set phrases (also feed Sentence Shuffle, unchanged mechanism)
-      { id: "tell-a-little-bit", en: "Let me tell you a little bit about myself.", vi: "Để tôi kể cho các bạn nghe một chút về bản thân tôi.", example: "Let me tell you a little bit about myself.", blank: "tell you", stages: ["missing-word"] },
-      { id: "introduce-myself", en: "Let me introduce myself.", vi: "Để tôi giới thiệu về bản thân mình.", example: "Let me introduce myself.", blank: "introduce", stages: ["missing-word"] },
-      { id: "tell-about-yourself-q", en: "Can you tell me about yourself?", vi: "Bạn có thể kể cho tôi về bản thân của bạn được không?", example: "Can you tell me about yourself?", blank: "tell", stages: ["missing-word"] },
-      { id: "whats-your-name", en: "What's your name?", vi: "Tên bạn là gì?", example: "What's your name?", blank: "name", stages: ["missing-word"] },
+      // Missing Word — 4 set phrases (these same 4 sentences also feed Sentence Shuffle)
+      { id: "tell-a-little-bit", en: "Let me tell you a little bit about myself.", vi: "Để tôi kể cho các bạn nghe một chút về bản thân tôi.", viFull: "Để tôi kể cho các bạn nghe một chút về bản thân tôi.", example: "Let me tell you a little bit about myself.", blank: "tell you", stages: ["missing-word", "sentence-shuffle"] },
+      { id: "introduce-myself", en: "Let me introduce myself.", vi: "Để tôi giới thiệu về bản thân mình.", viFull: "Để tôi giới thiệu về bản thân mình.", example: "Let me introduce myself.", blank: "introduce", stages: ["missing-word", "sentence-shuffle"] },
+      { id: "tell-about-yourself-q", en: "Can you tell me about yourself?", vi: "Bạn có thể kể cho tôi về bản thân của bạn được không?", viFull: "Bạn có thể kể cho tôi về bản thân của bạn được không?", example: "Can you tell me about yourself?", blank: "tell", stages: ["missing-word", "sentence-shuffle"] },
+      { id: "whats-your-name", en: "What's your name?", vi: "Tên bạn là gì?", viFull: "Tên bạn là gì?", example: "What's your name?", blank: "name", stages: ["missing-word", "sentence-shuffle"] },
+    ],
+  },
+
+  {
+    id: "unit2",
+    number: 2,
+    title: "Our Homes",
+    subtitle: "Global Success 5 · New Vocabulary",
+    hasExercises: false, // Exercises page for Unit 2 isn't built yet
+    words: [
+      // Tap Pairs — slides 1, 3 & 4
+      { id: "u2-house", en: "house", vi: "nhà ở", icon: "img/vocab-g5-u2-house.jpg", stages: ["tap-pairs", "picture-matching"] },
+      { id: "u2-building", en: "building", vi: "toà nhà", icon: "img/vocab-g5-u2-building.jpg", stages: ["tap-pairs", "picture-matching"] },
+      { id: "u2-tower", en: "tower", vi: "toà tháp", icon: "img/vocab-g5-u2-tower.jpg", stages: ["tap-pairs", "picture-matching"] },
+      { id: "u2-flat", en: "flat", vi: "căn hộ", icon: "img/vocab-g5-u2-flat.jpg", stages: ["tap-pairs", "picture-matching"] },
+      { id: "u2-school", en: "school", vi: "trường học", icon: "img/vocab-g5-u2-school.jpg", stages: ["tap-pairs", "picture-matching"] },
+      { id: "u2-street", en: "street", vi: "con đường", icon: "img/vocab-g5-u2-street.jpg", stages: ["tap-pairs", "picture-matching"] },
+      { id: "u2-near", en: "near", vi: "gần", group: "words", stages: ["tap-pairs", "multiple-choice"] },
+      { id: "u2-far", en: "far", vi: "xa", group: "words", stages: ["tap-pairs", "multiple-choice"] },
+      { id: "u2-great", en: "great", vi: "tuyệt vời", group: "words", stages: ["tap-pairs", "multiple-choice"] },
+      { id: "u2-best-friend", en: "best friend", vi: "bạn thân", group: "words", stages: ["tap-pairs", "multiple-choice"] },
+
+      // Picture Matching — 6 photos (same words as Tap Pairs) + this = near, that = far (slide 2)
+      { id: "u2-this", en: "this", vi: "chỉ vật ở gần", note: "chỉ vật ở gần", group: "this-that", icon: "img/vocab-g5-u2-this.jpg", stages: ["picture-matching"] },
+      { id: "u2-that", en: "that", vi: "chỉ vật ở xa", note: "chỉ vật ở xa", group: "this-that", icon: "img/vocab-g5-u2-that.jpg", stages: ["picture-matching"] },
+
+      // Multiple Choice — phrases (slides 3 & 4)
+      { id: "u2-dear-lan", en: "Dear Lan,", vi: "Gửi Lan,", group: "phrases", stages: ["multiple-choice"] },
+      { id: "u2-what-about-you", en: "What about you?", vi: "Còn bạn thì sao?", group: "phrases", stages: ["multiple-choice"] },
+      { id: "u2-house-address", en: "What's your house address?", vi: "Địa chỉ nhà của bạn là gì?", group: "phrases", stages: ["multiple-choice"] },
+
+      // Multiple Choice — numbers 11–20 (slide 5). Distractors come from the same group.
+      { id: "u2-n11", en: "eleven", vi: "11", group: "numbers", stages: ["multiple-choice"] },
+      { id: "u2-n12", en: "twelve", vi: "12", group: "numbers", stages: ["multiple-choice"] },
+      { id: "u2-n13", en: "thirteen", vi: "13", group: "numbers", stages: ["multiple-choice"] },
+      { id: "u2-n14", en: "fourteen", vi: "14", group: "numbers", stages: ["multiple-choice"] },
+      { id: "u2-n15", en: "fifteen", vi: "15", group: "numbers", stages: ["multiple-choice"] },
+      { id: "u2-n16", en: "sixteen", vi: "16", group: "numbers", stages: ["multiple-choice"] },
+      { id: "u2-n17", en: "seventeen", vi: "17", group: "numbers", stages: ["multiple-choice"] },
+      { id: "u2-n18", en: "eighteen", vi: "18", group: "numbers", stages: ["multiple-choice"] },
+      { id: "u2-n19", en: "nineteen", vi: "19", group: "numbers", stages: ["multiple-choice"] },
+      { id: "u2-n20", en: "twenty", vi: "20", group: "numbers", stages: ["multiple-choice"] },
+
+      // Missing Word + Sentence Shuffle — set sentences (slides 1, 3 & 4)
+      { id: "u2-s-live-flat", en: "Do you live in this flat?", vi: "Bạn có sống trong căn hộ này không?", example: "Do you live in this flat?", blank: "this", viFull: "Bạn có sống trong căn hộ này không?", viBlanked: "Bạn có sống trong căn hộ ___ không?", stages: ["missing-word", "sentence-shuffle"] },
+      { id: "u2-s-address", en: "What's your house address?", vi: "Địa chỉ nhà của bạn là gì?", example: "What's your house address?", blank: "address", viFull: "Địa chỉ nhà của bạn là gì?", viBlanked: "___ nhà của bạn là gì?", stages: ["missing-word", "sentence-shuffle"] },
+      { id: "u2-s-tran-phu", en: "It's Tran Phu street.", vi: "Trên đường Tran Phu.", example: "It's Tran Phu street.", blank: "street", viFull: "Trên đường Tran Phu.", viBlanked: "Trên ___ Tran Phu.", stages: ["missing-word", "sentence-shuffle"] },
+      { id: "u2-s-great-city", en: "It's a great city.", vi: "Đó là một thành phố tuyệt vời.", example: "It's a great city.", blank: "great", viFull: "Đó là một thành phố tuyệt vời.", viBlanked: "Đó là một thành phố ___.", stages: ["missing-word", "sentence-shuffle"] },
+      { id: "u2-s-what-about-you", en: "What about you?", vi: "Còn bạn thì sao?", example: "What about you?", blank: "about", viFull: "Còn bạn thì sao?", viBlanked: "___ bạn thì sao?", stages: ["missing-word", "sentence-shuffle"] },
+
+      // Sentence Shuffle only
+      { id: "u2-s-yes-i-do", en: "Yes, I do.", vi: "Yes, I do.", example: "Yes, I do.", stages: ["sentence-shuffle"] },
+      { id: "u2-s-no-i-dont", en: "No, I don't.", vi: "No, I don't.", example: "No, I don't.", stages: ["sentence-shuffle"] },
+      { id: "u2-s-this-house", en: "This is a house.", vi: "Đây là một ngôi nhà.", example: "This is a house.", viFull: "Đây là một ngôi nhà. (this: chỉ vật ở gần)", stages: ["sentence-shuffle"] },
+      { id: "u2-s-that-tower", en: "That is a tower.", vi: "Kia là một toà tháp.", example: "That is a tower.", viFull: "Kia là một toà tháp. (that: chỉ vật ở xa)", stages: ["sentence-shuffle"] },
     ],
   },
 ];
@@ -63,9 +124,6 @@ const STAGES = [
   { key: "missing-word", title: "Missing Word", subtitle: "Chọn từ còn thiếu" },
   { key: "sentence-shuffle", title: "Sentence Shuffle", subtitle: "Sắp xếp câu" },
 ];
-
-// Picture Matching now uses real photos (see each word's `icon` path
-// above) instead of hand-drawn icons.
 
 const PASS_LS_KEY = "eq_vocab_progress";
 
@@ -203,7 +261,7 @@ function openUnit(unitId) {
 function backToUnits() {
   document.getElementById("unit-select-view").classList.remove("hidden");
   document.getElementById("path-view").classList.remove("active");
-  renderUnitSelect(); // refresh progress bars
+  renderUnitSelect();
 }
 
 function renderStepper() {
@@ -246,10 +304,10 @@ function onStageComplete(stageKey) {
       <div class="stage-complete">
         <div class="badge-circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
         <h3>Xong rồi!</h3>
-        <p>${isLast ? "Chị đã hoàn thành hết các bài trong Unit này." : "Sẵn sàng cho dạng bài tiếp theo chưa?"}</p>
+        <p>${isLast ? "Em đã hoàn thành hết các bài trong Unit này." : "Sẵn sàng cho dạng bài tiếp theo chưa?"}</p>
         <div class="runner-actions" ${isLast ? 'style="flex-direction:column;align-items:stretch;"' : ""}>
           ${isLast
-            ? `<button class="btn btn-primary" id="btn-go-exercises" style="width:100%;white-space:normal;">Tiếp tục sang phần Exercise &rarr;</button><button class="btn btn-secondary" id="btn-back-units" style="width:100%;white-space:normal;">Quay lại danh sách Unit</button>`
+            ? `${currentUnit.hasExercises === false ? "" : `<button class="btn btn-primary" id="btn-go-exercises" style="width:100%;white-space:normal;">Tiếp tục sang phần Exercise &rarr;</button>`}<button class="btn ${currentUnit.hasExercises === false ? "btn-primary" : "btn-secondary"}" id="btn-back-units" style="width:100%;white-space:normal;">Quay lại danh sách Unit</button>`
             : `<button class="btn btn-primary" id="btn-next-stage">Dạng bài tiếp theo &rarr;</button>`}
         </div>
       </div>
@@ -264,6 +322,16 @@ function onStageComplete(stageKey) {
   });
 }
 
+// Distractors for an item: words from the SAME `group` first (e.g. numbers
+// with numbers, this with that), then any other word in the stage pool.
+function pickDistractors(pool, idx, n) {
+  const g = pool[idx].group || "default";
+  const others = pool.map((_, i) => i).filter(i => i !== idx);
+  const same = shuffle(others.filter(i => (pool[i].group || "default") === g));
+  const rest = shuffle(others.filter(i => (pool[i].group || "default") !== g));
+  return same.concat(rest).slice(0, n);
+}
+
 // ============================================================
 // Build the item list for a sequential (one-at-a-time) stage
 // ============================================================
@@ -272,15 +340,16 @@ function buildSequentialItems(stageKey, unit) {
 
   if (stageKey === "picture-matching") {
     const pool = wordsForStage.filter(w => w.icon);
-    return pool.map(w => {
-      const wIdx = pool.indexOf(w);
-      const distractorIdx = sample(pool, 2, wIdx);
-      const correctPos = Math.floor(Math.random() * 3);
+    if (pool.length < 2) return [];
+    const optCount = Math.min(3, pool.length);
+    return pool.map((w, wIdx) => {
+      const distractors = pickDistractors(pool, wIdx, optCount - 1).map(di => pool[di]);
+      const correctPos = Math.floor(Math.random() * optCount);
       const opts = [];
       let di = 0;
-      for (let i = 0; i < 3; i++) {
+      for (let i = 0; i < optCount; i++) {
         if (i === correctPos) opts.push(w);
-        else { opts.push(pool[distractorIdx[di] ?? 0]); di++; }
+        else { opts.push(distractors[di]); di++; }
       }
       return { word: w, opts, correctIdx: correctPos };
     });
@@ -289,7 +358,7 @@ function buildSequentialItems(stageKey, unit) {
   if (stageKey === "multiple-choice") {
     const pool = wordsForStage;
     return pool.map((w, i) => {
-      const distractors = sample(pool, 2, i).map(di => pool[di]);
+      const distractors = pickDistractors(pool, i, 2).map(di => pool[di]);
       const correctPos = Math.floor(Math.random() * 3);
       const opts = [];
       let di = 0;
@@ -318,9 +387,9 @@ function buildSequentialItems(stageKey, unit) {
   }
 
   if (stageKey === "sentence-shuffle") {
-    return unit.words.filter(w => w.example).map(w => ({
+    return wordsForStage.filter(w => w.example).map(w => ({
       word: w,
-      tokens: tokenize(w.example),
+      tokens: w.chunks && w.chunks.length ? w.chunks.slice() : tokenize(w.example),
       answer: w.example,
     }));
   }
@@ -362,14 +431,27 @@ function runSequential(host, stageKey, items, onDone) {
         <div class="runner-prompt"><div class="prompt-label">Chọn từ còn thiếu</div><div class="prompt-main prompt-sentence prompt-speak" id="prompt-speak">🔊 ${item.sentence.replace("___", '<span class="blank">&nbsp;</span>')}</div></div>
         <div class="runner-options">
           ${item.opts.map((o, oi) => `<div class="runner-opt" data-idx="${oi}"><span class="opt-letter">${String.fromCharCode(65 + oi)}</span>${o}</div>`).join("")}
-        </div>`;
+        </div>
+        ${item.word.viBlanked ? `
+        <div class="runner-translate">
+          <button class="btn btn-ghost btn-sm" id="btn-translate" type="button">🌐 Dịch</button>
+          <div class="translate-text" id="translate-text" style="display:none;margin-top:8px;color:var(--ink-soft);"></div>
+        </div>` : ""}`;
     } else if (stageKey === "sentence-shuffle") {
       body = `
-        <div class="runner-prompt"><div class="prompt-label">Sắp xếp thành câu đúng</div><div class="prompt-main">${item.word.vi}</div></div>
+        <div class="runner-prompt">
+          <div class="prompt-label">Sắp xếp thành câu đúng</div>
+          <button class="btn btn-ghost btn-sm" id="btn-hear-sentence" type="button">🔊 Nghe câu</button>
+        </div>
         <div class="runner-target" id="shuffle-target"></div>
         <div class="runner-pool" id="shuffle-pool">
           ${shuffle(item.tokens).map((w, wi) => `<span class="runner-chip" data-word="${w.replace(/"/g, "&quot;")}" data-pool-idx="${wi}">${w}</span>`).join("")}
-        </div>`;
+        </div>
+        ${item.word.viFull ? `
+        <div class="runner-translate">
+          <button class="btn btn-ghost btn-sm" id="btn-translate" type="button">🌐 Dịch</button>
+          <div class="translate-text" id="translate-text" style="display:none;margin-top:8px;color:var(--ink-soft);"></div>
+        </div>` : ""}`;
     }
 
     host.innerHTML = `
@@ -381,30 +463,75 @@ function runSequential(host, stageKey, items, onDone) {
         <div class="runner-actions" id="runner-actions"></div>
       </div>`;
 
+    if (stageKey === "missing-word") {
+      const spoken = item.sentence.replace("___", "blank");
+      speakWord(spoken);
+      const promptEl = document.getElementById("prompt-speak");
+      if (promptEl) {
+        promptEl.style.cursor = "pointer";
+        promptEl.addEventListener("click", () => speakWord(spoken));
+      }
+    }
+
     if (stageKey === "picture-matching" || stageKey === "multiple-choice") {
       speakWord(item.word.en);
-    } else if (stageKey === "missing-word") {
-      speakWord(item.word.en);
+      const promptEl = document.getElementById("prompt-speak");
+      if (promptEl) {
+        promptEl.style.cursor = "pointer";
+        promptEl.addEventListener("click", () => speakWord(item.word.en));
+      }
     }
-    const promptEl = document.getElementById("prompt-speak");
-    if (promptEl) {
-      promptEl.style.cursor = "pointer";
-      promptEl.addEventListener("click", () => speakWord(item.word.en));
+
+    if (stageKey === "sentence-shuffle") {
+      speakWord(item.answer);
+      const hearBtn = document.getElementById("btn-hear-sentence");
+      if (hearBtn) hearBtn.addEventListener("click", () => speakWord(item.answer));
+    }
+
+    const translateBtn = document.getElementById("btn-translate");
+    if (translateBtn) {
+      translateBtn.addEventListener("click", () => {
+        const box = document.getElementById("translate-text");
+        box.style.display = "block";
+        if (stageKey === "sentence-shuffle") {
+          box.textContent = item.word.viFull;
+        } else {
+          const answered = !!host.querySelector('.runner-opt[data-locked="1"]');
+          box.textContent = answered ? item.word.viFull : item.word.viBlanked;
+        }
+      });
     }
 
     wireItem(item);
   }
 
+  function revealFullTranslation() {
+    const box = document.getElementById("translate-text");
+    if (!box) return;
+    box.style.display = "block";
+    box.textContent = box.dataset.viFull || box.textContent;
+  }
+
   function wireItem(item) {
     const feedback = document.getElementById("runner-feedback");
     const actions = document.getElementById("runner-actions");
+    const translateBox = document.getElementById("translate-text");
+    if (translateBox && item.word.viFull) translateBox.dataset.viFull = item.word.viFull;
 
     function finishAnswer(correct) {
       recordExposure(currentUnit.id, item.word.id, correct);
       if (!correct) wrongQueue.push(item);
       feedback.textContent = correct ? "✓ Correct!" : "✗ Chưa đúng — đáp án đúng đã hiện phía trên.";
       feedback.className = "runner-feedback " + (correct ? "ok" : "no");
+      if (stageKey === "picture-matching" && item.word.note) {
+        const noteEl = document.createElement("div");
+        noteEl.style.cssText = "margin-top:6px;font-weight:800;color:var(--ink);";
+        noteEl.textContent = `${item.word.en} = ${item.word.note}`;
+        feedback.appendChild(noteEl);
+      }
       window.EQMascot && window.EQMascot.show("mascot-box", correct ? "correct" : "wrong");
+      revealFullTranslation();
+      if (stageKey === "missing-word" && item.word.example) speakWord(item.word.example);
       const isLastOfQueue = i === queue.length - 1;
       actions.innerHTML = `<button class="btn btn-primary" id="runner-continue">${isLastOfQueue ? "Tiếp tục" : "Câu tiếp theo"}</button>`;
       document.getElementById("runner-continue").addEventListener("click", () => {
@@ -447,7 +574,6 @@ function runSequential(host, stageKey, items, onDone) {
             question = item.sentence;
             chosenLabel = item.opts[chosen];
             correctLabel = item.opts[item.correctIdx];
-            speakWord(item.opts[chosen]);
           }
 
           eqRecordAndSave(`${stageKey}-${item.word.id}`, question, chosenLabel, correctLabel, correct);
@@ -582,5 +708,7 @@ function renderTapPairs(host, unit, onDone) {
 document.addEventListener("DOMContentLoaded", () => {
   if (!document.getElementById("unit-select-grid")) return; // not on vocabulary page
   renderUnitSelect();
+  const wantedUnit = new URLSearchParams(window.location.search).get("unit");
+  if (wantedUnit && VOCAB_UNITS_G5.some(u => u.id === wantedUnit)) openUnit(wantedUnit);
   document.getElementById("btn-back-to-units")?.addEventListener("click", (e) => { e.preventDefault(); backToUnits(); });
 });
