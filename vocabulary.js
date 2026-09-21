@@ -467,9 +467,8 @@ function runSequential(host, stageKey, items, onDone) {
       </div>`;
 
     if (stageKey === "missing-word") {
-      // sentence (blank read as "blank") + the answer choices: "A, great. B, this. C, about."
-      const spoken = item.sentence.replace("___", "blank") + " " +
-        item.opts.map((o, oi) => `${String.fromCharCode(65 + oi)}, ${o}.`).join(" ");
+      // read the FULL sentence, answer included (e.g. "Do you live in this flat?")
+      const spoken = item.word.example;
       speakWord(spoken);
       const promptEl = document.getElementById("prompt-speak");
       if (promptEl) {
