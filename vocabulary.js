@@ -66,7 +66,6 @@ var VOCAB_UNITS_G5 = [
     number: 2,
     title: "Our Homes",
     subtitle: "Global Success 5 · New Vocabulary",
-    hasExercises: false, // Exercises page for Unit 2 isn't built yet
     words: [
       // Tap Pairs — slides 1, 3 & 4
       { id: "u2-house", en: "house", vi: "nhà ở", icon: "img/vocab-g5-u2-house.jpg", stages: ["tap-pairs", "picture-matching"] },
