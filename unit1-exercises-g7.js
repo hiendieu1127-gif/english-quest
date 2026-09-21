@@ -133,6 +133,9 @@ const SENTENCES = [
 // ============================================================
 // Results saving — same saveQueue-serialized pattern as unit1-grammar-g7.js.
 // 14 scored items total: 5 Match + 5 True/False + 4 Make sentences.
+// Score is based on the FIRST attempt only — retry rounds (below) are for
+// practice and do not change the saved score.
+// Reading and Vocabulary are practice-only, not scored/saved.
 // ============================================================
 const UNIT_ID = "g7-unit1";
 const UNIT_LABEL = "Unit 1: Hobbies";
@@ -176,6 +179,29 @@ function renderDots(current, total) {
     dots += `<span class="runner-dot ${idx < current ? "done" : idx === current ? "current" : ""}"></span>`;
   }
   return `<div class="runner-dots">${dots}</div>`;
+}
+
+// ---- Shared "section complete" screen (Xong rồi! + optional "next section" button) ----
+function showSectionComplete(host, message, hasNext, mascotType) {
+  window.EQMascot && window.EQMascot.show("mascot-box", mascotType || "complete_exercise");
+  host.innerHTML = `
+    <div class="runner-card">
+      <div class="stage-complete">
+        <div class="badge-circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <h3>Xong rồi!</h3>
+        <p>${message}</p>
+        ${hasNext ? `<p style="color:#6b6b76;margin-top:4px;">Sẵn sàng cho dạng bài tiếp theo chưa?</p><button type="button" class="btn btn-primary" id="section-next-btn" style="margin-top:14px;">Dạng bài tiếp theo →</button>` : ""}
+      </div>
+    </div>`;
+  if (hasNext) {
+    const btn = document.getElementById("section-next-btn");
+    btn && btn.addEventListener("click", () => {
+      const activePanel = document.querySelector(".ex-panel.active");
+      const crumbs = Array.from(document.querySelectorAll(".eq-crumb"));
+      const idx = crumbs.findIndex(c => c.dataset.target === activePanel.id);
+      if (idx >= 0 && idx < crumbs.length - 1) switchPanel(crumbs[idx + 1].dataset.target);
+    });
+  }
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -223,20 +249,32 @@ function renderVocab() {
 }
 
 // ---- Match A with B (scored: 5) — one definition at a time, pick the matching word ----
+// Wrong answers automatically come back in a "Vòng 2" retry round (practice only, not re-scored).
 function renderMatch() {
   const host = document.getElementById("match-wrap");
   if (!host) return;
-  const total = MATCH_ITEMS.length;
+  runMatchRound(MATCH_ITEMS, 1);
+}
+
+function runMatchRound(items, round) {
+  const host = document.getElementById("match-wrap");
+  if (!host) return;
+  const total = items.length;
   let i = 0;
+  const wrongItems = [];
 
   function render() {
-    const item = MATCH_ITEMS[i];
+    const item = items[i];
     const others = MATCH_ITEMS.filter(m => m.id !== item.id).map(m => m.a);
     const options = shuffle([item.a, ...shuffle(others).slice(0, 3)]);
     const letters = ["A", "B", "C", "D"];
+    const header = round > 1
+      ? `<div style="background:#fff3cd;color:#8a6b00;font-weight:700;padding:10px 16px;border-radius:12px;margin-bottom:14px;text-align:center;">🔄 Làm lại câu sai — Vòng ${round}</div>`
+      : "";
 
     host.innerHTML = `
       <div class="runner-card">
+        ${header}
         ${renderDots(i, total)}
         <div class="mcq-def">${item.b}</div>
         <div class="mcq-def-vi">${item.bVi}</div>
@@ -269,20 +307,18 @@ function renderMatch() {
 
         feedback.textContent = correct ? "✓ Chính xác!" : `Đáp án đúng: ${item.a}`;
         feedback.className = correct ? "fitb-feedback ok" : "fitb-feedback no";
-        eqRecordAndSave(`match-${item.id}`, item.b, chosen, item.a, correct);
+
+        if (round === 1) eqRecordAndSave(`match-${item.id}`, item.b, chosen, item.a, correct);
+        if (!correct) wrongItems.push(item);
 
         setTimeout(() => {
           i++;
           if (i >= total) {
-            window.EQMascot && window.EQMascot.show("mascot-box", "complete_exercise");
-            host.innerHTML = `
-              <div class="runner-card">
-                <div class="stage-complete">
-                  <div class="badge-circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-                  <h3>Xong rồi!</h3>
-                  <p>Em đã hoàn thành phần Match A with B.</p>
-                </div>
-              </div>`;
+            if (wrongItems.length > 0) {
+              runMatchRound(wrongItems, round + 1);
+            } else {
+              showSectionComplete(host, "Em đã hoàn thành phần Match A with B.", true, "complete_exercise");
+            }
           } else {
             render();
           }
@@ -294,10 +330,24 @@ function renderMatch() {
 }
 
 // ---- True / False / No Information (scored: 5) — meaning hidden behind "Dịch" ----
+// Wrong answers automatically come back in a "Vòng 2" retry round (practice only, not re-scored).
 function renderTrueFalse() {
   const host = document.getElementById("tf-list");
   if (!host) return;
-  host.innerHTML = TF_ITEMS.map((t, idx) => `
+  runTFRound(TF_ITEMS.map((t, idx) => ({ ...t, origIdx: idx })), 1);
+}
+
+function runTFRound(items, round) {
+  const host = document.getElementById("tf-list");
+  if (!host) return;
+  const total = items.length;
+  let answeredCount = 0;
+  const wrongItems = [];
+  const header = round > 1
+    ? `<div style="background:#fff3cd;color:#8a6b00;font-weight:700;padding:10px 16px;border-radius:12px;margin-bottom:14px;text-align:center;">🔄 Làm lại câu sai — Vòng ${round}</div>`
+    : "";
+
+  host.innerHTML = header + items.map((t, idx) => `
     <div class="tf-item" data-idx="${idx}">
       <div>${idx + 1}. ${t.en}</div>
       <button type="button" class="eq-translate-btn" data-idx="${idx}">🔤 Dịch</button>
@@ -310,6 +360,8 @@ function renderTrueFalse() {
       <div class="fitb-feedback" id="tf-feedback-${idx}"></div>
     </div>`).join("");
 
+  if (round > 1) host.scrollIntoView({ behavior: "smooth", block: "start" });
+
   host.querySelectorAll(".eq-translate-btn").forEach(btn => {
     btn.addEventListener("click", () => {
       const idx = Number(btn.dataset.idx);
@@ -320,17 +372,17 @@ function renderTrueFalse() {
     });
   });
 
-  host.querySelectorAll(".tf-item").forEach((item) => {
-    const idx = Number(item.dataset.idx);
-    const t = TF_ITEMS[idx];
+  host.querySelectorAll(".tf-item").forEach((itemEl) => {
+    const idx = Number(itemEl.dataset.idx);
+    const t = items[idx];
     let answered = false;
-    item.querySelectorAll(".tf-btn").forEach(btn => {
+    itemEl.querySelectorAll(".tf-btn").forEach(btn => {
       btn.addEventListener("click", () => {
         if (answered) return;
         answered = true;
         const choice = btn.dataset.choice;
         const correct = choice === t.answer;
-        item.querySelectorAll(".tf-btn").forEach(b => {
+        itemEl.querySelectorAll(".tf-btn").forEach(b => {
           if (b.dataset.choice === t.answer) b.classList.add("selected-correct");
         });
         if (!correct) btn.classList.add("selected-wrong");
@@ -339,25 +391,51 @@ function renderTrueFalse() {
         const feedback = document.getElementById(`tf-feedback-${idx}`);
         feedback.textContent = correct ? "✓ Chính xác!" : `Đáp án đúng: ${t.answer}`;
         feedback.className = correct ? "fitb-feedback ok" : "fitb-feedback no";
-        eqRecordAndSave(`tf-${idx}`, t.en, choice, t.answer, correct);
+
+        if (round === 1) eqRecordAndSave(`tf-${t.origIdx}`, t.en, choice, t.answer, correct);
+        if (!correct) wrongItems.push(t);
+
+        answeredCount++;
+        if (answeredCount === total) {
+          setTimeout(() => {
+            if (wrongItems.length > 0) {
+              runTFRound(wrongItems, round + 1);
+            } else {
+              showSectionComplete(host, "Em đã hoàn thành phần True/False.", true, "complete_exercise");
+            }
+          }, 900);
+        }
       });
     });
   });
 }
 
 // ---- Make sentences (scored: 4, one at a time) — meaning hidden behind "Dịch" ----
+// Wrong answers automatically come back in a "Vòng 2" retry round (practice only, not re-scored).
 function runSentences() {
   const host = document.getElementById("sentence-runner");
   if (!host) return;
+  runSentenceRound(SENTENCES, 1);
+}
+
+function runSentenceRound(items, round) {
+  const host = document.getElementById("sentence-runner");
+  if (!host) return;
+  const total = items.length;
   let i = 0;
+  const wrongItems = [];
 
   function render() {
-    const item = SENTENCES[i];
+    const item = items[i];
     const shuffled = shuffle(item.chunks.map((c, idx) => ({ ...c, origIdx: idx })));
+    const header = round > 1
+      ? `<div style="background:#fff3cd;color:#8a6b00;font-weight:700;padding:10px 16px;border-radius:12px;margin-bottom:14px;text-align:center;">🔄 Làm lại câu sai — Vòng ${round}</div>`
+      : "";
 
     host.innerHTML = `
       <div class="runner-card">
-        ${renderDots(i, SENTENCES.length)}
+        ${header}
+        ${renderDots(i, total)}
         <div class="quiz-item">
           <button type="button" class="eq-translate-btn" id="sentence-translate">🔤 Dịch</button>
           <div class="sentence-answer-strip" id="sentence-strip"></div>
@@ -416,20 +494,18 @@ function runSentences() {
         ? `✓ Chính xác!<br><strong>${item.answer}</strong><br>${item.answerVi}`
         : `Chưa đúng.<br>Đáp án đúng: <strong>${item.answer}</strong><br>${item.answerVi}`;
       feedback.className = correct ? "fitb-feedback ok" : "fitb-feedback no";
-      eqRecordAndSave(`sentence-${item.id}`, "Sentence " + item.id, built, item.answer, correct);
+
+      if (round === 1) eqRecordAndSave(`sentence-${item.id}`, "Sentence " + item.id, built, item.answer, correct);
+      if (!correct) wrongItems.push(item);
 
       setTimeout(() => {
         i++;
-        if (i >= SENTENCES.length) {
-          window.EQMascot && window.EQMascot.show("mascot-box", "complete_unit");
-          host.innerHTML = `
-            <div class="runner-card">
-              <div class="stage-complete">
-                <div class="badge-circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-                <h3>Xong rồi!</h3>
-                <p>Em đã hoàn thành hết phần Exercises của Unit 1.</p>
-              </div>
-            </div>`;
+        if (i >= total) {
+          if (wrongItems.length > 0) {
+            runSentenceRound(wrongItems, round + 1);
+          } else {
+            showSectionComplete(host, "Em đã hoàn thành hết phần Exercises của Unit 1.", false, "complete_unit");
+          }
         } else {
           render();
         }
