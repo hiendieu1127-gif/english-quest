@@ -251,15 +251,18 @@ function openUnit(unitId) {
       section: "vocabulary",
     }).catch(() => {});
   }
-  document.getElementById("unit-select-view").classList.add("hidden");
+  // (the CSS rule for .hidden targets a class that the element doesn't have,
+  // so hide the unit cards directly — otherwise they stay visible above the lesson)
+  document.getElementById("unit-select-view").style.display = "none";
   document.getElementById("path-view").classList.add("active");
+  window.scrollTo(0, 0);
   document.getElementById("path-title").textContent = `Unit ${currentUnit.number}: ${currentUnit.title}`;
   renderStepper();
   renderStage(0);
 }
 
 function backToUnits() {
-  document.getElementById("unit-select-view").classList.remove("hidden");
+  document.getElementById("unit-select-view").style.display = "";
   document.getElementById("path-view").classList.remove("active");
   renderUnitSelect();
 }
