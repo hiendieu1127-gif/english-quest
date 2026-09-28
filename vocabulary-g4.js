@@ -18,7 +18,7 @@ var VOCAB_UNITS_G4 = [
     number: 1,
     title: "My Friends",
     subtitle: "Global Success 4 · New Vocabulary",
-    hasExercises: false, // bỏ dòng này khi đã có trang Exercises của Unit 1 Khối 4
+    
     words: [
       // Tap Pairs — words, phrases & questions (Lesson 1–3)
       { id: "g4u1-friend", en: "friend", vi: "bạn", group: "words", stages: ["tap-pairs", "multiple-choice"] },
