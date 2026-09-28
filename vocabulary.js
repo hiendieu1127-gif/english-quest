@@ -114,6 +114,51 @@ var VOCAB_UNITS_G5 = [
       { id: "u2-s-that-tower", en: "That is a tower.", vi: "Kia là một toà tháp.", example: "That is a tower.", viFull: "Kia là một toà tháp. (that: chỉ vật ở xa)", stages: ["sentence-shuffle"] },
     ],
   },
+
+  {
+    id: "unit3",
+    number: 3,
+    title: "My Foreign Friends",
+    subtitle: "Global Success 5 · New Vocabulary",
+    hasExercises: false,
+    words: [
+      // Tap Pairs — slides 1 & 3 (nationalities + adjectives also in Picture Matching, 8 photos from Hiền)
+      { id: "u3-foreign-friend", en: "a foreign friend", vi: "1 người bạn nước ngoài", stages: ["tap-pairs"] },
+      { id: "u3-australian", en: "Australian", vi: "thuộc về nước Úc, người Úc", group: "nationality", icon: "img/vocab-g5-u3-australian.jpg", stages: ["tap-pairs", "picture-matching"] },
+      { id: "u3-malaysian", en: "Malaysian", vi: "thuộc về nước Malaysia, người Malaysia", group: "nationality", icon: "img/vocab-g5-u3-malaysian.jpg", stages: ["tap-pairs", "picture-matching"] },
+      { id: "u3-american", en: "American", vi: "thuộc về nước Mỹ, người Mỹ", group: "nationality", icon: "img/vocab-g5-u3-american.jpg", stages: ["tap-pairs", "picture-matching"] },
+      { id: "u3-japanese", en: "Japanese", vi: "thuộc về nước Nhật, người Nhật", group: "nationality", icon: "img/vocab-g5-u3-japanese.jpg", stages: ["tap-pairs", "picture-matching"] },
+      { id: "u3-pupil", en: "pupil", vi: "học sinh", stages: ["tap-pairs"] },
+      { id: "u3-helpful", en: "helpful", vi: "hay giúp đỡ, sẵn lòng hỗ trợ người khác", group: "character", icon: "img/vocab-g5-u3-helpful.jpg", stages: ["tap-pairs", "picture-matching"] },
+      { id: "u3-friendly", en: "friendly", vi: "thân thiện", group: "character", icon: "img/vocab-g5-u3-friendly.jpg", stages: ["tap-pairs", "picture-matching"] },
+      { id: "u3-clever", en: "clever", vi: "thông minh", group: "character", icon: "img/vocab-g5-u3-clever.jpg", stages: ["tap-pairs", "picture-matching"] },
+      { id: "u3-active", en: "active", vi: "năng động, tích cực tham gia", group: "character", icon: "img/vocab-g5-u3-active.jpg", stages: ["tap-pairs", "picture-matching"] },
+      { id: "u3-new", en: "new", vi: "mới", stages: ["tap-pairs"] },
+      { id: "u3-old", en: "old", vi: "cũ", stages: ["tap-pairs"] },
+
+      // Multiple Choice — slide 6 words, she/her/he/his (slide 4), new <> old (slide 2)
+      { id: "u3-mc-friend", en: "friend", vi: "bạn bè", group: "words", stages: ["multiple-choice"] },
+      { id: "u3-mc-help", en: "help", vi: "giúp đỡ", group: "words", stages: ["multiple-choice"] },
+      { id: "u3-mc-play-together", en: "play together", vi: "chơi cùng nhau", group: "words", stages: ["multiple-choice"] },
+      { id: "u3-mc-boy", en: "boy", vi: "con trai", group: "words", stages: ["multiple-choice"] },
+      { id: "u3-mc-she", en: "she", vi: "cô ấy", group: "pronouns", stages: ["multiple-choice"] },
+      { id: "u3-mc-her", en: "her", vi: "của cô ấy", group: "pronouns", stages: ["multiple-choice"] },
+      { id: "u3-mc-he", en: "he", vi: "anh ấy", group: "pronouns", stages: ["multiple-choice"] },
+      { id: "u3-mc-his", en: "his", vi: "của anh ấy", group: "pronouns", stages: ["multiple-choice"] },
+      { id: "u3-mc-new", en: "new", vi: "mới", group: "new-old", stages: ["multiple-choice"] },
+      { id: "u3-mc-old", en: "old", vi: "cũ", group: "new-old", stages: ["multiple-choice"] },
+
+      // Missing Word + Sentence Shuffle — slides 2 & 4
+      // (VN for the 3 answer sentences is Claude-written — slide had none; Hiền to review)
+      { id: "u3-s-nationality", en: "What nationality is he?", vi: "Anh ấy thuộc quốc tịch nào?", example: "What nationality is he?", blank: "nationality", viFull: "Anh ấy thuộc quốc tịch nào?", viBlanked: "Anh ấy thuộc ___ nào?", stages: ["missing-word", "sentence-shuffle"] },
+      { id: "u3-s-japanese", en: "He's Japanese.", vi: "Anh ấy là người Nhật.", example: "He's Japanese.", blank: "Japanese", viFull: "Anh ấy là người Nhật. (He's = He is)", viBlanked: "Anh ấy là người ___.", stages: ["missing-word", "sentence-shuffle"] },
+      { id: "u3-s-from", en: "Where's he from?", vi: "Anh ấy đến từ đâu?", example: "Where's he from?", blank: "from", viFull: "Anh ấy đến từ đâu?", viBlanked: "Anh ấy đến ___ đâu?", stages: ["missing-word", "sentence-shuffle"] },
+      { id: "u3-s-he-like", en: "What's he like?", vi: "Anh ấy là người như thế nào?", example: "What's he like?", blank: "like", viFull: "Anh ấy là người như thế nào?", viBlanked: "Anh ấy là người ___?", stages: ["missing-word", "sentence-shuffle"] },
+      { id: "u3-s-friendly", en: "He's friendly.", vi: "Anh ấy thân thiện.", example: "He's friendly.", blank: "friendly", viFull: "Anh ấy thân thiện. (He's = He is)", viBlanked: "Anh ấy ___.", stages: ["missing-word", "sentence-shuffle"] },
+      { id: "u3-s-she-like", en: "What's she like?", vi: "Cô ấy là người như thế nào?", example: "What's she like?", blank: "she", viFull: "Cô ấy là người như thế nào?", viBlanked: "___ là người như thế nào?", stages: ["missing-word", "sentence-shuffle"] },
+      { id: "u3-s-clever", en: "She's clever.", vi: "Cô ấy thông minh.", example: "She's clever.", blank: "clever", viFull: "Cô ấy thông minh. (She's = She is)", viBlanked: "Cô ấy ___.", stages: ["missing-word", "sentence-shuffle"] },
+    ],
+  },
 ];
 
 const STAGES = [
@@ -291,7 +336,10 @@ function renderStage(idx) {
   } else {
     const items = buildSequentialItems(stage.key, currentUnit);
     if (items.length === 0) {
-      host.innerHTML = `<div class="runner-card"><p style="text-align:center;color:var(--ink-soft)">Chưa có dữ liệu phù hợp cho dạng bài này ở Unit này.</p></div>`;
+      const hasNext = idx < STAGES.length - 1;
+      host.innerHTML = `<div class="runner-card"><p style="text-align:center;color:var(--ink-soft)">Dạng bài này đang được cập nhật cho Unit này.</p>${hasNext ? `<div class="runner-actions"><button class="btn btn-primary" id="btn-skip-stage">Dạng bài tiếp theo &rarr;</button></div>` : ""}</div>`;
+      const skipBtn = document.getElementById("btn-skip-stage");
+      if (skipBtn) skipBtn.addEventListener("click", () => renderStage(idx + 1));
       return;
     }
     runSequential(host, stage.key, items, () => onStageComplete(stage.key));
