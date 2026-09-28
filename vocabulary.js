@@ -120,7 +120,6 @@ var VOCAB_UNITS_G5 = [
     number: 3,
     title: "My Foreign Friends",
     subtitle: "Global Success 5 · New Vocabulary",
-    hasExercises: false,
     words: [
       // Tap Pairs — slides 1 & 3 (nationalities + adjectives also in Picture Matching, 8 photos from Hiền)
       { id: "u3-foreign-friend", en: "a foreign friend", vi: "1 người bạn nước ngoài", stages: ["tap-pairs"] },
