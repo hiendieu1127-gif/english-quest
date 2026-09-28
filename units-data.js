@@ -17,7 +17,7 @@ const EQ_UNITS = [
     exercises: "unit1-exercises.html",
   },
   { id: 2, title: "Our Homes", status: "in-progress", vocabulary: "vocabulary.html?unit=unit2", grammar: null, exercises: "unit2-exercises.html" },
-  { id: 3, title: "My Foreign Friends", status: "in-progress", vocabulary: "vocabulary.html?unit=unit3", grammar: null, exercises: null },
+  { id: 3, title: "My Foreign Friends", status: "in-progress", vocabulary: "vocabulary.html?unit=unit3", grammar: null, exercises: "unit3-exercises.html" },
   { id: 4, title: "Our Free-time Activities", status: "not-started", vocabulary: null, grammar: null, exercises: null },
   { id: 5, title: "My Future Job", status: "not-started", vocabulary: null, grammar: null, exercises: null },
   { id: 6, title: "Our School Rooms", status: "not-started", vocabulary: null, grammar: null, exercises: null },
