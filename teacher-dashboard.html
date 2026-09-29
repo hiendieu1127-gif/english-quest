@@ -9,22 +9,50 @@
 <link rel="stylesheet" href="style.css">
 <style>
   .td-wrap{ max-width:1100px; margin:0 auto; }
-  .td-table{ width:100%; border-collapse:separate; border-spacing:0; background:#fff; border-radius:var(--radius-lg); overflow:hidden; box-shadow:var(--shadow-card); font-size:.88rem; }
-  .td-table th, .td-table td{ padding:10px 14px; text-align:center; border-bottom:1px solid var(--line); white-space:nowrap; }
-  .td-table th{ background:#f4f3ee; font-size:.75rem; text-transform:uppercase; letter-spacing:.03em; color:var(--ink-soft); }
-  .td-table td.td-name{ text-align:left; font-weight:800; position:sticky; left:0; background:#fff; }
-  .td-table th.td-name-h{ text-align:left; position:sticky; left:0; background:#f4f3ee; }
-  .td-table th.td-grade-h{ background:#e9e6dc; font-weight:800; letter-spacing:.05em; }
-  .td-cell{ cursor:pointer; border-radius:8px; padding:4px 8px; display:inline-block; font-weight:800; }
-  .td-cell.done{ background:color-mix(in srgb, var(--c-progress) 16%, white); color:#1a7a3e; }
-  .td-cell.progress{ background:color-mix(in srgb, #e0a800 16%, white); color:#8a6400; }
-  .td-cell.todo{ color:var(--ink-soft); font-weight:600; cursor:default; }
-  .td-scroll{ overflow-x:auto; border-radius:var(--radius-lg); }
+  /* grade tabs */
+  .td-tabs{ display:flex; gap:10px; flex-wrap:wrap; margin-bottom:18px; }
+  .td-tab{ font-family:var(--font-display); font-weight:800; font-size:1.05rem; padding:10px 22px; border-radius:999px;
+    border:2px solid var(--line); background:#fff; color:var(--ink-soft); cursor:pointer; }
+  .td-tab .n{ font-family:var(--font-body); font-size:.78rem; font-weight:700; margin-left:6px; opacity:.75; }
+  .td-tab.active{ background:var(--brand); border-color:var(--brand); color:#fff; }
+  /* toolbar + summary */
+  .td-toolbar{ display:flex; gap:12px; flex-wrap:wrap; align-items:center; margin-bottom:14px; }
+  .td-search{ flex:1; min-width:200px; padding:10px 14px; border:2px solid var(--line); border-radius:12px; font:inherit; background:#fff; }
+  .td-toggle{ display:flex; align-items:center; gap:6px; font-size:.9rem; color:var(--ink-soft); cursor:pointer; user-select:none; }
+  .td-summary{ display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:12px; margin-bottom:18px; }
+  .td-stat{ background:#fff; border-radius:16px; padding:14px 18px; box-shadow:var(--shadow-card); }
+  .td-stat .v{ font-family:var(--font-display); font-size:1.7rem; font-weight:800; line-height:1.1; color:var(--ink); }
+  .td-stat .l{ font-size:.82rem; color:var(--ink-soft); }
+  /* table */
+  .td-scroll{ overflow-x:auto; border-radius:18px; box-shadow:var(--shadow-card); background:#fff; }
+  .td-table{ width:100%; border-collapse:separate; border-spacing:0; font-size:.9rem; }
+  .td-table th, .td-table td{ padding:9px 10px; text-align:center; white-space:nowrap; border-bottom:1px solid #f1ede3; }
+  .td-table thead th{ background:#faf8f3; color:var(--ink-soft); font-weight:700; }
+  .td-table thead tr:first-child th{ font-family:var(--font-display); font-size:.95rem; color:var(--ink); padding-top:12px; }
+  .td-table thead tr:last-child th{ font-size:.72rem; text-transform:uppercase; letter-spacing:.04em; padding-bottom:10px; }
+  .td-table .alt{ background:#fcfbf7; }
+  .td-table thead .alt{ background:#f4f1e8; }
+  .td-table .ustart{ border-left:2px solid #eee8da; }
+  .td-name, .td-name-h{ text-align:left !important; position:sticky; left:0; z-index:1; background:#fff; font-weight:800; min-width:150px; max-width:220px; overflow:hidden; text-overflow:ellipsis; }
+  .td-table thead .td-name-h{ background:#faf8f3; z-index:2; }
+  .td-table tbody tr:hover td{ background:#f7f5ff; }
+  .td-avg{ font-weight:800; color:var(--ink); }
+  /* score pills */
+  .td-cell{ display:inline-block; min-width:48px; padding:4px 8px; border-radius:999px; font-weight:800; font-size:.85rem; cursor:pointer; }
+  .td-cell.hi{ background:#dcf5e4; color:#17733a; }
+  .td-cell.mid{ background:#fff1cc; color:#8a5a00; }
+  .td-cell.lo{ background:#fde2dd; color:#a8321e; }
+  .td-cell.progress{ background:#eef0ff; color:#4b4fb5; font-weight:700; font-size:.75rem; cursor:default; }
+  .td-cell.todo{ color:#d3cdbf; cursor:default; min-width:0; padding:0; }
+  .td-legend{ display:flex; gap:14px; flex-wrap:wrap; font-size:.8rem; color:var(--ink-soft); margin-top:12px; }
+  .td-legend span{ display:inline-flex; align-items:center; gap:6px; }
+  .td-legend i{ width:12px; height:12px; border-radius:50%; display:inline-block; }
+  /* modal */
   .td-modal-backdrop{ position:fixed; inset:0; background:rgba(20,20,30,.5); display:none; align-items:center; justify-content:center; z-index:100; padding:20px; }
   .td-modal-backdrop.open{ display:flex; }
   .td-modal{ background:#fff; border-radius:var(--radius-lg); max-width:640px; width:100%; max-height:82vh; overflow-y:auto; padding:26px; }
   .td-modal h3{ margin-bottom:4px; }
-  .td-modal .td-modal-meta{ color:var(--ink-soft); font-size:.9rem; margin-bottom:18px; }
+  .td-modal .td-modal-meta{ color:var(--ink-soft); font-size:.9rem; margin-bottom:12px; }
   .td-qrow{ padding:10px 0; border-bottom:1px dashed var(--line); font-size:.9rem; }
   .td-qrow:last-child{ border-bottom:none; }
   .td-qrow .q{ font-weight:700; margin-bottom:4px; }
@@ -53,18 +81,35 @@
       <div class="container">
         <span class="eyebrow" style="border-color: var(--page-color);">Teacher Dashboard</span>
         <h1>Kết quả học sinh</h1>
-        <p>Bảng này tự động cập nhật khi có Unit mới — không cần chỉnh sửa trang này.</p>
+        <p>Chọn khối để xem kết quả. Bảng tự cập nhật khi có Unit mới.</p>
       </div>
     </section>
 
     <section class="section" style="padding-top:10px;">
       <div class="container td-wrap">
         <div id="td-status" style="margin-bottom:14px;color:var(--ink-soft);font-size:.9rem;">Đang tải dữ liệu...</div>
-        <div class="td-scroll">
-          <table class="td-table" id="td-table" style="display:none;">
-            <thead id="td-head"></thead>
-            <tbody id="td-body"></tbody>
-          </table>
+        <div id="td-app" style="display:none;">
+          <div class="td-tabs" id="td-tabs"></div>
+          <div class="td-summary" id="td-summary"></div>
+          <div class="td-toolbar">
+            <input class="td-search" id="td-search" type="search" placeholder="🔍 Tìm học sinh...">
+            <label class="td-toggle"><input type="checkbox" id="td-only-active" checked> Chỉ hiện học sinh đã làm bài của khối này</label>
+          </div>
+          <div class="td-scroll">
+            <table class="td-table" id="td-table">
+              <thead id="td-head"></thead>
+              <tbody id="td-body"></tbody>
+            </table>
+          </div>
+          <div class="td-empty" id="td-none" style="display:none;">Chưa có học sinh nào làm bài của khối này.</div>
+          <div class="td-legend">
+            <span><i style="background:#2DBE60"></i>80% trở lên</span>
+            <span><i style="background:#FFB627"></i>50–79%</span>
+            <span><i style="background:#E85A42"></i>dưới 50%</span>
+            <span><i style="background:#8f93e6"></i>đang làm</span>
+            <span>· chưa làm</span>
+            <span>Chạm vào ô điểm để xem từng câu.</span>
+          </div>
         </div>
         <div class="td-empty" id="td-empty" style="display:none;">Chưa có học sinh nào làm bài.</div>
       </div>
@@ -82,6 +127,6 @@
 <script src="vocabulary-g7.js"></script>
 <script src="vocabulary-g4.js"></script>
 <script type="module" src="results-service.js"></script>
-<script src="teacher-dashboard.js"></script>
+<script src="teacher-dashboard.js?v=2"></script>
 </body>
 </html>
