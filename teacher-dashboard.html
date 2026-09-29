@@ -42,6 +42,7 @@
   .td-cell.hi{ background:#dcf5e4; color:#17733a; }
   .td-cell.mid{ background:#fff1cc; color:#8a5a00; }
   .td-cell.lo{ background:#fde2dd; color:#a8321e; }
+  .td-cell.partial{ box-shadow: inset 0 0 0 2px currentColor; opacity:.85; }
   .td-cell.progress{ background:#eef0ff; color:#4b4fb5; font-weight:700; font-size:.75rem; cursor:default; }
   .td-cell.todo{ color:#d3cdbf; cursor:default; min-width:0; padding:0; }
   .td-legend{ display:flex; gap:14px; flex-wrap:wrap; font-size:.8rem; color:var(--ink-soft); margin-top:12px; }
@@ -107,6 +108,7 @@
             <span><i style="background:#FFB627"></i>50–79%</span>
             <span><i style="background:#E85A42"></i>dưới 50%</span>
             <span><i style="background:#8f93e6"></i>đang làm</span>
+            <span><i style="background:#fff;box-shadow:inset 0 0 0 2px #8a5a00"></i>có viền = em chưa làm hết bài</span>
             <span>· chưa làm</span>
             <span>Chạm vào ô điểm để xem từng câu.</span>
           </div>
@@ -127,6 +129,6 @@
 <script src="vocabulary-g7.js"></script>
 <script src="vocabulary-g4.js"></script>
 <script type="module" src="results-service.js"></script>
-<script src="teacher-dashboard.js?v=2"></script>
+<script src="teacher-dashboard.js?v=3"></script>
 </body>
 </html>
