@@ -3,7 +3,7 @@
 // Source: teacher Hien's reading passage (Lan / Minh / Celia / David).
 // Same 5-section skeleton as Grade 5, content made HARDER on purpose:
 //   1 Reading  2 Vocabulary  3 Fill in the Blank  4 Sentence Ordering
-//   5 Quiz = True / False / Not given → Complete the table → Write the missing word
+//   5 Quiz = workbook: Listen and circle → Look, complete and read → Read and complete → Read and match
 // Vietnamese translations + answer keys: written by Claude from the passage — please review.
 // Rules (same as every Exercises page): only the FIRST attempt is scored, wrong answers
 // come back in "Vòng 2, 3...", no timer — the student taps "Tiếp theo →".
@@ -159,49 +159,52 @@ const ORDER_ITEMS = [
 ];
 
 // ============================================================
-// 5a) QUIZ · True / False / Not given (scored: 6)
-//     "Not given" = the passage does not say it.
+// 5) QUIZ — 4 bài từ Sách bài tập (thay 3 phần cũ)
 // ============================================================
-const TF_OPTIONS = [{ key: "a", text: "True" }, { key: "b", text: "False" }, { key: "c", text: "Not given" }];
-const TF_OPT_VI = ["a. Đúng", "b. Sai", "c. Bài không nói tới"];
-const TF_ITEMS = [
-  { id: 1, stem: "Lan has a younger brother.", answer: "a", vi: "Lan có một em trai." },
-  { id: 2, stem: "Celia lives in Britain now.", answer: "b", vi: "Bây giờ Celia sống ở nước Anh.", why: "She lives in Viet Nam now." },
-  { id: 3, stem: "Lan and Celia are the same age.", answer: "a", vi: "Lan và Celia bằng tuổi nhau.", why: "They are both nine." },
-  { id: 4, stem: "David likes badminton.", answer: "b", vi: "David thích cầu lông.", why: "He doesn't like badminton." },
-  { id: 5, stem: "Minh likes football.", answer: "c", vi: "Minh thích bóng đá.", why: "The passage doesn't say it." },
-  { id: 6, stem: "Lan and David are in the same class.", answer: "a", vi: "Lan và David học cùng lớp.", why: "He is in my class." },
-].map(x => ({ ...x, options: TF_OPTIONS, optVi: TF_OPT_VI, listenFull: true }));
 
-// ============================================================
-// 5b) QUIZ · Complete the table (scored: 6) — tap a blank, then a word from the box
-//     Lan's row is the example. The box has extra wrong words on purpose.
-//     An answer can be a list when more than one word is right (Celia likes two things).
-// ============================================================
-const TABLE_FIELDS = [
-  { key: "age", label: "Age" },
-  { key: "country", label: "From" },
-  { key: "likes", label: "Likes" },
-];
-const TABLE_ROWS = [
-  { name: "Lan", age: "nine", country: "Viet Nam", likes: "—", example: true },
-  { name: "Celia", age: "nine", country: "Britain", likes: ["drawing", "badminton"] },
-  { name: "David", age: "eight", country: "America", likes: "football" },
-];
-const TABLE_BANK = ["seven", "eight", "nine", "Britain", "America", "Viet Nam", "football", "badminton", "drawing"];
-const TABLE_DONE_SPEAK = "Celia is nine years old. She is from Britain. She likes drawing and badminton. David is eight years old. He is from America. He likes football.";
+// 5a) Listen and circle (scored: 2) — mỗi câu có file audio riêng (g4-u1-listen-1/2.mp3 ở thư mục gốc repo)
+const LISTEN_ITEMS = [
+  { id: 1, stem: "She's from ___.", answer: "c", vi: "Cô ấy đến từ ___.",
+    options: [{ key: "a", text: "Australia" }, { key: "b", text: "Malaysia" }, { key: "c", text: "America" }] },
+  { id: 2, stem: "He's from ___.", answer: "c", vi: "Cậu ấy đến từ ___.",
+    options: [{ key: "a", text: "Malaysia" }, { key: "b", text: "America" }, { key: "c", text: "Australia" }] },
+].map(x => ({ ...x, audio: `g4-u1-listen-${x.id}.mp3`, audioNote: "Bấm ▶ để nghe, rồi chọn đáp án." }));
 
-// ============================================================
-// 5c) QUIZ · Write the missing word (scored: 6) — typed, no hints (hardest)
-// ============================================================
-const WRITE_ITEMS = [
-  { id: 1, before: "I live in Ha Noi", after: "my parents.", answer: ["with"], full: "I live in Ha Noi with my parents.", vi: "Mình sống ở Hà Nội với bố mẹ." },
-  { id: 2, before: "Minh is my younger", after: ".", answer: ["brother"], full: "Minh is my younger brother.", vi: "Minh là em trai của mình." },
-  { id: 3, before: "Celia is nine years old,", after: ".", answer: ["too"], full: "Celia is nine years old, too.", vi: "Celia cũng 9 tuổi." },
-  { id: 4, before: "She is from Britain,", after: "she lives in Viet Nam.", answer: ["but"], full: "She is from Britain, but she lives in Viet Nam.", vi: "Bạn ấy đến từ nước Anh, nhưng bạn ấy sống ở Việt Nam." },
-  { id: 5, before: "David", after: "like badminton.", answer: ["doesn't", "does not", "doesnt"], full: "David doesn't like badminton.", vi: "David không thích cầu lông." },
-  { id: 6, before: "We often play football together after", after: ".", answer: ["school"], full: "We often play football together after school.", vi: "Chúng mình thường chơi bóng đá cùng nhau sau giờ học." },
+// 5b) Look, complete and read (scored: 4) — nhìn hình, TỰ GÕ tên nước (không hiện đáp án sẵn)
+//     answer = các cách viết được chấp nhận (viết thường)
+const LOOK_ITEMS = [
+  { id: 1, before: "I'm from", after: ".", answer: ["australia"], full: "I'm from Australia.", image: "img/g4-u1-look-1.jpg", vi: "Mình đến từ nước Úc." },
+  { id: 2, before: "Laura is from", after: ".", answer: ["britain"], full: "Laura is from Britain.", image: "img/g4-u1-look-2.jpg", vi: "Laura đến từ nước Anh." },
+  { id: 3, before: "My friend is from", after: ".", answer: ["malaysia"], full: "My friend is from Malaysia.", image: "img/g4-u1-look-3.jpg", vi: "Bạn của mình đến từ Malaysia." },
+  { id: 4, before: "They're from", after: ".", answer: ["thailand"], full: "They're from Thailand.", image: "img/g4-u1-look-4.jpg", vi: "Họ đến từ Thái Lan." },
 ];
+
+// 5c) Read and complete (scored: 4) — cùng một hộp từ a–d cho cả 4 câu
+const RC_OPTIONS = [{ key: "a", text: "he from" }, { key: "b", text: "from Britain" }, { key: "c", text: "from" }, { key: "d", text: "Australia" }];
+const RC_ITEMS = [
+  { id: 1, stem: "Where are you ___?", answer: "c", vi: "Bạn đến từ đâu?" },
+  { id: 2, stem: "Where's ___?", answer: "a", vi: "Cậu ấy đến từ đâu?" },
+  { id: 3, stem: "I'm from ___.", answer: "d", vi: "Mình đến từ nước Úc." },
+  { id: 4, stem: "She's ___.", answer: "b", vi: "Cô ấy đến từ nước Anh." },
+].map(x => ({ ...x, options: RC_OPTIONS }));
+
+// 5d) Read and match (scored: 5) — đọc câu hỏi, chọn câu trả lời a–e
+const RM_OPTIONS = [
+  { key: "a", text: "He's from Singapore." },
+  { key: "b", text: "I'm eight years old." },
+  { key: "c", text: "I'm from Viet Nam." },
+  { key: "d", text: "My name's Long." },
+  { key: "e", text: "She's from Thailand." },
+];
+const RM_OPT_VI = ["a. Cậu ấy đến từ Singapore.", "b. Mình 8 tuổi.", "c. Mình đến từ Việt Nam.", "d. Mình tên là Long.", "e. Cô ấy đến từ Thái Lan."];
+const RM_ITEMS = [
+  { id: 1, stem: "What's your name?", answer: "d", vi: "Bạn tên là gì?" },
+  { id: 2, stem: "Where are you from?", answer: "c", vi: "Bạn đến từ đâu?" },
+  { id: 3, stem: "How old are you?", answer: "b", vi: "Bạn bao nhiêu tuổi?" },
+  { id: 4, stem: "Where's she from?", answer: "e", vi: "Cô ấy đến từ đâu?" },
+  { id: 5, stem: "Where's he from?", answer: "a", vi: "Cậu ấy đến từ đâu?" },
+].map(x => ({ ...x, options: RM_OPTIONS, optVi: RM_OPT_VI, speakBefore: x.stem,
+              answerSentence: RM_OPTIONS.find(o => o.key === x.answer).text }));
 
 // ============================================================
 // Results saving — FIRST attempt only
@@ -213,8 +216,7 @@ let eqAnswers = {};
 let saveQueue = Promise.resolve();
 
 function eqTotalItems() {
-  const blanks = TABLE_ROWS.filter(r => !r.example).length * TABLE_FIELDS.length;
-  return FITB_ITEMS.length + ORDER_ITEMS.length + TF_ITEMS.length + blanks + WRITE_ITEMS.length;
+  return FITB_ITEMS.length + ORDER_ITEMS.length + LISTEN_ITEMS.length + LOOK_ITEMS.length + RC_ITEMS.length + RM_ITEMS.length;
 }
 
 function eqRecordAndSave(key, question, studentAnswer, correctAnswer, correct) {
@@ -380,10 +382,11 @@ function renderChoiceItem(host, item, ctx) {
 
   host.innerHTML = `
     ${ctx.top}
+    ${item.image ? `<img src="${escapeHtml(item.image)}" alt="" style="display:block;max-width:100%;max-height:230px;margin:0 auto 12px;border-radius:14px;">` : ""}
     <p class="q-stem">${ctx.i + 1}. ${stemHtml}</p>
     <div>
       ${item.audio
-        ? `<audio class="q-audio" id="q-audio" controls preload="auto" src="${escapeHtml(item.audio)}"></audio><div class="q-vi" style="margin:0 0 6px;">Track 3 có cả câu 1 và câu 2. Nghe rồi chọn đáp án.</div>`
+        ? `<audio class="q-audio" id="q-audio" controls preload="auto" src="${escapeHtml(item.audio)}"></audio><div class="q-vi" style="margin:0 0 6px;">${escapeHtml(item.audioNote || "Nghe rồi chọn đáp án.")}</div>`
         : hasListen ? `<button type="button" class="q-listen-btn" id="q-listen">🔊 Nghe</button>` : ""}
       ${viHtml}
     </div>
@@ -575,128 +578,7 @@ function runFITB() {
 }
 
 // ============================================================
-// 5b) Complete the table — tap a blank, then tap a word in the box.
-//     Wrong cells show the right answer, then come back empty in "Vòng 2".
-// ============================================================
-function tableAnswers(c) { return Array.isArray(c.answer) ? c.answer : [c.answer]; }
-
-function runTable(host, preHtml, onComplete) {
-  const cells = [];
-  TABLE_ROWS.forEach((r, ri) => {
-    if (r.example) return;
-    TABLE_FIELDS.forEach(f => {
-      cells.push({ key: `table-${r.name}-${f.key}`, row: ri, field: f.key, answer: r[f.key], value: "", locked: false, label: `${r.name} — ${f.label}` });
-    });
-  });
-  let round = 1;
-  let selected = null;
-  let checked = false;
-
-  function cellFor(ri, field) { return cells.find(c => c.row === ri && c.field === field); }
-  function firstEmpty() { return cells.find(c => !c.locked && !c.value) || null; }
-
-  function cellHtml(ri, field) {
-    const r = TABLE_ROWS[ri];
-    const c = cellFor(ri, field);
-    if (!c) return `<td class="tb-given">${escapeHtml(r[field])}</td>`;
-    let cls = "tb-blank";
-    if (c.locked) cls += " ok";
-    else if (checked && c.value) cls += " no";
-    if (c === selected && !checked) cls += " selected";
-    const fix = checked && !c.locked ? `<div class="tb-fix">→ ${escapeHtml(tableAnswers(c).join(" / "))}</div>` : "";
-    return `<td><button type="button" class="${cls}" data-key="${c.key}">${c.value ? escapeHtml(c.value) : "?"}</button>${fix}</td>`;
-  }
-
-  function render() {
-    const allFilled = cells.every(c => c.locked || c.value);
-    host.innerHTML = `
-      ${preHtml}
-      ${roundHeader(round)}
-      <table class="tb-table">
-        <thead><tr><th></th>${TABLE_FIELDS.map(f => `<th>${escapeHtml(f.label)}</th>`).join("")}</tr></thead>
-        <tbody>
-          ${TABLE_ROWS.map((r, ri) => `<tr${r.example ? ' class="tb-example"' : ""}><td class="tb-name">${escapeHtml(r.name)}${r.example ? '<span class="tb-ex-tag">ví dụ</span>' : ""}</td>${TABLE_FIELDS.map(f => cellHtml(ri, f.key)).join("")}</tr>`).join("")}
-        </tbody>
-      </table>
-      <p class="q-vi" style="margin:12px 0 6px;">Chạm vào ô <b>?</b> rồi chạm vào từ đúng bên dưới. Chú ý: có từ thừa!</p>
-      <div class="sentence-chunks" id="tb-bank">
-        ${TABLE_BANK.map(w => `<div class="sentence-chunk" data-word="${escapeHtml(w)}">${escapeHtml(w)}</div>`).join("")}
-      </div>
-      <div class="fitb-row" style="margin-top:14px;">
-        <button class="btn btn-primary btn-sm" id="tb-check" ${allFilled && !checked ? "" : "disabled"}>Kiểm tra</button>
-      </div>
-      <div class="fitb-feedback" id="tb-feedback"></div>
-      <div id="tb-actions"></div>`;
-
-    host.querySelectorAll(".tb-blank").forEach(btn => {
-      btn.addEventListener("click", () => {
-        if (checked) return;
-        const c = cells.find(x => x.key === btn.dataset.key);
-        if (!c || c.locked) return;
-        selected = c;
-        render();
-      });
-    });
-    host.querySelectorAll("#tb-bank .sentence-chunk").forEach(chip => {
-      chip.addEventListener("click", () => {
-        if (checked) return;
-        say(chip.dataset.word);
-        if (!selected || selected.locked) selected = firstEmpty();
-        if (!selected) return;
-        selected.value = chip.dataset.word;
-        selected = firstEmpty();
-        render();
-      });
-    });
-    const checkBtn = host.querySelector("#tb-check");
-    checkBtn && checkBtn.addEventListener("click", check);
-  }
-
-  function check() {
-    if (checked) return;
-    checked = true;
-    let wrong = 0;
-    cells.forEach(c => {
-      if (c.locked) return;
-      const ok = tableAnswers(c).includes(c.value);
-      if (round === 1) eqRecordAndSave(c.key, c.label, c.value, tableAnswers(c).join(" / "), ok);
-      if (ok) c.locked = true; else wrong++;
-    });
-    sfx(wrong === 0);
-    render();
-    const fb = host.querySelector("#tb-feedback");
-    const btn = document.createElement("button");
-    btn.type = "button";
-    btn.className = "btn btn-primary btn-sm";
-    btn.style.marginTop = "14px";
-    if (wrong === 0) {
-      fb.textContent = "✓ Chính xác hết rồi!";
-      fb.className = "fitb-feedback ok";
-      say(TABLE_DONE_SPEAK);
-      btn.textContent = "Tiếp theo →";
-      btn.addEventListener("click", onComplete);
-    } else {
-      fb.textContent = `Còn ${wrong} ô sai — xem đáp án đúng màu đỏ ở trên, rồi làm lại nhé.`;
-      fb.className = "fitb-feedback no";
-      btn.textContent = "Làm lại ô sai →";
-      btn.addEventListener("click", () => {
-        round++;
-        checked = false;
-        cells.forEach(c => { if (!c.locked) c.value = ""; });
-        selected = firstEmpty();
-        render();
-        host.scrollIntoView({ behavior: "smooth", block: "start" });
-      });
-    }
-    host.querySelector("#tb-actions").appendChild(btn);
-  }
-
-  selected = firstEmpty();
-  render();
-}
-
-// ============================================================
-// 5c) Write the missing word — typed, no hints
+// Typed answer (no options shown) — used by Quiz "Look, complete and read"
 // ============================================================
 function normalizeTyped(s) {
   return String(s).trim().toLowerCase().replace(/[’‘`]/g, "'").replace(/[.,!?]+$/g, "").replace(/\s+/g, " ");
@@ -705,10 +587,11 @@ function normalizeTyped(s) {
 function renderWriteItem(host, item, ctx) {
   host.innerHTML = `
     ${ctx.top}
+    ${item.image ? `<img src="${escapeHtml(item.image)}" alt="" style="display:block;max-width:100%;max-height:230px;margin:0 auto 12px;border-radius:14px;">` : ""}
     <div class="cw-row" style="justify-content:flex-start;">
       <span>${ctx.i + 1}.</span>
       ${item.before ? `<span>${escapeHtml(item.before)}</span>` : ""}
-      <input class="cw-input" id="wr-input" type="text" inputmode="text" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="…" aria-label="Từ còn thiếu">
+      <input class="cw-input" id="wr-input" type="text" inputmode="text" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="gõ tên nước…" style="min-width:140px;" aria-label="Từ còn thiếu">
       <span>${escapeHtml(item.after)}</span>
     </div>
     <div>
@@ -751,7 +634,7 @@ function renderWriteItem(host, item, ctx) {
       `<div style="color:#222;font-weight:800;margin-top:6px;">${escapeHtml(item.full)}</div>`;
     feedback.className = "fitb-feedback";
     ctx.done(correct, {
-      key: `write-${item.id}`,
+      key: `${item.keyPrefix || "write"}-${item.id}`,
       question: `${item.before} ___ ${item.after}`.trim(),
       studentAnswer: typed,
       correctAnswer: item.answer[0],
@@ -761,30 +644,19 @@ function renderWriteItem(host, item, ctx) {
   input.addEventListener("keydown", (e) => { if (e.key === "Enter") check(); });
 }
 
+
 // ============================================================
 // 5) Quiz — parts run one after another
 // ============================================================
 function buildQuizParts() {
+  const seq = (items, prefix) => (host, pre, done) =>
+    runSequence(host, items.map(x => ({ ...x, keyPrefix: prefix })), 1, { scored: true, preHtml: pre, renderItem: renderChoiceItem, onComplete: done });
   return [
-    {
-      title: "True / False / Not given",
-      instruction: "Đọc câu rồi chọn True (đúng), False (sai) hoặc Not given (bài không nói tới).",
-      run(host, pre, done) {
-        runSequence(host, TF_ITEMS.map(x => ({ ...x, keyPrefix: "tf" })), 1, { scored: true, preHtml: pre, renderItem: renderChoiceItem, onComplete: done });
-      },
-    },
-    {
-      title: "Complete the table",
-      instruction: "Hoàn thành bảng thông tin về Celia và David.",
-      run(host, pre, done) { runTable(host, pre, done); },
-    },
-    {
-      title: "Write the missing word",
-      instruction: "Tự gõ từ còn thiếu vào ô trống (không có gợi ý nhé!).",
-      run(host, pre, done) {
-        runSequence(host, WRITE_ITEMS, 1, { scored: true, preHtml: pre, renderItem: renderWriteItem, onComplete: done });
-      },
-    },
+    { title: "Listen and circle", instruction: "Nghe rồi chọn đáp án đúng.", run: seq(LISTEN_ITEMS, "listen") },
+    { title: "Look, complete and read", instruction: "Nhìn hình rồi tự gõ tên nước để hoàn thành câu.",
+      run: (host, pre, done) => runSequence(host, LOOK_ITEMS.map(x => ({ ...x, keyPrefix: "look" })), 1, { scored: true, preHtml: pre, renderItem: renderWriteItem, onComplete: done }) },
+    { title: "Read and complete", instruction: "Chọn từ trong hộp (a, b, c, d) để hoàn thành câu.", run: seq(RC_ITEMS, "rc") },
+    { title: "Read and match", instruction: "Đọc câu hỏi rồi chọn câu trả lời đúng.", run: seq(RM_ITEMS, "match") },
   ];
 }
 
@@ -795,7 +667,7 @@ function runQuiz() {
 
   function startPart(n) {
     const p = parts[n];
-    const pre = `<button type="button" class="eq-back-link" data-target="panel-reading">← Quay lại Reading để tìm ý</button><br><span class="q-part-tag">Quiz · Phần ${n + 1}/${parts.length} · ${p.title}</span><p class="eq-instruction">${p.instruction}</p>`;
+    const pre = `<span class="q-part-tag">Quiz · Phần ${n + 1}/${parts.length} · ${p.title}</span><p class="eq-instruction">${p.instruction}</p>`;
     p.run(host, pre, () => {
       if (n < parts.length - 1) {
         showSectionComplete(host, `Em đã hoàn thành phần "${p.title}".`, true, "complete_exercise",
