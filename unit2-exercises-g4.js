@@ -72,8 +72,54 @@ const ORDER_ITEMS = [
 ];
 
 // ============================================================
-// 5) QUIZ — coming next (workbook listening + writing tasks)
+// 5) QUIZ — Sách bài tập Unit 2 (4 bài)
 // ============================================================
+
+// 5a) Listen and tick or cross (scored: 4) — audio made with Google AI Studio (g4-u2-tick-N.wav)
+//     Pictures reuse the Unit 2 vocab photos + a clock drawn in code (book pic 4 = watching TV → here have dinner; still ✗)
+const TICK_OPTIONS = [{ key: "a", text: "✓ Tick (đúng)" }, { key: "b", text: "✗ Cross (sai)" }];
+const TICK_ITEMS = [
+  { id: 1, clock: "5:15", ampm: "AM", answer: "a", sayAfter: "What time is it? It's five fifteen." },
+  { id: 2, image: "img/vocab-g4-u2-go-to-school.jpg", clock: "6:15", ampm: "AM", answer: "b", sayAfter: "What time do you go to school? At six forty-five." },
+  { id: 3, image: "img/vocab-g4-u2-get-up.jpg", clock: "6:00", ampm: "AM", answer: "a", sayAfter: "What time do you get up? I get up at six o'clock." },
+  { id: 4, image: "img/vocab-g4-u2-have-dinner.jpg", clock: "9:45", ampm: "PM", answer: "b", sayAfter: "What time do you go to bed? I go to bed at nine forty-five." },
+].map(x => ({ ...x, stem: "Tick (✓) or cross (✗)?", options: TICK_OPTIONS, noTranslate: true,
+              audio: `g4-u2-tick-${x.id}.wav`, audioNote: "Bấm ▶ để nghe, rồi so với hình." }));
+
+// 5b) Look, complete and read (scored: 4) — nhìn hình, TỰ GÕ (không hiện đáp án sẵn)
+const LOOK_ITEMS = [
+  { id: 1, before: "It's", after: "o'clock.", answer: ["six", "6"], full: "It's six o'clock.", clock: "6:00", ampm: "AM", vi: "Bây giờ là 6 giờ." },
+  { id: 2, before: "I get up at", after: ".", answer: ["five fifteen", "5:15"], full: "I get up at five fifteen.", image: "img/vocab-g4-u2-get-up.jpg", clock: "5:15", ampm: "AM", vi: "Mình thức dậy lúc 5 giờ 15." },
+  { id: 3, before: "I", after: "at seven o'clock.", answer: ["go to school"], full: "I go to school at seven o'clock.", image: "img/vocab-g4-u2-go-to-school.jpg", clock: "7:00", ampm: "AM", vi: "Mình đi học lúc 7 giờ." },
+  { id: 4, before: "What time do you", after: "?", answer: ["have dinner"], full: "What time do you have dinner?", image: "img/vocab-g4-u2-have-dinner.jpg", clock: "7:30", ampm: "PM", vi: "Bạn ăn tối lúc mấy giờ?" },
+];
+
+// 5c) Read and complete (scored: 4) — cùng một hộp từ a–d cho cả 4 câu
+const RC_OPTIONS = [{ key: "a", text: "at nine fifteen" }, { key: "b", text: "go to school" }, { key: "c", text: "is it" }, { key: "d", text: "six forty-five" }];
+const RC_ITEMS = [
+  { id: 1, stem: "What time ___?", answer: "c", vi: "Mấy giờ rồi?" },
+  { id: 2, stem: "It's ___.", answer: "d", vi: "Bây giờ là 6 giờ 45." },
+  { id: 3, stem: "What time do you ___?", answer: "b", vi: "Bạn đi học lúc mấy giờ?" },
+  { id: 4, stem: "I go to bed ___.", answer: "a", vi: "Mình đi ngủ lúc 9 giờ 15." },
+].map(x => ({ ...x, options: RC_OPTIONS }));
+
+// 5d) Read and match (scored: 5) — đọc câu hỏi, chọn câu trả lời a–e
+const RM_OPTIONS = [
+  { key: "a", text: "I have dinner at seven thirty." },
+  { key: "b", text: "I go to bed at nine fifteen." },
+  { key: "c", text: "I get up at six o'clock." },
+  { key: "d", text: "It's five forty-five." },
+  { key: "e", text: "I go to school at seven o'clock." },
+];
+const RM_OPT_VI = ["a. Mình ăn tối lúc 7 giờ 30.", "b. Mình đi ngủ lúc 9 giờ 15.", "c. Mình thức dậy lúc 6 giờ.", "d. Bây giờ là 5 giờ 45.", "e. Mình đi học lúc 7 giờ."];
+const RM_ITEMS = [
+  { id: 1, stem: "What time is it?", answer: "d", vi: "Mấy giờ rồi?" },
+  { id: 2, stem: "What time do you get up?", answer: "c", vi: "Bạn thức dậy lúc mấy giờ?" },
+  { id: 3, stem: "What time do you go to school?", answer: "e", vi: "Bạn đi học lúc mấy giờ?" },
+  { id: 4, stem: "What time do you have dinner?", answer: "a", vi: "Bạn ăn tối lúc mấy giờ?" },
+  { id: 5, stem: "What time do you go to bed?", answer: "b", vi: "Bạn đi ngủ lúc mấy giờ?" },
+].map(x => ({ ...x, options: RM_OPTIONS, optVi: RM_OPT_VI, speakBefore: x.stem,
+              answerSentence: RM_OPTIONS.find(o => o.key === x.answer).text }));
 
 // ============================================================
 // Results saving — FIRST attempt only
@@ -85,7 +131,7 @@ let eqAnswers = {};
 let saveQueue = Promise.resolve();
 
 function eqTotalItems() {
-  return FITB_ITEMS.length + ORDER_ITEMS.length;
+  return FITB_ITEMS.length + ORDER_ITEMS.length + TICK_ITEMS.length + LOOK_ITEMS.length + RC_ITEMS.length + RM_ITEMS.length;
 }
 
 function eqRecordAndSave(key, question, studentAnswer, correctAnswer, correct) {
@@ -238,6 +284,22 @@ function runSequence(host, items, round, cfg) {
 // ============================================================
 // Multiple-choice question (used by Fill in the Blank, Listen and circle, Choose)
 // ============================================================
+// Picture for a quiz item: a photo (reused from Unit 2 Vocabulary) with a digital clock
+// badge drawn in code, or just a big clock when there is no photo.
+function clockHtml(t, ampm, big) {
+  return `<span style="display:inline-flex;align-items:baseline;gap:4px;background:#1f2a44;color:#7CFFB2;border:3px solid #fff;` +
+    `border-radius:12px;padding:${big ? "14px 26px" : "4px 10px"};font-family:'Courier New',monospace;font-weight:800;` +
+    `font-size:${big ? "48px" : "22px"};box-shadow:0 2px 8px rgba(0,0,0,.25);">${escapeHtml(t)}<small style="font-size:.45em;">${escapeHtml(ampm || "")}</small></span>`;
+}
+function picHtml(item) {
+  if (!item.image && !item.clock) return "";
+  if (!item.image) return `<div style="text-align:center;margin:0 auto 14px;">${clockHtml(item.clock, item.ampm, true)}</div>`;
+  return `<div style="position:relative;max-width:360px;margin:0 auto 14px;">` +
+    `<img src="${escapeHtml(item.image)}" alt="" style="display:block;width:100%;height:210px;object-fit:cover;border-radius:14px;">` +
+    (item.clock ? `<div style="position:absolute;right:8px;bottom:8px;">${clockHtml(item.clock, item.ampm, false)}</div>` : "") +
+    `</div>`;
+}
+
 function renderChoiceItem(host, item, ctx) {
   const stemHtml = escapeHtml(item.stem).replace("___", `<span class="q-blank" id="q-blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>`);
   const hasListen = !!(item.listenFull || item.speakBefore);
@@ -251,7 +313,7 @@ function renderChoiceItem(host, item, ctx) {
 
   host.innerHTML = `
     ${ctx.top}
-    ${item.image ? `<img src="${escapeHtml(item.image)}" alt="" style="display:block;max-width:100%;max-height:230px;margin:0 auto 12px;border-radius:14px;">` : ""}
+    ${picHtml(item)}
     <p class="q-stem">${ctx.i + 1}. ${stemHtml}</p>
     <div>
       ${item.audio
@@ -280,7 +342,7 @@ function renderChoiceItem(host, item, ctx) {
 
   if (listenBtn) {
     listenBtn.addEventListener("click", () => {
-      if (answered) say(item.answerSentence ? item.stem + " " + item.answerSentence : fullSentence(item)); // after answering, replay = the complete sentence
+      if (answered) say(item.sayAfter || (item.answerSentence ? item.stem + " " + item.answerSentence : fullSentence(item))); // after answering, replay = the complete sentence
       else playQuestion();
     });
   }
@@ -311,7 +373,7 @@ function renderChoiceItem(host, item, ctx) {
       audioEl && audioEl.pause(); // don't let the recording talk over the answer read-out
       sfx(correct);
       // Read the FULL sentence with the correct answer filled in (never "blank", never the options)
-      say(item.answerSentence ? item.stem + " " + item.answerSentence : fullSentence(item));
+      say(item.sayAfter || (item.answerSentence ? item.stem + " " + item.answerSentence : fullSentence(item)));
       if (listenBtn) listenBtn.textContent = "🔊 Nghe lại";
 
       feedback.textContent = (correct ? "✓ Chính xác!" : `Đáp án đúng: ${item.answer}. ${optionText(item, item.answer)}`) + (item.why ? ` — ${item.why}` : "");
@@ -456,11 +518,11 @@ function normalizeTyped(s) {
 function renderWriteItem(host, item, ctx) {
   host.innerHTML = `
     ${ctx.top}
-    ${item.image ? `<img src="${escapeHtml(item.image)}" alt="" style="display:block;max-width:100%;max-height:230px;margin:0 auto 12px;border-radius:14px;">` : ""}
+    ${picHtml(item)}
     <div class="cw-row" style="justify-content:flex-start;">
       <span>${ctx.i + 1}.</span>
       ${item.before ? `<span>${escapeHtml(item.before)}</span>` : ""}
-      <input class="cw-input" id="wr-input" type="text" inputmode="text" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="gõ tên nước…" style="min-width:140px;" aria-label="Từ còn thiếu">
+      <input class="cw-input" id="wr-input" type="text" inputmode="text" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="gõ vào đây…" style="min-width:140px;" aria-label="Từ còn thiếu">
       <span>${escapeHtml(item.after)}</span>
     </div>
     <div>
@@ -518,7 +580,14 @@ function renderWriteItem(host, item, ctx) {
 // 5) Quiz — parts run one after another
 // ============================================================
 function buildQuizParts() {
-  return []; // Quiz for Unit 2 is being built
+  const seq = (items, prefix, renderItem) => (host, pre, done) =>
+    runSequence(host, items.map(x => ({ ...x, keyPrefix: prefix })), 1, { scored: true, preHtml: pre, renderItem: renderItem || renderChoiceItem, onComplete: done });
+  return [
+    { title: "Listen and tick or cross", instruction: "Nghe rồi chọn ✓ nếu hình ĐÚNG với bài nghe, ✗ nếu SAI.", run: seq(TICK_ITEMS, "tick") },
+    { title: "Look, complete and read", instruction: "Nhìn hình rồi tự gõ chữ còn thiếu.", run: seq(LOOK_ITEMS, "look", renderWriteItem) },
+    { title: "Read and complete", instruction: "Chọn cụm từ trong hộp (a, b, c, d) để hoàn thành câu.", run: seq(RC_ITEMS, "rc") },
+    { title: "Read and match", instruction: "Đọc câu hỏi rồi chọn câu trả lời đúng.", run: seq(RM_ITEMS, "match") },
+  ];
 }
 
 function runQuiz() {
