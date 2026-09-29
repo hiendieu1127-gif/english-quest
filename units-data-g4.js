@@ -9,7 +9,7 @@
 
 const EQ_UNITS = [
   { id: 1, title: "My Friends", status: "in-progress", vocabulary: "vocabulary-g4.html?unit=g4-unit1", grammar: null, exercises: "unit1-exercises-g4.html" },
-  { id: 2, title: "Time And Daily Routines", status: "in-progress", vocabulary: "vocabulary-g4.html?unit=g4-unit2", grammar: null, exercises: null },
+  { id: 2, title: "Time And Daily Routines", status: "in-progress", vocabulary: "vocabulary-g4.html?unit=g4-unit2", grammar: null, exercises: "unit2-exercises-g4.html" },
   { id: 3, title: "My Week", status: "not-started", vocabulary: null, grammar: null, exercises: null },
   { id: 4, title: "My Birthday Party", status: "not-started", vocabulary: null, grammar: null, exercises: null },
   { id: 5, title: "Things We Can Do", status: "not-started", vocabulary: null, grammar: null, exercises: null },
