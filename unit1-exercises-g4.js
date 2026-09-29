@@ -88,7 +88,7 @@ const FITB_ITEMS = [
 ].map(x => ({ ...x, listenFull: true }));
 
 // ============================================================
-// 4) SENTENCE ORDERING (scored: 4) — sentences from the passage
+// 4) SENTENCE ORDERING (scored: 8) — 1–4 from the passage, 5–8 from the workbook "Make sentences"
 // ============================================================
 const ORDER_ITEMS = [
   {
@@ -126,6 +126,35 @@ const ORDER_ITEMS = [
     ],
     answer: "We often play football together after school.",
     answerVi: "Chúng mình thường chơi bóng đá cùng nhau sau giờ học.",
+  },
+  // --- Sách bài tập: "Make sentences" (chunks giữ đúng như sách, dấu câu tự thêm ở cuối) ---
+  {
+    id: 5,
+    chunks: [ { en: "America", vi: "nước Mỹ" }, { en: "She is", vi: "cô ấy" }, { en: "from", vi: "đến từ" } ],
+    end: ".",
+    answer: "She is from America.",
+    answerVi: "Cô ấy đến từ nước Mỹ.",
+  },
+  {
+    id: 6,
+    chunks: [ { en: "He", vi: "cậu ấy" }, { en: "from Thailand", vi: "đến từ Thái Lan" }, { en: "is", vi: "là / thì" } ],
+    end: ".",
+    answer: "He is from Thailand.",
+    answerVi: "Cậu ấy đến từ Thái Lan.",
+  },
+  {
+    id: 7,
+    chunks: [ { en: "from", vi: "đến từ" }, { en: "Where is", vi: "ở đâu" }, { en: "she", vi: "cô ấy" } ],
+    end: "?",
+    answer: "Where is she from?",
+    answerVi: "Cô ấy đến từ đâu?",
+  },
+  {
+    id: 8,
+    chunks: [ { en: "are", vi: "là / thì" }, { en: "from", vi: "đến từ" }, { en: "Where", vi: "ở đâu" }, { en: "you", vi: "bạn" } ],
+    end: "?",
+    answer: "Where are you from?",
+    answerVi: "Bạn đến từ đâu?",
   },
 ];
 
@@ -497,7 +526,7 @@ function renderOrderItem(host, item, ctx) {
     if (checked) return;
     if (placed.length === 0) return;
     checked = true;
-    const built = placed.map(c => c.en).join(" ");
+    const built = placed.map(c => c.en).join(" ") + (item.end || "");
     const correct = built === item.answer;
     sfx(correct);
 
