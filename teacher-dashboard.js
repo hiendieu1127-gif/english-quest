@@ -1,32 +1,32 @@
 // ============================================================
-// Teacher Dashboard — fully automatic, works for any number of grades.
+// Teacher Dashboard — one grade at a time (tabs: Khối 4 / 5 / 7 ...).
 //
-// How a grade's Units show up here:
-//   1) Its vocabulary-gN.js file declares  var VOCAB_UNITS_G<N> = [...]
-//      (must be `var`, not `const` — that's what makes it a real
-//      window property this file can auto-discover)
-//   2) dashboard.html has a <script src="vocabulary-gN.js"> tag
-// That's it — NO other edit needed in this file when a new
-// grade/unit/section is added.
+// Fully automatic, works for any number of grades:
+//   1) A grade's vocabulary-gN.js declares  var VOCAB_UNITS_G<N> = [...]
+//      (must be `var` so it becomes a window property we can discover)
+//   2) teacher-dashboard.html has a <script src="vocabulary-gN.js"> tag
+// No edit needed here when a new grade/unit/section is added.
 //
-// "Vocabulary" column is guaranteed to show per catalog unit; any
-// other section (grammar, exercises, ...) appears automatically the
-// first time any student has a saved result for it.
-//
-// Grade 5's historic unitIds have no prefix (e.g. "unit1"). Every
-// grade after that uses "g<N>-unit1" etc. Any unitId without a
-// recognized "gN-" prefix is treated as Khối 5, for backward
-// compatibility with already-saved Firestore data.
+// "Vocabulary" column always shows per catalog unit; any other section
+// (grammar, exercises, ...) appears the first time any student saves it.
+// Grade 5's historic unitIds have no prefix ("unit1"); later grades use
+// "g<N>-unit1". Unprefixed ids are treated as Khối 5.
 // ============================================================
 
-const SECTION_LABELS = { vocabulary: "Vocabulary", grammar: "Grammar", exercises: "Exercises" };
+const SECTION_LABELS = { vocabulary: "Từ vựng", grammar: "Ngữ pháp", exercises: "Bài tập" };
+const SECTION_LABELS_LONG = { vocabulary: "Vocabulary", grammar: "Grammar", exercises: "Exercises" };
 const SECTION_ORDER = ["vocabulary", "grammar", "exercises"];
+const TAB_KEY = "eq_dashboard_grade";
 
-function gradeInfoFromUnitId(unitId) {
-  const m = /^g(\d+)-/.exec(unitId);
-  if (m) return { num: Number(m[1]), label: `Khối ${m[1]}` };
-  return { num: 5, label: "Khối 5" };
+function gradeNumFromUnitId(unitId) {
+  const m = /^g(\d+)-/.exec(unitId || "");
+  return m ? Number(m[1]) : 5;
 }
+function unitNumFromId(unitId) {
+  const m = /unit(\d+)/.exec(unitId || "");
+  return m ? Number(m[1]) : 99;
+}
+function band(p) { return p >= 80 ? "hi" : p >= 50 ? "mid" : "lo"; }
 
 function whenResultsReady(cb) {
   if (window.EQResults) { cb(); return; }
@@ -43,159 +43,184 @@ whenResultsReady(async () => {
     return;
   }
 
-  // ---------- discover every loaded VOCAB_UNITS_G<N> catalog ----------
-  const catalogsByGrade = {}; // gradeNum -> [{id, label, number}]
+  // ---------- grades -> units -> sections ----------
+  const grades = {}; // num -> Map(unitId -> {number, title, sections:Set})
+  function ensureUnit(num, unitId, number, title) {
+    grades[num] = grades[num] || new Map();
+    if (!grades[num].has(unitId)) grades[num].set(unitId, { number, title: title || "", sections: new Set() });
+    const u = grades[num].get(unitId);
+    if (title && !u.title) u.title = title;
+    return u;
+  }
   Object.keys(window).filter(k => /^VOCAB_UNITS_G\d+$/.test(k)).forEach(key => {
-    const gradeNum = Number(key.match(/\d+/)[0]);
-    catalogsByGrade[gradeNum] = window[key].map(u => ({ id: u.id, label: `Unit ${u.number}`, number: u.number }));
+    const num = Number(key.match(/\d+/)[0]);
+    (window[key] || []).forEach(u => ensureUnit(num, u.id, u.number, u.title).sections.add("vocabulary"));
   });
-
-  // ---------- build { gradeNum -> { label, units: Map(unitId -> {label, sections:Set}) } } ----------
-  const grades = {};
-  function ensureGrade(gradeNum, label) {
-    if (!grades[gradeNum]) grades[gradeNum] = { label, units: new Map() };
-    return grades[gradeNum];
-  }
-  function ensureUnit(g, unitId, label) {
-    if (!g.units.has(unitId)) g.units.set(unitId, { label, sections: new Set() });
-    return g.units.get(unitId);
-  }
-
-  // seed from catalogs (guarantees a "Vocabulary" column even with 0 results)
-  Object.entries(catalogsByGrade).forEach(([gradeNum, units]) => {
-    const g = ensureGrade(Number(gradeNum), Number(gradeNum) === 5 ? "Khối 5" : `Khối ${gradeNum}`);
-    units.forEach(u => ensureUnit(g, u.id, u.label).sections.add("vocabulary"));
-  });
-
-  // add any section actually seen in results — covers exercises/grammar,
-  // and any unit/grade with no catalog file loaded at all
   results.forEach(r => {
-    const info = gradeInfoFromUnitId(r.unitId);
-    const g = ensureGrade(info.num, info.label);
-    const label = r.unitLabel ? r.unitLabel.split(":")[0].trim() : r.unitId;
-    ensureUnit(g, r.unitId, label).sections.add(r.section);
+    const title = r.unitLabel && r.unitLabel.includes(":") ? r.unitLabel.split(":").slice(1).join(":").trim() : "";
+    ensureUnit(gradeNumFromUnitId(r.unitId), r.unitId, unitNumFromId(r.unitId), title).sections.add(r.section);
   });
 
   const gradeNums = Object.keys(grades).map(Number).sort((a, b) => a - b);
-  if (gradeNums.length === 0) {
-    statusEl.textContent = "Chưa có Unit nào trong website.";
-    return;
-  }
+  if (!gradeNums.length) { statusEl.textContent = "Chưa có Unit nào trong website."; return; }
 
-  function sortSections(set) {
-    return [...set].sort((a, b) => {
-      const ia = SECTION_ORDER.indexOf(a), ib = SECTION_ORDER.indexOf(b);
-      return (ia === -1 ? 99 : ia) - (ib === -1 ? 99 : ib);
-    });
-  }
-
-  // ---------- flatten into ordered column list ----------
-  const columns = []; // {gradeLabel, unitId, unitLabel, section}
-  gradeNums.forEach(gradeNum => {
-    const g = grades[gradeNum];
-    const unitEntries = [...g.units.entries()].sort((a, b) => {
-      const na = parseInt((a[0].match(/\d+/) || ["99"])[0], 10);
-      const nb = parseInt((b[0].match(/\d+/) || ["99"])[0], 10);
-      return na - nb;
-    });
-    unitEntries.forEach(([unitId, info]) => {
-      sortSections(info.sections).forEach(section => {
-        columns.push({ gradeLabel: g.label, unitId, unitLabel: info.label, section });
-      });
-    });
-  });
-
-  // ---------- student list ----------
+  // ---------- students ----------
   const students = {};
   results.forEach(r => {
-    if (!students[r.studentKey]) students[r.studentKey] = { name: r.student, rows: {} };
-    students[r.studentKey].rows[`${r.unitId}__${r.section}`] = r;
+    const k = r.studentKey || r.student;
+    if (!students[k]) students[k] = { name: r.student, rows: {} };
+    students[k].rows[`${r.unitId}__${r.section}`] = r;
   });
   const studentList = Object.values(students).sort((a, b) => a.name.localeCompare(b.name, "vi"));
-  if (studentList.length === 0) {
+  if (!studentList.length) {
     statusEl.style.display = "none";
     document.getElementById("td-empty").style.display = "block";
     return;
   }
 
-  // ---------- header (2 rows: grade group row + unit/section row) ----------
-  const head = document.getElementById("td-head");
-  let gradeRowHtml = `<th class="td-name-h" rowspan="2">Học sinh</th>`;
-  let unitRowHtml = "";
-  let i = 0;
-  while (i < columns.length) {
-    const gradeLabel = columns[i].gradeLabel;
-    let span = 0;
-    while (i + span < columns.length && columns[i + span].gradeLabel === gradeLabel) span++;
-    gradeRowHtml += `<th colspan="${span}" class="td-grade-h">${gradeLabel}</th>`;
-    for (let j = 0; j < span; j++) {
-      const c = columns[i + j];
-      unitRowHtml += `<th>${c.unitLabel}<br>${SECTION_LABELS[c.section] || c.section}</th>`;
-    }
-    i += span;
+  function studentGradeRows(s, num) {
+    return Object.values(s.rows).filter(r => gradeNumFromUnitId(r.unitId) === num);
   }
-  head.innerHTML = `<tr>${gradeRowHtml}</tr><tr>${unitRowHtml}</tr>`;
+  function activeCount(num) {
+    return studentList.filter(s => studentGradeRows(s, num).length).length;
+  }
 
-  // ---------- body ----------
-  const body = document.getElementById("td-body");
-  body.innerHTML = studentList.map(s => {
-    let rowHtml = `<td class="td-name">${escapeHtml(s.name)}</td>`;
-    columns.forEach(c => { rowHtml += cellHtml(s, c.unitId, c.section); });
-    return `<tr>${rowHtml}</tr>`;
-  }).join("");
+  // ---------- state ----------
+  let current = null;
+  try { current = Number(localStorage.getItem(TAB_KEY)); } catch (e) {}
+  if (!gradeNums.includes(current)) {
+    // default: the grade with the most active students
+    current = gradeNums.slice().sort((a, b) => activeCount(b) - activeCount(a))[0];
+  }
+  const searchEl = document.getElementById("td-search");
+  const onlyActiveEl = document.getElementById("td-only-active");
 
+  function renderTabs() {
+    document.getElementById("td-tabs").innerHTML = gradeNums.map(n =>
+      `<button type="button" class="td-tab ${n === current ? "active" : ""}" data-g="${n}">Khối ${n}<span class="n">${activeCount(n)} HS</span></button>`
+    ).join("");
+    document.querySelectorAll(".td-tab").forEach(b => b.addEventListener("click", () => {
+      current = Number(b.dataset.g);
+      try { localStorage.setItem(TAB_KEY, String(current)); } catch (e) {}
+      render();
+    }));
+  }
+
+  function columnsFor(num) {
+    const cols = [];
+    [...grades[num].entries()].sort((a, b) => a[1].number - b[1].number).forEach(([unitId, u], ui) => {
+      const secs = [...u.sections].sort((a, b) => {
+        const ia = SECTION_ORDER.indexOf(a), ib = SECTION_ORDER.indexOf(b);
+        return (ia < 0 ? 99 : ia) - (ib < 0 ? 99 : ib);
+      });
+      secs.forEach((section, si) => cols.push({ unitId, unit: u, section, first: si === 0, span: secs.length, alt: ui % 2 === 1 }));
+    });
+    return cols;
+  }
+
+  function render() {
+    renderTabs();
+    const cols = columnsFor(current);
+    const q = (searchEl.value || "").trim().toLowerCase();
+    const list = studentList.filter(s =>
+      (!onlyActiveEl.checked || studentGradeRows(s, current).length) &&
+      (!q || s.name.toLowerCase().includes(q)));
+
+    // summary
+    const done = studentList.flatMap(s => studentGradeRows(s, current)).filter(r => r.status !== "in_progress");
+    const avg = done.length ? Math.round(done.reduce((t, r) => t + (r.percent || 0), 0) / done.length) : null;
+    const needHelp = studentList.filter(s => {
+      const d = studentGradeRows(s, current).filter(r => r.status !== "in_progress");
+      return d.length && d.reduce((t, r) => t + (r.percent || 0), 0) / d.length < 50;
+    }).length;
+    document.getElementById("td-summary").innerHTML = `
+      <div class="td-stat"><div class="v">${activeCount(current)}</div><div class="l">học sinh đã làm bài Khối ${current}</div></div>
+      <div class="td-stat"><div class="v">${grades[current].size}</div><div class="l">Unit</div></div>
+      <div class="td-stat"><div class="v">${avg === null ? "–" : avg + "%"}</div><div class="l">điểm trung bình</div></div>
+      <div class="td-stat"><div class="v" style="color:${needHelp ? "#a8321e" : "inherit"}">${needHelp}</div><div class="l">học sinh dưới 50% (cần hỗ trợ)</div></div>`;
+
+    // header: row 1 = units, row 2 = sections
+    let r1 = `<th class="td-name-h" rowspan="2">Học sinh</th>`, r2 = "";
+    cols.forEach(c => {
+      const cls = `${c.alt ? "alt" : ""} ${c.first ? "ustart" : ""}`;
+      if (c.first) r1 += `<th colspan="${c.span}" class="${cls}" title="${escapeHtml(c.unit.title)}">Unit ${c.unit.number}</th>`;
+      r2 += `<th class="${cls}">${SECTION_LABELS[c.section] || c.section}</th>`;
+    });
+    r1 += `<th rowspan="2" class="ustart">Trung bình</th>`;
+    document.getElementById("td-head").innerHTML = `<tr>${r1}</tr><tr>${r2}</tr>`;
+
+    // body
+    const body = document.getElementById("td-body");
+    body.innerHTML = list.map(s => {
+      let row = `<td class="td-name" title="${escapeHtml(s.name)}">${escapeHtml(s.name)}</td>`;
+      cols.forEach(c => { row += cellHtml(s, c); });
+      const d = studentGradeRows(s, current).filter(r => r.status !== "in_progress");
+      const a = d.length ? Math.round(d.reduce((t, r) => t + (r.percent || 0), 0) / d.length) : null;
+      row += `<td class="ustart td-avg">${a === null ? `<span class="td-cell todo">·</span>` : `<span class="td-cell ${band(a)}" style="cursor:default">${a}%</span>`}</td>`;
+      return `<tr>${row}</tr>`;
+    }).join("");
+    document.getElementById("td-table").style.display = list.length ? "table" : "none";
+    document.getElementById("td-none").style.display = list.length ? "none" : "block";
+
+    body.querySelectorAll(".td-cell[data-key]").forEach(cell => {
+      cell.addEventListener("click", () => openDetail(cell.dataset.student, cell.dataset.key, students));
+    });
+  }
+
+  function cellHtml(s, c) {
+    const cls = `${c.alt ? "alt" : ""} ${c.first ? "ustart" : ""}`;
+    const key = `${c.unitId}__${c.section}`;
+    const r = s.rows[key];
+    if (!r) return `<td class="${cls}"><span class="td-cell todo">·</span></td>`;
+    if (r.status === "in_progress") return `<td class="${cls}"><span class="td-cell progress">đang làm</span></td>`;
+    const sk = Object.keys(students).find(k => students[k] === s);
+    return `<td class="${cls}"><span class="td-cell ${band(r.percent || 0)}" data-student="${escapeHtml(sk)}" data-key="${escapeHtml(key)}" title="${r.correct}/${r.total} câu đúng">${r.percent}%</span></td>`;
+  }
+
+  searchEl.addEventListener("input", render);
+  onlyActiveEl.addEventListener("change", render);
   statusEl.style.display = "none";
-  document.getElementById("td-table").style.display = "table";
-
-  body.querySelectorAll(".td-cell[data-key]").forEach(cell => {
-    cell.addEventListener("click", () => openDetail(cell.dataset.key, students));
-  });
-
-  function cellHtml(student, unitId, section) {
-    const key = `${unitId}__${section}`;
-    const r = student.rows[key];
-    if (!r) return `<td><span class="td-cell todo">Chưa làm</span></td>`;
-    if (r.status === "in_progress") return `<td><span class="td-cell progress">Đang làm</span></td>`;
-    return `<td><span class="td-cell done" data-key="${student.name}||${key}">${r.percent}%<br><span style="font-weight:600;font-size:.78em;">${r.correct}/${r.total}</span></span></td>`;
-  }
+  document.getElementById("td-app").style.display = "block";
+  render();
 });
 
 function escapeHtml(s) {
   const d = document.createElement("div");
-  d.textContent = s;
-  return d.innerHTML;
+  d.textContent = s == null ? "" : String(s);
+  return d.innerHTML.replace(/"/g, "&quot;");
 }
 
-function openDetail(compositeKey, students) {
-  const [studentName, key] = compositeKey.split("||");
-  const student = Object.values(students).find(s => s.name === studentName);
+function openDetail(studentKey, key, students) {
+  const student = students[studentKey];
   const r = student && student.rows[key];
   if (!r) return;
-
   const backdrop = document.getElementById("td-modal-backdrop");
   const content = document.getElementById("td-modal-content");
-  const sectionLabel = SECTION_LABELS[r.section] || r.section;
+  const sectionLabel = SECTION_LABELS_LONG[r.section] || r.section;
+  const answers = Array.isArray(r.answers) ? r.answers : [];
+  const wrong = answers.filter(a => !a.correct).length;
 
-  let answersHtml = "";
-  if (Array.isArray(r.answers) && r.answers.length) {
-    answersHtml = r.answers.map(a => `
+  function rows(onlyWrong) {
+    const list = onlyWrong ? answers.filter(a => !a.correct) : answers;
+    if (!list.length) return `<p style="color:var(--ink-soft)">${answers.length ? "Không có câu sai 🎉" : "Không có chi tiết từng câu cho lần làm bài này."}</p>`;
+    return list.map(a => `
       <div class="td-qrow">
         <div class="q">${escapeHtml(a.question || "")}</div>
         <div class="${a.correct ? "a-right" : "a-wrong"}">
-          ${a.correct ? "✓" : "✗"} Học sinh trả lời: ${escapeHtml(String(a.studentAnswer ?? ""))}
-          ${!a.correct ? ` — Đáp án đúng: ${escapeHtml(String(a.correctAnswer ?? ""))}` : ""}
+          ${a.correct ? "✓" : "✗"} Học sinh trả lời: ${escapeHtml(a.studentAnswer ?? "")}
+          ${!a.correct ? ` — Đáp án đúng: ${escapeHtml(a.correctAnswer ?? "")}` : ""}
         </div>
-      </div>
-    `).join("");
-  } else {
-    answersHtml = `<p style="color:var(--ink-soft)">Không có chi tiết từng câu cho lần làm bài này.</p>`;
+      </div>`).join("");
   }
 
   content.innerHTML = `
-    <h3>${escapeHtml(studentName)} — ${escapeHtml(r.unitLabel || r.unitId)}</h3>
-    <div class="td-modal-meta">${sectionLabel} · ${r.correct}/${r.total} câu đúng · ${r.percent}%</div>
-    ${answersHtml}
-  `;
+    <h3>${escapeHtml(student.name)}</h3>
+    <div class="td-modal-meta">Khối ${gradeNumFromUnitId(r.unitId)} · ${escapeHtml(r.unitLabel || r.unitId)} · ${sectionLabel}<br>
+      <b>${r.correct}/${r.total}</b> câu đúng · <b>${r.percent}%</b>${answers.length ? ` · ${wrong} câu sai` : ""}</div>
+    ${answers.length ? `<label class="td-toggle" style="margin-bottom:8px;"><input type="checkbox" id="td-only-wrong"> Chỉ xem câu sai</label>` : ""}
+    <div id="td-qlist">${rows(false)}</div>`;
+  const ow = document.getElementById("td-only-wrong");
+  ow && ow.addEventListener("change", () => { document.getElementById("td-qlist").innerHTML = rows(ow.checked); });
   backdrop.classList.add("open");
 }
 
