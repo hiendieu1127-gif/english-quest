@@ -52,6 +52,44 @@ var VOCAB_UNITS_G4 = [
       { id: "g4u1-s-friendly", en: "They are friendly.", vi: "Họ rất thân thiện.", example: "They are friendly.", blank: "friendly", viFull: "Họ rất thân thiện.", viBlanked: "Họ rất ___.", stages: ["missing-word", "sentence-shuffle"] },
     ],
   },
+  {
+    id: "g4-unit2",
+    number: 2,
+    title: "Time And Daily Routines",
+    subtitle: "Global Success 4 · New Vocabulary",
+    hasExercises: false,
+
+    words: [
+      // Daily routines — Tap Pairs + Multiple Choice (+ Picture Matching when a photo exists)
+      { id: "g4u2-get-up", en: "get up", vi: "thức dậy", group: "routines", icon: "img/vocab-g4-u2-get-up.jpg", stages: ["tap-pairs", "picture-matching", "multiple-choice"] },
+      { id: "g4u2-have-breakfast", en: "have breakfast", vi: "ăn sáng", group: "routines", icon: "img/vocab-g4-u2-have-breakfast.jpg", stages: ["tap-pairs", "picture-matching", "multiple-choice"] },
+      { id: "g4u2-go-to-school", en: "go to school", vi: "đi học", group: "routines", icon: "img/vocab-g4-u2-go-to-school.jpg", stages: ["tap-pairs", "picture-matching", "multiple-choice"] },
+      { id: "g4u2-go-to-bed", en: "go to bed", vi: "đi ngủ", group: "routines", icon: "img/vocab-g4-u2-go-to-bed.jpg", stages: ["tap-pairs", "picture-matching", "multiple-choice"] },
+      { id: "g4u2-have-lunch", en: "have lunch", vi: "ăn trưa", group: "routines", icon: "img/vocab-g4-u2-have-lunch.jpg", stages: ["tap-pairs", "picture-matching", "multiple-choice"] },
+      { id: "g4u2-have-dinner", en: "have dinner", vi: "ăn tối", group: "routines", icon: "img/vocab-g4-u2-have-dinner.jpg", stages: ["tap-pairs", "picture-matching", "multiple-choice"] },
+      { id: "g4u2-do-homework", en: "do my homework", vi: "làm bài tập về nhà", group: "routines", icon: "img/vocab-g4-u2-do-my-homework.jpg", stages: ["tap-pairs", "picture-matching", "multiple-choice"] },
+      { id: "g4u2-clean-teeth", en: "clean my teeth", vi: "đánh răng", group: "routines", icon: "img/vocab-g4-u2-clean-my-teeth.jpg", stages: ["tap-pairs", "picture-matching", "multiple-choice"] },
+      { id: "g4u2-wash-face", en: "wash my face", vi: "rửa mặt", group: "routines", stages: ["tap-pairs", "multiple-choice"] },
+      { id: "g4u2-q-time", en: "What time is it?", vi: "Mấy giờ rồi?", stages: ["tap-pairs"] },
+      { id: "g4u2-break", en: "Let's have a break.", vi: "Mình nghỉ giải lao nhé.", stages: ["tap-pairs"] },
+
+      // Times — the "picture" is a digital clock drawn in code (no image file needed)
+      { id: "g4u2-six-oclock", en: "six o'clock", vi: "6 giờ", group: "times", clock: "6:00", ampm: "AM", stages: ["picture-matching", "multiple-choice"] },
+      { id: "g4u2-six-fifteen", en: "six fifteen", vi: "6 giờ 15", group: "times", clock: "6:15", ampm: "AM", stages: ["picture-matching", "multiple-choice"] },
+      { id: "g4u2-six-thirty", en: "six thirty", vi: "6 giờ 30", group: "times", clock: "6:30", ampm: "PM", stages: ["picture-matching", "multiple-choice"] },
+      { id: "g4u2-six-forty-five", en: "six forty-five", vi: "6 giờ 45", group: "times", clock: "6:45", ampm: "PM", stages: ["picture-matching", "multiple-choice"] },
+
+      // Sentences — Missing Word + Sentence Shuffle
+      { id: "g4u2-s-time", en: "What time is it?", vi: "Mấy giờ rồi?", example: "What time is it?", blank: "time", viFull: "Mấy giờ rồi?", viBlanked: "Mấy ___ rồi?", chunks: ["What", "time", "is", "it?"], stages: ["missing-word", "sentence-shuffle"] },
+      { id: "g4u2-s-eight-thirty", en: "It's eight thirty.", vi: "Bây giờ là 8 giờ 30.", example: "It's eight thirty.", blank: "eight thirty", viFull: "Bây giờ là 8 giờ 30.", viBlanked: "Bây giờ là ___.", chunks: ["It's", "eight thirty."], stages: ["missing-word"] },
+      { id: "g4u2-s-break", en: "Let's have a break.", vi: "Mình nghỉ giải lao nhé.", example: "Let's have a break.", blank: "break", viFull: "Mình nghỉ giải lao nhé.", viBlanked: "Mình nghỉ ___ nhé.", chunks: ["Let's", "have", "a break."], stages: ["missing-word", "sentence-shuffle"] },
+      { id: "g4u2-s-q-get-up", en: "What time do you get up?", vi: "Bạn thức dậy lúc mấy giờ?", example: "What time do you get up?", blank: "get up", viFull: "Bạn thức dậy lúc mấy giờ?", viBlanked: "Bạn ___ lúc mấy giờ?", chunks: ["What time", "do", "you", "get up?"], stages: ["missing-word", "sentence-shuffle"] },
+      { id: "g4u2-s-get-up", en: "I get up at six o'clock.", vi: "Mình thức dậy lúc 6 giờ.", example: "I get up at six o'clock.", blank: "six o'clock", viFull: "Mình thức dậy lúc 6 giờ.", viBlanked: "Mình thức dậy lúc ___.", chunks: ["I", "get up", "at", "six o'clock."], stages: ["missing-word", "sentence-shuffle"] },
+      { id: "g4u2-s-breakfast", en: "I have breakfast at six fifteen.", vi: "Mình ăn sáng lúc 6 giờ 15.", example: "I have breakfast at six fifteen.", blank: "have breakfast", viFull: "Mình ăn sáng lúc 6 giờ 15.", viBlanked: "Mình ___ lúc 6 giờ 15.", chunks: ["I", "have breakfast", "at", "six fifteen."], stages: ["missing-word", "sentence-shuffle"] },
+      { id: "g4u2-s-school", en: "I go to school at six thirty.", vi: "Mình đi học lúc 6 giờ 30.", example: "I go to school at six thirty.", blank: "go to school", viFull: "Mình đi học lúc 6 giờ 30.", viBlanked: "Mình ___ lúc 6 giờ 30.", chunks: ["I", "go to school", "at", "six thirty."], stages: ["missing-word", "sentence-shuffle"] },
+      { id: "g4u2-s-bed", en: "I go to bed at nine forty-five.", vi: "Mình đi ngủ lúc 9 giờ 45.", example: "I go to bed at nine forty-five.", blank: "go to bed", viFull: "Mình đi ngủ lúc 9 giờ 45.", viBlanked: "Mình ___ lúc 9 giờ 45.", chunks: ["I", "go to bed", "at", "nine forty-five."], stages: ["missing-word", "sentence-shuffle"] },
+    ],
+  },
 ];
 
 (function () {
@@ -69,6 +107,8 @@ const PASS_LS_KEY = "eq_vocab_progress_g4";
 // Pronunciation — tap any English word/sentence to hear it read aloud
 // ============================================================
 function speakWord(text) {
+  // A bare "I" is read by some voices as "capital I" — "aye" sounds right. Display unchanged.
+  if (text && text.trim() === "I") text = "aye";
   if (window.EQSpeak) window.EQSpeak.speak(text);
 }
 
@@ -283,7 +323,7 @@ function buildSequentialItems(stageKey, unit) {
   const wordsForStage = unit.words.filter(w => w.stages && w.stages.includes(stageKey));
 
   if (stageKey === "picture-matching") {
-    const pool = wordsForStage.filter(w => w.icon);
+    const pool = wordsForStage.filter(w => w.icon || w.clock);
     if (pool.length < 2) return [];
     const optCount = Math.min(3, pool.length);
     return pool.map((w, wIdx) => {
@@ -362,7 +402,7 @@ function runSequential(host, stageKey, items, onDone) {
       body = `
         <div class="runner-prompt"><div class="prompt-label">Chọn hình đúng</div><div class="prompt-main prompt-speak" id="prompt-speak">🔊 ${item.word.en}</div></div>
         <div class="runner-pics">
-          ${item.opts.map((o, oi) => `<div class="runner-pic-opt" data-idx="${oi}">${o.icon ? `<img src="${o.icon}" alt="${o.en}" style="width:100%;height:100%;object-fit:cover;border-radius:12px;">` : ""}</div>`).join("")}
+          ${item.opts.map((o, oi) => `<div class="runner-pic-opt" data-idx="${oi}">${o.icon ? `<img src="${o.icon}" alt="${o.en}" style="width:100%;height:100%;object-fit:cover;border-radius:12px;">` : o.clock ? `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#1f2a44;border-radius:12px;color:#7CFFB2;font-family:'Courier New',monospace;font-weight:800;font-size:clamp(20px,6vw,34px);letter-spacing:1px;">${o.clock}<span style="font-size:0.5em;margin-left:3px;">${o.ampm || ""}</span></div>` : ""}</div>`).join("")}
         </div>`;
     } else if (stageKey === "multiple-choice") {
       body = `
