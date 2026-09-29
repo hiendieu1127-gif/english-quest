@@ -174,7 +174,10 @@ whenResultsReady(async () => {
     if (!r) return `<td class="${cls}"><span class="td-cell todo">·</span></td>`;
     if (r.status === "in_progress") return `<td class="${cls}"><span class="td-cell progress">đang làm</span></td>`;
     const sk = Object.keys(students).find(k => students[k] === s);
-    return `<td class="${cls}"><span class="td-cell ${band(r.percent || 0)}" data-student="${escapeHtml(sk)}" data-key="${escapeHtml(key)}" title="${r.correct}/${r.total} câu đúng">${r.percent}%</span></td>`;
+    const answered = Array.isArray(r.answers) ? r.answers.length : r.total;
+    const partial = answered < r.total;
+    const tip = `${r.correct} đúng · ${answered - r.correct} sai` + (partial ? ` · ${r.total - answered} chưa làm` : "");
+    return `<td class="${cls}"><span class="td-cell ${band(r.percent || 0)}${partial ? " partial" : ""}" data-student="${escapeHtml(sk)}" data-key="${escapeHtml(key)}" title="${tip}">${r.percent}%</span></td>`;
   }
 
   searchEl.addEventListener("input", render);
@@ -216,7 +219,7 @@ function openDetail(studentKey, key, students) {
   content.innerHTML = `
     <h3>${escapeHtml(student.name)}</h3>
     <div class="td-modal-meta">Khối ${gradeNumFromUnitId(r.unitId)} · ${escapeHtml(r.unitLabel || r.unitId)} · ${sectionLabel}<br>
-      <b>${r.correct}/${r.total}</b> câu đúng · <b>${r.percent}%</b>${answers.length ? ` · ${wrong} câu sai` : ""}</div>
+      <b>${r.percent}%</b> · <span class="a-right">${r.correct} câu đúng</span>${answers.length ? ` · <span class="a-wrong">${wrong} câu sai</span>` : ""}${answers.length && answers.length < r.total ? ` · <b>${r.total - answers.length} câu chưa làm</b> (em chưa làm hết bài)` : ""} <span style="opacity:.7">(tổng ${r.total} câu)</span></div>
     ${answers.length ? `<label class="td-toggle" style="margin-bottom:8px;"><input type="checkbox" id="td-only-wrong"> Chỉ xem câu sai</label>` : ""}
     <div id="td-qlist">${rows(false)}</div>`;
   const ow = document.getElementById("td-only-wrong");
