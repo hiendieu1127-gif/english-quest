@@ -57,7 +57,6 @@ var VOCAB_UNITS_G4 = [
     number: 2,
     title: "Time And Daily Routines",
     subtitle: "Global Success 4 · New Vocabulary",
-    hasExercises: false,
 
     words: [
       // Daily routines — Tap Pairs + Multiple Choice (+ Picture Matching when a photo exists)
