@@ -141,6 +141,7 @@ const UNIT_ID = "g7-unit1";
 const UNIT_LABEL = "Unit 1: Hobbies";
 let eqStudent = "";
 let eqAnswers = {};
+let eqRetries = []; // answers given in retry rounds (Vòng 2, 3…) — scored separately from the first attempt
 let saveQueue = Promise.resolve();
 
 function eqTotalItems() {
@@ -148,7 +149,10 @@ function eqTotalItems() {
 }
 
 function eqRecordAndSave(key, question, studentAnswer, correctAnswer, correct) {
-  eqAnswers[key] = { question, studentAnswer, correctAnswer, correct };
+  // The FIRST attempt is the main score (L1). Answers in retry rounds ("làm lại các câu sai",
+  // Vòng 2, 3…) never change it — they are saved separately as the retry score (L2/L3).
+  if (eqAnswers[key]) eqRetries.push({ question, studentAnswer, correctAnswer, correct });
+  else eqAnswers[key] = { question, studentAnswer, correctAnswer, correct };
   if (!window.EQResults || !eqStudent) return;
   const values = Object.values(eqAnswers);
   const correctCount = values.filter(a => a.correct).length;
@@ -160,6 +164,7 @@ function eqRecordAndSave(key, question, studentAnswer, correctAnswer, correct) {
     correct: correctCount,
     total: eqTotalItems(),
     answers: values,
+    retries: eqRetries.slice(),
   };
   saveQueue = saveQueue.then(() => window.EQResults.saveResult(payload).catch(() => {}));
 }
@@ -319,7 +324,7 @@ function runMatchRound(items, round) {
         feedback.textContent = correct ? "✓ Chính xác!" : `Đáp án đúng: ${item.a}`;
         feedback.className = correct ? "fitb-feedback ok" : "fitb-feedback no";
 
-        if (round === 1) eqRecordAndSave(`match-${item.id}`, item.b, chosen, item.a, correct);
+        eqRecordAndSave(`match-${item.id}`, item.b, chosen, item.a, correct);
         if (!correct) wrongItems.push(item);
 
         const nextBtn = document.createElement("button");
@@ -409,7 +414,7 @@ function runTFRound(items, round) {
         feedback.textContent = correct ? "✓ Chính xác!" : `Đáp án đúng: ${t.answer}`;
         feedback.className = correct ? "fitb-feedback ok" : "fitb-feedback no";
 
-        if (round === 1) eqRecordAndSave(`tf-${t.origIdx}`, t.en, choice, t.answer, correct);
+        eqRecordAndSave(`tf-${t.origIdx}`, t.en, choice, t.answer, correct);
         if (!correct) wrongItems.push(t);
 
         answeredCount++;
@@ -543,7 +548,7 @@ function runSentenceRound(items, round) {
       }
       feedback.className = "fitb-feedback";
 
-      if (round === 1) eqRecordAndSave(`sentence-${item.id}`, "Sentence " + item.id, built, item.answer, correct);
+      eqRecordAndSave(`sentence-${item.id}`, "Sentence " + item.id, built, item.answer, correct);
       if (!correct) wrongItems.push(item);
 
       resetBtn.disabled = true;

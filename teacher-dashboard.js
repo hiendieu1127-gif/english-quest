@@ -177,7 +177,9 @@ whenResultsReady(async () => {
     const answered = Array.isArray(r.answers) ? r.answers.length : r.total;
     const partial = answered < r.total;
     const tip = `${r.correct} đúng · ${answered - r.correct} sai` + (partial ? ` · ${r.total - answered} chưa làm` : "");
-    return `<td class="${cls}"><span class="td-cell ${band(r.percent || 0)}${partial ? " partial" : ""}" data-student="${escapeHtml(sk)}" data-key="${escapeHtml(key)}" title="${tip}">${r.percent}%</span></td>`;
+    // Retry rounds (L2, L3…) are shown as a separate small score under the first-attempt (L1) score
+    const fix = r.retryTotal ? `<span class="td-fix" title="Các vòng làm lại (L2, L3…): ${r.retryCorrect} đúng / ${r.retryTotal} lượt">Sửa ${r.retryCorrect}/${r.retryTotal}</span>` : "";
+    return `<td class="${cls}"><span class="td-cell ${band(r.percent || 0)}${partial ? " partial" : ""}" data-student="${escapeHtml(sk)}" data-key="${escapeHtml(key)}" title="${tip}">${r.percent}%</span>${fix}</td>`;
   }
 
   searchEl.addEventListener("input", render);
@@ -202,9 +204,11 @@ function openDetail(studentKey, key, students) {
   const sectionLabel = SECTION_LABELS_LONG[r.section] || r.section;
   const answers = Array.isArray(r.answers) ? r.answers : [];
   const wrong = answers.filter(a => !a.correct).length;
+  const retries = Array.isArray(r.retries) ? r.retries : [];
 
-  function rows(onlyWrong) {
-    const list = onlyWrong ? answers.filter(a => !a.correct) : answers;
+  function rows(onlyWrong, src) {
+    const all = src || answers;
+    const list = onlyWrong ? all.filter(a => !a.correct) : all;
     if (!list.length) return `<p style="color:var(--ink-soft)">${answers.length ? "Không có câu sai 🎉" : "Không có chi tiết từng câu cho lần làm bài này."}</p>`;
     return list.map(a => `
       <div class="td-qrow">
@@ -219,9 +223,12 @@ function openDetail(studentKey, key, students) {
   content.innerHTML = `
     <h3>${escapeHtml(student.name)}</h3>
     <div class="td-modal-meta">Khối ${gradeNumFromUnitId(r.unitId)} · ${escapeHtml(r.unitLabel || r.unitId)} · ${sectionLabel}<br>
-      <b>${r.percent}%</b> · <span class="a-right">${r.correct} câu đúng</span>${answers.length ? ` · <span class="a-wrong">${wrong} câu sai</span>` : ""}${answers.length && answers.length < r.total ? ` · <b>${r.total - answers.length} câu chưa làm</b> (em chưa làm hết bài)` : ""} <span style="opacity:.7">(tổng ${r.total} câu)</span></div>
+      Lần đầu (L1): <b>${r.percent}%</b> · <span class="a-right">${r.correct} câu đúng</span>${answers.length ? ` · <span class="a-wrong">${wrong} câu sai</span>` : ""}${answers.length && answers.length < r.total ? ` · <b>${r.total - answers.length} câu chưa làm</b> (em chưa làm hết bài)` : ""} <span style="opacity:.7">(tổng ${r.total} câu)</span></div>
     ${answers.length ? `<label class="td-toggle" style="margin-bottom:8px;"><input type="checkbox" id="td-only-wrong"> Chỉ xem câu sai</label>` : ""}
-    <div id="td-qlist">${rows(false)}</div>`;
+    <div id="td-qlist">${rows(false)}</div>
+    ${retries.length ? `<h4 style="margin:18px 0 4px;">Sửa bài — các vòng làm lại (L2, L3…)</h4>
+    <div class="td-modal-meta"><b>${r.retryCorrect}/${r.retryTotal}</b> lượt làm lại đúng (điểm này tính riêng, không cộng vào ${r.percent}% ở trên)</div>
+    ${rows(false, retries)}` : ""}`;
   const ow = document.getElementById("td-only-wrong");
   ow && ow.addEventListener("change", () => { document.getElementById("td-qlist").innerHTML = rows(ow.checked); });
   backdrop.classList.add("open");
