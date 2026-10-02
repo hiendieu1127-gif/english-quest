@@ -94,7 +94,6 @@ var VOCAB_UNITS_G4 = [
     number: 3,
     title: "My Week",
     subtitle: "Global Success 4 · New Vocabulary",
-    hasExercises: false,
 
     words: [
       // Days of the week — Picture Matching shows the Vietnamese day and 3 English words to pick from (textMatch, no image needed)
