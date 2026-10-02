@@ -94,6 +94,9 @@ whenResultsReady(async () => {
   }
   const searchEl = document.getElementById("td-search");
   const onlyActiveEl = document.getElementById("td-only-active");
+  // "Xoá học sinh" mode — remove test / junk names from the current grade only
+  let deleteMode = false;
+  const picked = new Set(); // student keys
 
   function renderTabs() {
     document.getElementById("td-tabs").innerHTML = gradeNums.map(n =>
@@ -152,7 +155,9 @@ whenResultsReady(async () => {
     // body
     const body = document.getElementById("td-body");
     body.innerHTML = list.map(s => {
-      let row = `<td class="td-name" title="${escapeHtml(s.name)}">${escapeHtml(s.name)}</td>`;
+      const sk = Object.keys(students).find(k => students[k] === s);
+      const pick = deleteMode ? `<input type="checkbox" class="td-pick" data-sk="${escapeHtml(sk)}" ${picked.has(sk) ? "checked" : ""}>` : "";
+      let row = `<td class="td-name" title="${escapeHtml(s.name)}">${pick}${escapeHtml(s.name)}</td>`;
       cols.forEach(c => { row += cellHtml(s, c); });
       const d = studentGradeRows(s, current).filter(r => r.status !== "in_progress");
       const a = d.length ? Math.round(d.reduce((t, r) => t + (r.percent || 0), 0) / d.length) : null;
@@ -161,6 +166,12 @@ whenResultsReady(async () => {
     }).join("");
     document.getElementById("td-table").style.display = list.length ? "table" : "none";
     document.getElementById("td-none").style.display = list.length ? "none" : "block";
+
+    body.querySelectorAll(".td-pick").forEach(cb => cb.addEventListener("change", () => {
+      if (cb.checked) picked.add(cb.dataset.sk); else picked.delete(cb.dataset.sk);
+      updateDeleteBar();
+    }));
+    updateDeleteBar();
 
     body.querySelectorAll(".td-cell[data-key]").forEach(cell => {
       cell.addEventListener("click", () => openDetail(cell.dataset.student, cell.dataset.key, students));
@@ -181,6 +192,51 @@ whenResultsReady(async () => {
     const fix = r.retryTotal ? `<span class="td-fix" title="Các vòng làm lại (L2, L3…): ${r.retryCorrect} đúng / ${r.retryTotal} lượt">Sửa ${r.retryCorrect}/${r.retryTotal}</span>` : "";
     return `<td class="${cls}"><span class="td-cell ${band(r.percent || 0)}${partial ? " partial" : ""}" data-student="${escapeHtml(sk)}" data-key="${escapeHtml(key)}" title="${tip}">${r.percent}%</span>${fix}</td>`;
   }
+
+  function updateDeleteBar() {
+    document.getElementById("td-del-toggle").classList.toggle("on", deleteMode);
+    document.getElementById("td-del-bar").classList.toggle("open", deleteMode);
+    document.getElementById("td-del-count").textContent = picked.size
+      ? `Đã chọn ${picked.size} học sinh — chỉ xoá bài của Khối ${current}.`
+      : "Tích ô cạnh tên các em cần xoá.";
+    document.getElementById("td-del-go").disabled = !picked.size;
+  }
+  document.getElementById("td-del-toggle").addEventListener("click", () => {
+    deleteMode = !deleteMode; picked.clear(); render();
+  });
+  document.getElementById("td-del-cancel").addEventListener("click", () => {
+    deleteMode = false; picked.clear(); render();
+  });
+  document.getElementById("td-del-go").addEventListener("click", async () => {
+    const chosen = [...picked].map(k => students[k]).filter(Boolean);
+    const names = chosen.map(s => "• " + s.name).join("\n");
+    if (!window.confirm(`Xoá vĩnh viễn toàn bộ bài làm Khối ${current} của:\n\n${names}\n\nKhông khôi phục lại được. Tiếp tục?`)) return;
+    const btn = document.getElementById("td-del-go");
+    btn.disabled = true; btn.textContent = "Đang xoá...";
+    try {
+      for (const s of chosen) {
+        for (const r of studentGradeRows(s, current)) {
+          await window.EQResults.deleteResult(r);
+          delete s.rows[`${r.unitId}__${r.section}`];
+        }
+      }
+      // a student with no results left in any grade disappears from the table
+      chosen.forEach(s => {
+        if (!Object.keys(s.rows).length) {
+          const k = Object.keys(students).find(x => students[x] === s);
+          delete students[k];
+          studentList.splice(studentList.indexOf(s), 1);
+        }
+      });
+      deleteMode = false; picked.clear();
+    } catch (e) {
+      window.alert("Không xoá được: " + (e && e.code === "permission-denied"
+        ? "Firestore Rules chưa cho phép xoá. Vào Firebase Console → Firestore Database → Rules và thêm quyền delete cho collection results."
+        : (e && e.message) || e));
+    }
+    btn.textContent = "Xoá các tên đã chọn";
+    render();
+  });
 
   searchEl.addEventListener("input", render);
   onlyActiveEl.addEventListener("change", render);
