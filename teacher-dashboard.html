@@ -45,6 +45,12 @@
   .td-cell.partial{ box-shadow: inset 0 0 0 2px currentColor; opacity:.85; }
   .td-cell.progress{ background:#eef0ff; color:#4b4fb5; font-weight:700; font-size:.75rem; cursor:default; }
   .td-cell.todo{ color:#d3cdbf; cursor:default; min-width:0; padding:0; }
+  .td-del-btn{ padding:9px 14px; border:2px solid var(--line); border-radius:12px; background:#fff; font:inherit; font-weight:700; cursor:pointer; color:#a8321e; }
+  .td-del-btn.on{ background:#fde2dd; border-color:#e8a597; }
+  .td-del-bar{ display:none; align-items:center; gap:10px; flex-wrap:wrap; background:#fff4f1; border:2px solid #f3c4ba; border-radius:12px; padding:10px 14px; margin-bottom:14px; font-size:.9rem; }
+  .td-del-bar.open{ display:flex; }
+  .td-del-bar button{ padding:7px 14px; border-radius:10px; border:none; font:inherit; font-weight:700; cursor:pointer; }
+  .td-pick{ width:18px; height:18px; margin-right:8px; vertical-align:middle; cursor:pointer; }
   .td-fix{ display:block; margin-top:3px; font-size:.7rem; font-weight:700; color:#6b6b76; white-space:nowrap; }
   .td-legend{ display:flex; gap:14px; flex-wrap:wrap; font-size:.8rem; color:var(--ink-soft); margin-top:12px; }
   .td-legend span{ display:inline-flex; align-items:center; gap:6px; }
@@ -96,6 +102,12 @@
           <div class="td-toolbar">
             <input class="td-search" id="td-search" type="search" placeholder="🔍 Tìm học sinh...">
             <label class="td-toggle"><input type="checkbox" id="td-only-active" checked> Chỉ hiện học sinh đã làm bài của khối này</label>
+            <button type="button" class="td-del-btn" id="td-del-toggle">🗑 Xoá học sinh</button>
+          </div>
+          <div class="td-del-bar" id="td-del-bar">
+            <span id="td-del-count">Tích ô cạnh tên các em cần xoá.</span>
+            <button type="button" id="td-del-go" style="background:#d64545;color:#fff;" disabled>Xoá các tên đã chọn</button>
+            <button type="button" id="td-del-cancel" style="background:#eee;color:#333;">Huỷ</button>
           </div>
           <div class="td-scroll">
             <table class="td-table" id="td-table">
@@ -129,7 +141,7 @@
 <script src="vocabulary.js?v=2"></script>
 <script src="vocabulary-g7.js?v=2"></script>
 <script src="vocabulary-g4.js?v=2"></script>
-<script type="module" src="results-service.js?v=2"></script>
-<script src="teacher-dashboard.js?v=4"></script>
+<script type="module" src="results-service.js?v=3"></script>
+<script src="teacher-dashboard.js?v=5"></script>
 </body>
 </html>

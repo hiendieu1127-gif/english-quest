@@ -24,7 +24,7 @@
 import { firebaseConfig } from "./firebase-config.js";
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import {
-  getFirestore, doc, setDoc, getDoc, getDocs, collection, serverTimestamp,
+  getFirestore, doc, setDoc, getDoc, getDocs, deleteDoc, collection, serverTimestamp,
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const app = initializeApp(firebaseConfig);
@@ -107,10 +107,18 @@ async function getAllResults() {
   return snap.docs.map((d) => d.data());
 }
 
+// ---------- delete (Teacher Dashboard "Xoá học sinh") ----------
+// Removes one student's result doc for one unit+section. Needs a Firestore
+// Rules "allow delete" on results/{id}; otherwise this throws permission-denied.
+async function deleteResult({ student, studentKey, unitId, section }) {
+  const key = studentKey || slugify(student);
+  await deleteDoc(doc(db, "results", resultId(key, unitId, section)));
+}
+
 window.EQResults = {
   getStudentName, setStudentName,
   markInProgress, saveResult, getResult,
-  getAllResults,
+  getAllResults, deleteResult,
   slugify,
 };
 
