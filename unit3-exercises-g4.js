@@ -87,22 +87,27 @@ const LISTEN_ITEMS = [
 ].map(x => ({ ...x, audio: `g4-u3-listen-${x.id}.wav`, audioNote: "Bấm ▶ để nghe, rồi gõ phần còn thiếu." }));
 
 // 5b) Listen and circle (scored: 2) — nghe rồi chọn hình a hoặc b
+//     Pictures: calendar pages drawn in code (1) + photos reused from 5c (2: listen to music / boy with the TV remote)
+const CIRCLE_PICS = {
+  1: [{ cal: "Thursday", date: 8 }, { cal: "Friday", date: 9 }],
+  2: ["img/g4-u3-look-4.jpg", "img/g4-u3-look-3.jpg"],
+};
 const CIRCLE_ITEMS = [
   { id: 1, options: [{ key: "a", text: "Thursday" }, { key: "b", text: "Friday" }], answer: "b",
     sayAfter: "What day is it today? It's Friday." },
   { id: 2, options: [{ key: "a", text: "listen to music" }, { key: "b", text: "watch TV" }], answer: "a",
     sayAfter: "What do you do on Saturdays? I listen to music." },
 ].map(x => ({ ...x, stem: "Listen and choose a or b.", noTranslate: true,
-              pics: [`img/g4-u3-circle-${x.id}a.jpg`, `img/g4-u3-circle-${x.id}b.jpg`],
+              pics: CIRCLE_PICS[x.id],
               audio: `g4-u3-circle-${x.id}.wav`, audioNote: "Bấm ▶ để nghe, rồi chọn a hoặc b." }));
 
 // 5c) Look, complete and read (scored: 4) — nhìn hình, TỰ GÕ (không hiện đáp án sẵn)
 const LOOK_ITEMS = [
-  { id: 1, before: "It's", after: ".", answer: ["monday"], full: "It's Monday.", tag: "Monday", vi: "Hôm nay là thứ Hai." },
+  { id: 1, before: "It's", after: ".", answer: ["monday"], full: "It's Monday.", cal: "Monday", date: 16, vi: "Hôm nay là thứ Hai." },
   { id: 2, before: "I", after: "at school on Thursdays.", answer: ["study"], full: "I study at school on Thursdays.", tag: "Thursdays", vi: "Mình học ở trường vào các ngày thứ Năm." },
   { id: 3, before: "I stay at home on", after: ".", answer: ["saturdays", "saturday"], full: "I stay at home on Saturdays.", tag: "Saturdays", vi: "Mình ở nhà vào các ngày thứ Bảy." },
   { id: 4, before: "I", after: "on Sundays.", answer: ["listen to music"], full: "I listen to music on Sundays.", tag: "Sundays", vi: "Mình nghe nhạc vào các ngày Chủ nhật." },
-].map(x => ({ ...x, image: `img/g4-u3-look-${x.id}.jpg` }));
+].map(x => x.cal ? x : ({ ...x, image: `img/g4-u3-look-${x.id}.jpg` }));
 
 // 5d) Read and complete (scored: 4) — cùng một hộp từ a–d cho cả 4 câu
 const RC_OPTIONS = [{ key: "a", text: "housework" }, { key: "b", text: "on Saturdays" }, { key: "c", text: "What day" }, { key: "d", text: "Friday" }];
@@ -298,11 +303,19 @@ function clockHtml(t, ampm, big) {
     `border-radius:12px;padding:${big ? "14px 26px" : "4px 10px"};font-family:'Courier New',monospace;font-weight:800;` +
     `font-size:${big ? "48px" : "22px"};box-shadow:0 2px 8px rgba(0,0,0,.25);">${escapeHtml(t)}<small style="font-size:.45em;">${escapeHtml(ampm || "")}</small></span>`;
 }
+// Calendar page drawn in code (day name + date), like the workbook pictures
+function calHtml(day, date, height) {
+  return `<div style="height:${height}px;display:flex;flex-direction:column;background:#fff;border:2px solid #d9dbe3;border-radius:12px;overflow:hidden;box-shadow:0 2px 6px rgba(0,0,0,.08);">` +
+    `<div style="background:#e5484d;color:#fff;font-weight:800;text-align:center;padding:8px 4px;font-size:clamp(15px,4.5vw,20px);">${escapeHtml(day)}</div>` +
+    `<div style="flex:1;display:flex;align-items:center;justify-content:center;color:#1f2a44;font-weight:900;font-size:${Math.round(height * 0.38)}px;">${date}</div></div>`;
+}
+
 function picHtml(item) {
+  if (item.cal) return `<div style="max-width:220px;margin:0 auto 14px;">${calHtml(item.cal, item.date, 190)}</div>`;
   if (item.pics) {
     return `<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;max-width:360px;margin:0 auto 14px;">` +
-      item.pics.map((src, idx) => `<div style="position:relative;"><img src="${escapeHtml(src)}" alt="" onerror="this.style.visibility='hidden'" style="display:block;width:100%;height:140px;object-fit:cover;border-radius:12px;background:#f1f1f4;">` +
-        `<span style="position:absolute;left:6px;top:6px;background:#e5484d;color:#fff;font-weight:800;border-radius:999px;width:26px;height:26px;display:flex;align-items:center;justify-content:center;">${item.options[idx].key}</span></div>`).join("") +
+      item.pics.map((pic, idx) => `<div style="position:relative;">${pic.cal ? calHtml(pic.cal, pic.date, 140) : `<img src="${escapeHtml(pic)}" alt="" style="display:block;width:100%;height:140px;object-fit:cover;border-radius:12px;background:#f1f1f4;">`}` +
+        `<span style="position:absolute;left:6px;top:6px;background:#232966;border:2px solid #fff;color:#fff;font-weight:800;border-radius:999px;width:28px;height:28px;display:flex;align-items:center;justify-content:center;">${item.options[idx].key}</span></div>`).join("") +
       `</div>`;
   }
   if (!item.image && !item.clock) return "";
