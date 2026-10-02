@@ -160,6 +160,10 @@ var VOCAB_UNITS_G5 = [
   },
 ];
 
+
+// Engine wrapped in (function(){ ... })() so it never clashes with the other grades'
+// vocabulary files when the Teacher Dashboard loads all of them on one page.
+(function () {
 const STAGES = [
   { key: "tap-pairs", title: "Tap Pairs", subtitle: "Ghép từ với nghĩa" },
   { key: "picture-matching", title: "Picture Matching", subtitle: "Chọn hình đúng" },
@@ -208,6 +212,7 @@ let currentStageIdx = 0;
 const stageDone = {}; // stageKey -> true
 let eqStudent = "";
 let eqAnswers = {}; // key -> {question, studentAnswer, correctAnswer, correct}
+let eqRetries = []; // answers given in retry rounds (Vòng 2, 3…) — scored separately from the first attempt
 
 function eqUnitLabel(unit) {
   return `Unit ${unit.number}: ${unit.title}`;
@@ -221,10 +226,10 @@ function eqTotalItems(unit) {
 let saveQueue = Promise.resolve();
 
 function eqRecordAndSave(key, question, studentAnswer, correctAnswer, correct) {
-  // Only the FIRST attempt is scored. Retry rounds ("làm lại các câu sai") are
-  // practice only, so they must never overwrite the first answer's result.
-  if (eqAnswers[key]) return;
-  eqAnswers[key] = { question, studentAnswer, correctAnswer, correct };
+  // The FIRST attempt is the main score (L1). Answers in retry rounds ("làm lại các câu sai",
+  // Vòng 2, 3…) never change it — they are saved separately as the retry score (L2/L3).
+  if (eqAnswers[key]) eqRetries.push({ question, studentAnswer, correctAnswer, correct });
+  else eqAnswers[key] = { question, studentAnswer, correctAnswer, correct };
   if (!window.EQResults || !eqStudent || !currentUnit) return;
   const values = Object.values(eqAnswers);
   const correctCount = values.filter(a => a.correct).length;
@@ -236,6 +241,7 @@ function eqRecordAndSave(key, question, studentAnswer, correctAnswer, correct) {
     correct: correctCount,
     total: eqTotalItems(currentUnit),
     answers: values,
+    retries: eqRetries.slice(),
   };
   saveQueue = saveQueue.then(() => window.EQResults.saveResult(payload).catch(() => {}));
 }
@@ -288,6 +294,7 @@ function openUnit(unitId) {
   currentStageIdx = 0;
   Object.keys(stageDone).forEach(k => delete stageDone[k]);
   eqAnswers = {};
+  eqRetries = [];
   eqStudent = window.EQStudent ? window.EQStudent.ensureName() : "";
   if (window.EQResults && eqStudent) {
     window.EQResults.markInProgress({
@@ -765,3 +772,4 @@ document.addEventListener("DOMContentLoaded", () => {
   if (wantedUnit && VOCAB_UNITS_G5.some(u => u.id === wantedUnit)) openUnit(wantedUnit);
   document.getElementById("btn-back-to-units")?.addEventListener("click", (e) => { e.preventDefault(); backToUnits(); });
 });
+})();
