@@ -89,6 +89,47 @@ var VOCAB_UNITS_G4 = [
       { id: "g4u2-s-bed", en: "I go to bed at nine forty-five.", vi: "Mình đi ngủ lúc 9 giờ 45.", example: "I go to bed at nine forty-five.", blank: "go to bed", viFull: "Mình đi ngủ lúc 9 giờ 45.", viBlanked: "Mình ___ lúc 9 giờ 45.", chunks: ["I", "go to bed", "at", "nine forty-five."], stages: ["missing-word", "sentence-shuffle"] },
     ],
   },
+  {
+    id: "g4-unit3",
+    number: 3,
+    title: "My Week",
+    subtitle: "Global Success 4 · New Vocabulary",
+    hasExercises: false,
+
+    words: [
+      // Days of the week — Picture Matching shows the Vietnamese day and 3 English words to pick from (textMatch, no image needed)
+      { id: "g4u3-monday", en: "Monday", vi: "thứ Hai", group: "days", textMatch: true, stages: ["picture-matching", "multiple-choice"] },
+      { id: "g4u3-tuesday", en: "Tuesday", vi: "thứ Ba", group: "days", textMatch: true, stages: ["picture-matching", "multiple-choice"] },
+      { id: "g4u3-wednesday", en: "Wednesday", vi: "thứ Tư", group: "days", textMatch: true, stages: ["picture-matching", "multiple-choice"] },
+      { id: "g4u3-thursday", en: "Thursday", vi: "thứ Năm", group: "days", textMatch: true, stages: ["picture-matching", "multiple-choice"] },
+      { id: "g4u3-friday", en: "Friday", vi: "thứ Sáu", group: "days", textMatch: true, stages: ["picture-matching", "multiple-choice"] },
+      { id: "g4u3-saturday", en: "Saturday", vi: "thứ Bảy", group: "days", textMatch: true, stages: ["picture-matching", "multiple-choice"] },
+      { id: "g4u3-sunday", en: "Sunday", vi: "Chủ nhật", group: "days", textMatch: true, stages: ["picture-matching", "multiple-choice"] },
+      { id: "g4u3-today", en: "today", vi: "hôm nay", group: "words", stages: ["tap-pairs", "multiple-choice"] },
+      { id: "g4u3-week", en: "week", vi: "tuần", group: "words", stages: ["tap-pairs", "multiple-choice"] },
+      { id: "g4u3-weekend", en: "at the weekend", vi: "vào cuối tuần", group: "words", stages: ["tap-pairs", "multiple-choice"] },
+
+      // Weekly activities — Tap Pairs + Multiple Choice
+      { id: "g4u3-study-school", en: "study at school", vi: "học ở trường", group: "activities", stages: ["tap-pairs", "multiple-choice"] },
+      { id: "g4u3-do-housework", en: "do housework", vi: "làm việc nhà", group: "activities", stages: ["tap-pairs", "multiple-choice"] },
+      { id: "g4u3-listen-music", en: "listen to music", vi: "nghe nhạc", group: "activities", stages: ["tap-pairs", "multiple-choice"] },
+      { id: "g4u3-go-school", en: "go to school", vi: "đi học", group: "activities", stages: ["tap-pairs", "multiple-choice"] },
+      { id: "g4u3-stay-home", en: "stay at home", vi: "ở nhà", group: "activities", stages: ["tap-pairs", "multiple-choice"] },
+      { id: "g4u3-q-day", en: "What day is it today?", vi: "Hôm nay là thứ mấy?", stages: ["tap-pairs"] },
+      { id: "g4u3-q-do", en: "What do you do on Mondays?", vi: "Bạn làm gì vào các ngày thứ Hai?", stages: ["tap-pairs"] },
+
+      // Sentences — Missing Word + Sentence Shuffle (every blank is different)
+      { id: "g4u3-s-q-day", en: "What day is it today?", vi: "Hôm nay là thứ mấy?", example: "What day is it today?", blank: "day", viFull: "Hôm nay là thứ mấy?", viBlanked: "Hôm nay là ___ mấy?", chunks: ["What", "day", "is it", "today?"], stages: ["missing-word", "sentence-shuffle"] },
+      { id: "g4u3-s-monday", en: "It's Monday.", vi: "Hôm nay là thứ Hai.", example: "It's Monday.", blank: "Monday", viFull: "Hôm nay là thứ Hai.", viBlanked: "Hôm nay là ___.", chunks: ["It's", "Monday."], stages: ["missing-word"] },
+      { id: "g4u3-s-today", en: "Today is Friday.", vi: "Hôm nay là thứ Sáu.", example: "Today is Friday.", blank: "Today", viFull: "Hôm nay là thứ Sáu.", viBlanked: "___ là thứ Sáu.", chunks: ["Today", "is", "Friday."], stages: ["missing-word", "sentence-shuffle"] },
+      { id: "g4u3-s-q-do", en: "What do you do on Tuesdays?", vi: "Bạn làm gì vào các ngày thứ Ba?", example: "What do you do on Tuesdays?", blank: "Tuesdays", viFull: "Bạn làm gì vào các ngày thứ Ba?", viBlanked: "Bạn làm gì vào các ngày ___?", chunks: ["What", "do you do", "on", "Tuesdays?"], stages: ["missing-word", "sentence-shuffle"] },
+      { id: "g4u3-s-study", en: "I study at school.", vi: "Mình học ở trường.", example: "I study at school.", blank: "study", viFull: "Mình học ở trường.", viBlanked: "Mình ___ ở trường.", chunks: ["I", "study", "at school."], stages: ["missing-word", "sentence-shuffle"] },
+      { id: "g4u3-s-housework", en: "I do housework on Saturdays.", vi: "Mình làm việc nhà vào các ngày thứ Bảy.", example: "I do housework on Saturdays.", blank: "housework", viFull: "Mình làm việc nhà vào các ngày thứ Bảy.", viBlanked: "Mình làm ___ vào các ngày thứ Bảy.", chunks: ["I", "do housework", "on", "Saturdays."], stages: ["missing-word", "sentence-shuffle"] },
+      { id: "g4u3-s-music", en: "I listen to music on Sundays.", vi: "Mình nghe nhạc vào các ngày Chủ nhật.", example: "I listen to music on Sundays.", blank: "listen", viFull: "Mình nghe nhạc vào các ngày Chủ nhật.", viBlanked: "Mình ___ nhạc vào các ngày Chủ nhật.", chunks: ["I", "listen to music", "on", "Sundays."], stages: ["missing-word", "sentence-shuffle"] },
+      { id: "g4u3-s-go-school", en: "I go to school from Monday to Friday.", vi: "Mình đi học từ thứ Hai đến thứ Sáu.", example: "I go to school from Monday to Friday.", blank: "go", viFull: "Mình đi học từ thứ Hai đến thứ Sáu.", viBlanked: "Mình ___ học từ thứ Hai đến thứ Sáu.", chunks: ["I", "go to school", "from Monday", "to Friday."], stages: ["missing-word", "sentence-shuffle"] },
+      { id: "g4u3-s-weekend", en: "I stay at home at the weekend.", vi: "Mình ở nhà vào cuối tuần.", example: "I stay at home at the weekend.", blank: "weekend", viFull: "Mình ở nhà vào cuối tuần.", viBlanked: "Mình ở nhà vào ___.", chunks: ["I", "stay at home", "at", "the weekend."], stages: ["missing-word", "sentence-shuffle"] },
+    ],
+  },
 ];
 
 (function () {
@@ -322,7 +363,7 @@ function buildSequentialItems(stageKey, unit) {
   const wordsForStage = unit.words.filter(w => w.stages && w.stages.includes(stageKey));
 
   if (stageKey === "picture-matching") {
-    const pool = wordsForStage.filter(w => w.icon || w.clock);
+    const pool = wordsForStage.filter(w => w.icon || w.clock || w.textMatch);
     if (pool.length < 2) return [];
     const optCount = Math.min(3, pool.length);
     return pool.map((w, wIdx) => {
@@ -397,7 +438,13 @@ function runSequential(host, stageKey, items, onDone) {
     const item = queue[i];
     let body = "";
 
-    if (stageKey === "picture-matching") {
+    if (stageKey === "picture-matching" && item.word.textMatch) {
+      body = `
+        <div class="runner-prompt"><div class="prompt-label">Chọn từ đúng</div><div class="prompt-main">${item.word.vi}</div></div>
+        <div class="runner-options">
+          ${item.opts.map((o, oi) => `<div class="runner-opt" data-idx="${oi}"><span class="opt-letter">${String.fromCharCode(65 + oi)}</span>${o.en}</div>`).join("")}
+        </div>`;
+    } else if (stageKey === "picture-matching") {
       body = `
         <div class="runner-prompt"><div class="prompt-label">Chọn hình đúng</div><div class="prompt-main prompt-speak" id="prompt-speak">🔊 ${item.word.en}</div></div>
         <div class="runner-pics">
@@ -457,7 +504,7 @@ function runSequential(host, stageKey, items, onDone) {
       }
     }
 
-    if (stageKey === "picture-matching" || stageKey === "multiple-choice") {
+    if ((stageKey === "picture-matching" && !item.word.textMatch) || stageKey === "multiple-choice") {
       speakWord(item.word.en);
       const promptEl = document.getElementById("prompt-speak");
       if (promptEl) {
@@ -537,7 +584,7 @@ function runSequential(host, stageKey, items, onDone) {
     }
 
     if (stageKey === "picture-matching" || stageKey === "multiple-choice" || stageKey === "missing-word") {
-      const optSelector = stageKey === "picture-matching" ? ".runner-pic-opt" : ".runner-opt";
+      const optSelector = stageKey === "picture-matching" && !item.word.textMatch ? ".runner-pic-opt" : ".runner-opt";
       host.querySelectorAll(optSelector).forEach(opt => {
         opt.addEventListener("click", () => {
           if (host.querySelector(`${optSelector}[data-locked="1"]`)) return;
@@ -546,7 +593,7 @@ function runSequential(host, stageKey, items, onDone) {
 
           let question, chosenLabel, correctLabel;
           if (stageKey === "picture-matching") {
-            question = `Picture for "${item.word.en}"`;
+            question = item.word.textMatch ? `"${item.word.vi}" in English?` : `Picture for "${item.word.en}"`;
             chosenLabel = item.opts[chosen].en;
             correctLabel = item.word.en;
             speakWord(item.opts[chosen].en);
