@@ -140,6 +140,7 @@ const UNIT_ID = "g4-unit3";
 const UNIT_LABEL = "Unit 3: My Week";
 let eqStudent = "";
 let eqAnswers = {};
+let eqRetries = []; // answers given in retry rounds (Vòng 2, 3…) — scored separately from the first attempt
 let saveQueue = Promise.resolve();
 
 function eqTotalItems() {
@@ -147,8 +148,10 @@ function eqTotalItems() {
 }
 
 function eqRecordAndSave(key, question, studentAnswer, correctAnswer, correct) {
-  if (eqAnswers[key]) return;
-  eqAnswers[key] = { question, studentAnswer, correctAnswer, correct };
+  // The FIRST attempt is the main score (L1). Answers in retry rounds ("làm lại các câu sai",
+  // Vòng 2, 3…) never change it — they are saved separately as the retry score (L2/L3).
+  if (eqAnswers[key]) eqRetries.push({ question, studentAnswer, correctAnswer, correct });
+  else eqAnswers[key] = { question, studentAnswer, correctAnswer, correct };
   if (!window.EQResults || !eqStudent) return;
   const values = Object.values(eqAnswers);
   const payload = {
@@ -159,6 +162,7 @@ function eqRecordAndSave(key, question, studentAnswer, correctAnswer, correct) {
     correct: values.filter(a => a.correct).length,
     total: eqTotalItems(),
     answers: values,
+    retries: eqRetries.slice(),
   };
   saveQueue = saveQueue.then(() => window.EQResults.saveResult(payload).catch(() => {}));
 }
@@ -266,7 +270,7 @@ function runSequence(host, items, round, cfg) {
       i, total, round,
       top: (cfg.preHtml || "") + roundHeader(round) + renderDots(i, total),
       done(correct, rec, anchor) {
-        if (cfg.scored && round === 1) {
+        if (cfg.scored) {
           eqRecordAndSave(rec.key, rec.question, rec.studentAnswer, rec.correctAnswer, correct);
         }
         if (!correct) wrongItems.push(item);

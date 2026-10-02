@@ -108,6 +108,7 @@ const UNIT_ID = "g7-unit1";
 const UNIT_LABEL = "Unit 1: Hobbies";
 let eqStudent = "";
 let eqAnswers = {};
+let eqRetries = []; // answers given in retry rounds (Vòng 2, 3…) — scored separately from the first attempt
 let saveQueue = Promise.resolve();
 
 function eqTotalItems() {
@@ -115,10 +116,10 @@ function eqTotalItems() {
 }
 
 function eqRecordAndSave(key, question, studentAnswer, correctAnswer, correct) {
-  // Only the FIRST attempt is scored. Retry rounds ("làm lại các câu sai") are
-  // practice only, so they must never overwrite the first answer's result.
-  if (eqAnswers[key]) return;
-  eqAnswers[key] = { question, studentAnswer, correctAnswer, correct };
+  // The FIRST attempt is the main score (L1). Answers in retry rounds ("làm lại các câu sai",
+  // Vòng 2, 3…) never change it — they are saved separately as the retry score (L2/L3).
+  if (eqAnswers[key]) eqRetries.push({ question, studentAnswer, correctAnswer, correct });
+  else eqAnswers[key] = { question, studentAnswer, correctAnswer, correct };
   if (!window.EQResults || !eqStudent) return;
   const values = Object.values(eqAnswers);
   const correctCount = values.filter(a => a.correct).length;
@@ -130,6 +131,7 @@ function eqRecordAndSave(key, question, studentAnswer, correctAnswer, correct) {
     correct: correctCount,
     total: eqTotalItems(),
     answers: values,
+    retries: eqRetries.slice(),
   };
   saveQueue = saveQueue.then(() => window.EQResults.saveResult(payload).catch(() => {}));
 }

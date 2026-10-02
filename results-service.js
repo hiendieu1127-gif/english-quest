@@ -10,8 +10,10 @@
 //     {
 //       student, studentKey, unitId, unitLabel, section,   // "vocabulary" | "exercises"
 //       status,                                            // "in_progress" | "completed"
-//       correct, total, percent,
+//       correct, total, percent,                           // first attempt only (L1)
 //       answers: [{ question, studentAnswer, correctAnswer, correct }],
+//       retryCorrect, retryTotal,                          // retry rounds (L2, L3…), scored separately
+//       retries: [{ question, studentAnswer, correctAnswer, correct }],
 //       startedAt, completedAt
 //     }
 //
@@ -71,7 +73,7 @@ async function markInProgress({ student, unitId, unitLabel, section }) {
 
 // Call when a student finishes a unit/section — this is the one
 // generic "grade + save" entry point every page calls.
-async function saveResult({ student, unitId, unitLabel, section, correct, total, answers }) {
+async function saveResult({ student, unitId, unitLabel, section, correct, total, answers, retries }) {
   const studentKey = slugify(student);
   const id = resultId(studentKey, unitId, section);
   const percent = total > 0 ? Math.round((correct / total) * 100) : 0;
@@ -80,6 +82,9 @@ async function saveResult({ student, unitId, unitLabel, section, correct, total,
     status: "completed",
     correct, total, percent,
     answers: answers || [],
+    retries: retries || [],
+    retryCorrect: (retries || []).filter(a => a.correct).length,
+    retryTotal: (retries || []).length,
     completedAt: serverTimestamp(),
   }, { merge: true });
   return { correct, total, percent };
