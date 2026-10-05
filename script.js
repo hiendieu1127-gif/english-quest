@@ -168,7 +168,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 // English Quest — the "English Quest" logo/brand no longer navigates straight to
-// index.html; tapping it opens a small "Khối 4 / Khối 5 / Khối 7" dropdown instead, on
+// index.html; tapping it opens a small "Khối 4 / 5 / 6 / 7" dropdown instead, on
 // every page site-wide. Self-contained (inline styles), no CSS file edit needed.
 document.addEventListener("DOMContentLoaded", () => {
   const brand = document.querySelector(".brand");
@@ -195,6 +195,8 @@ document.addEventListener("DOMContentLoaded", () => {
     'font-weight:800;color:#222;text-decoration:none;font-size:.95rem;">Khối 4</a>' +
     '<a href="lessons-g5.html" style="display:block;padding:10px 14px;border-radius:10px;' +
     'font-weight:800;color:#222;text-decoration:none;font-size:.95rem;">Khối 5</a>' +
+    '<a href="lessons-g6.html" style="display:block;padding:10px 14px;border-radius:10px;' +
+    'font-weight:800;color:#222;text-decoration:none;font-size:.95rem;">Khối 6</a>' +
     '<a href="lessons-g7.html" style="display:block;padding:10px 14px;border-radius:10px;' +
     'font-weight:800;color:#222;text-decoration:none;font-size:.95rem;">Khối 7</a>';
   menu.querySelectorAll("a").forEach((a) => {
