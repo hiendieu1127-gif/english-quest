@@ -153,8 +153,8 @@ const BOOK_DIALOGUES = {
       title: "Read and complete",
       img: "img/review3-ex5-1.jpg",
       lines: [
-        { sp: "A", t: "I have a new friend at school. He's Malaysian." },
-        { sp: "B", t: "Really? I also have a friend from ___. Is he from Kuala Lumpur?", blank: { options: ["Malaysia", "Malaysian", "Japan"], answer: 0, vi: "Thật à? Mình cũng có một người bạn đến từ Malaysia. Bạn ấy có phải đến từ Kuala Lumpur không?" } },
+        { sp: "A", t: "I have a new friend at school. He's American." },
+        { sp: "B", t: "Really? I also have a friend from ___. Is he from New York?", blank: { options: ["America", "American", "Japan"], answer: 0, vi: "Thật à? Mình cũng có một người bạn đến từ nước Mỹ. Bạn ấy có phải đến từ New York không?" } },
         { sp: "A", t: "Yes, he is." },
         { sp: "B", t: "What's he like?" },
         { sp: "A", t: "He's ___. He likes helping others.", blank: { options: ["helpful", "clever", "active"], answer: 0, vi: "Bạn ấy hay giúp đỡ người khác. Bạn ấy thích giúp đỡ mọi người." } },
