@@ -134,6 +134,9 @@
   /* --- Review page additions --- */
   .big-listen-btn { width:84px; height:84px; border-radius:50%; border:none; background: var(--page-color); color:#fff; font-size:2.2rem; cursor:pointer; box-shadow:0 6px 16px rgba(0,0,0,.12); }
   .big-listen-btn:active { transform: scale(.95); }
+  .book-dialogue { background:#fff; border:1px solid #e2e2e2; border-radius:12px; padding:12px 14px; margin:4px 0 6px; line-height:1.7; }
+  .book-line { padding:2px 6px; border-radius:8px; }
+  .book-line.current { background:#fff7e6; font-weight:800; }
 </style>
 </head>
 <body data-page="lessons" style="--page-color: var(--c-progress);">
@@ -170,7 +173,7 @@
           <button class="eq-crumb" data-target="panel-meaning"><span class="eq-crumb-num">3</span>Meaning</button>
           <button class="eq-crumb" data-target="panel-missing"><span class="eq-crumb-num">4</span>Missing Word</button>
           <button class="eq-crumb" data-target="panel-order"><span class="eq-crumb-num">5</span>Sentence Ordering</button>
-          <button class="eq-crumb" data-target="panel-book"><span class="eq-crumb-num">6</span>Workbook</button>
+          <button class="eq-crumb" data-target="panel-book"><span class="eq-crumb-num">6</span>Read and complete</button>
         </div>
 
         <div id="mascot-box" class="mascot-box"></div>
@@ -212,7 +215,7 @@
 
         <div class="ex-panel" id="panel-book">
           <div class="runner-card">
-            <p class="eq-instruction">Bài ôn trong sách — chọn đáp án đúng.</p>
+            <p class="eq-instruction">Đọc đoạn hội thoại rồi chọn từ đúng cho chỗ trống được tô màu.</p>
             <div id="book-wrap"></div>
           </div>
         </div>
@@ -252,7 +255,7 @@
 <script src="student-gate.js"></script>
 <script type="module" src="results-service.js?v=3"></script>
 <script src="vocabulary.js?v=2"></script>
-<script src="review-g5.js?v=1"></script>
+<script src="review-g5.js?v=2"></script>
 <script src="mascot.js"></script>
 </body>
 </html>

@@ -12,7 +12,7 @@
 //   3 Meaning     — đọc nghĩa tiếng Việt, chọn từ    (scored)
 //   4 Missing Word— chọn từ còn thiếu trong câu      (scored)
 //   5 Sentence Ordering — sắp xếp từ thành câu       (scored)
-//   6 Workbook    — bài ôn từ sách cô Hiền gửi       (only shows when BOOK_ITEMS[unit] has items)
+//   6 Workbook    — bài ôn từ sách cô Hiền gửi       (only shows when BOOK_DIALOGUES[unit] has items)
 //
 // Questions are picked at random each time, so the review feels new every visit.
 // Standing rules: first attempt only is saved; wrong answers come back in Vòng 2, 3…;
@@ -93,8 +93,87 @@ const REVIEW_MISSING = {
 };
 
 // ---- 6) Workbook review (from cô Hiền's book pictures) ----
-// Empty = section hidden. Each item: { stem: "... ___ ...", options: ["..","..",".."], answer: 0, vi: "..." }
-const BOOK_ITEMS = { 1: [], 2: [], 3: [] };
+// Empty = section hidden. Each dialogue = picture + lines; a line with `blank` becomes one question
+// (the whole dialogue is shown, the current blank is highlighted).
+// Pictures: cô Hiền uploads them to img/ with the names below (hidden until the file exists).
+// VN of the blank lines: written by Claude — please review.
+const BOOK_DIALOGUES = {
+  1: [
+    {
+      title: "Read and complete",
+      img: "img/review1-ex5-1.jpg",
+      lines: [
+        { sp: "A", t: "Where were you yesterday?" },
+        { sp: "B", t: "I was at the zoo." },
+        { sp: "A", t: "What's your favourite animal?" },
+        { sp: "B", t: "It's ___.", blank: { options: ["a dolphin", "a panda", "a giraffe"], answer: 0, vi: "Đó là con cá heo." } },
+        { sp: "A", t: "___ do you like it?", blank: { options: ["Why", "What", "Where"], answer: 0, vi: "Tại sao bạn thích nó?" } },
+        { sp: "B", t: "Because it jumps and dances beautifully." },
+      ],
+    },
+    {
+      title: "Read and complete",
+      img: "img/review1-ex5-2.jpg",
+      lines: [
+        { sp: "A", t: "My favourite food is ___. Do you like pizza, too?", blank: { options: ["pizza", "chips", "fish"], answer: 0, vi: "Món ăn yêu thích của tôi là pizza. Bạn cũng thích pizza chứ?" } },
+        { sp: "B", t: "No, I ___.", blank: { options: ["don't", "do", "am"], answer: 0, vi: "Không, tôi không thích." } },
+        { sp: "A", t: "What's your favourite food?" },
+        { sp: "B", t: "It's ___.", blank: { options: ["a sandwich", "pizza", "fish"], answer: 0, vi: "Đó là bánh sandwich." } },
+        { sp: "A", t: "A sandwich?" },
+        { sp: "B", t: "Yes. I love sandwiches." },
+      ],
+    },
+  ],
+  2: [
+    {
+      title: "Read and complete",
+      img: "img/review2-ex5-1.jpg",
+      lines: [
+        { sp: "A", t: "What's your address?" },
+        { sp: "B", t: "It's ___.", blank: { options: ["100 Tran Hung Dao Street", "231 Nguyen Van Cu Street", "53 George Street"], answer: 0, vi: "Đó là số 100 đường Trần Hưng Đạo." } },
+        { sp: "A", t: "Is it far ___ here?", blank: { options: ["from", "near", "in"], answer: 0, vi: "Nó có xa đây không?" } },
+        { sp: "B", t: "Yes, it is. It's about ten kilometres from here." },
+      ],
+    },
+    {
+      title: "Read and complete",
+      img: "img/review2-ex5-2.jpg",
+      lines: [
+        { sp: "A", t: "I live in ___ building over there.", blank: { options: ["that", "this", "it"], answer: 0, vi: "Tôi sống ở toà nhà đằng kia." } },
+        { sp: "B", t: "Oh, it's near the sports centre." },
+        { sp: "A", t: "___ do you live?", blank: { options: ["Where", "What", "Why"], answer: 0, vi: "Bạn sống ở đâu?" } },
+        { sp: "B", t: "I live far from here, in District 5." },
+        { sp: "A", t: "___ your address?", blank: { options: ["What's", "Where's", "Who's"], answer: 0, vi: "Địa chỉ của bạn là gì?" } },
+        { sp: "B", t: "It's ___.", blank: { options: ["231 Nguyen Van Cu Street", "100 Tran Hung Dao Street", "53 George Street"], answer: 0, vi: "Đó là số 231 đường Nguyễn Văn Cừ." } },
+      ],
+    },
+  ],
+  3: [
+    {
+      title: "Read and complete",
+      img: "img/review3-ex5-1.jpg",
+      lines: [
+        { sp: "A", t: "I have a new friend at school. He's Malaysian." },
+        { sp: "B", t: "Really? I also have a friend from ___. Is he from Kuala Lumpur?", blank: { options: ["Malaysia", "Malaysian", "Japan"], answer: 0, vi: "Thật à? Mình cũng có một người bạn đến từ Malaysia. Bạn ấy có phải đến từ Kuala Lumpur không?" } },
+        { sp: "A", t: "Yes, he is." },
+        { sp: "B", t: "What's he like?" },
+        { sp: "A", t: "He's ___. He likes helping others.", blank: { options: ["helpful", "clever", "active"], answer: 0, vi: "Bạn ấy hay giúp đỡ người khác. Bạn ấy thích giúp đỡ mọi người." } },
+      ],
+    },
+    {
+      title: "Read and complete",
+      img: "img/review3-ex5-2.jpg",
+      lines: [
+        { sp: "A", t: "Do you have a new English teacher?" },
+        { sp: "B", t: "Yes, I do." },
+        { sp: "A", t: "What nationality is she?" },
+        { sp: "B", t: "She's ___.", blank: { options: ["American", "Australian", "Japanese"], answer: 0, vi: "Cô ấy là người Mỹ." } },
+        { sp: "A", t: "What's she ___?", blank: { options: ["like", "from", "help"], answer: 0, vi: "Cô ấy là người như thế nào?" } },
+        { sp: "B", t: "She's friendly." },
+      ],
+    },
+  ],
+};
 
 // ============================================================
 // Which unit + its data
@@ -187,18 +266,23 @@ const QUESTIONS = {
     answer: s.en,
     answerVi: s.vi,
   })),
-  book: (BOOK_ITEMS[REVIEW_UNIT_NUM] || []).map((b, idx) => {
-    const keys = ["a", "b", "c", "d"];
-    return {
-      id: "book-" + (idx + 1),
-      stem: b.stem,
-      options: b.options.map((t, i) => ({ key: keys[i], text: t })),
-      answer: keys[b.answer],
-      vi: b.vi || "",
-      noTranslate: !b.vi,
-      listenFull: true,
-    };
-  }),
+  // options keep the book's order a/b/c? No — shuffled so the answer isn't always "a"
+  book: (BOOK_DIALOGUES[REVIEW_UNIT_NUM] || []).flatMap((d, di) =>
+    d.lines.map((ln, li) => ({ ln, li })).filter(x => x.ln.blank).map(({ ln, li }) => {
+      const keys = ["a", "b", "c", "d"];
+      const right = ln.blank.options[ln.blank.answer];
+      const opts = shuffle(ln.blank.options);
+      return {
+        id: `book-${di + 1}-${li + 1}`,
+        dialogue: d,
+        lineIdx: li,
+        stem: ln.t,
+        options: opts.map((t, i) => ({ key: keys[i], text: t })),
+        answer: keys[opts.indexOf(right)],
+        vi: ln.blank.vi || "",
+      };
+    })
+  ),
 };
 
 // ============================================================
@@ -435,6 +519,69 @@ function renderChoiceItem(host, item, ctx) {
 }
 
 // ============================================================
+// Workbook "Read and complete" — whole dialogue + picture, current blank highlighted
+// ============================================================
+function renderBookItem(host, item, ctx) {
+  const d = item.dialogue;
+  const linesHtml = d.lines.map((ln, li) => {
+    let text = escapeHtml(ln.t);
+    if (li === item.lineIdx) {
+      text = text.replace("___", `<span class="q-blank" id="q-blank">&nbsp;?&nbsp;</span>`);
+    } else {
+      text = text.replace("___", `<span style="letter-spacing:1px;color:#aaa;">______</span>`);
+    }
+    const cur = li === item.lineIdx;
+    return `<div class="book-line${cur ? " current" : ""}"><b style="color:${ln.sp === "A" ? "#5b7cfa" : "#e0703c"};">${ln.sp}:</b> ${text}</div>`;
+  }).join("");
+  host.innerHTML = `
+    ${ctx.top}
+    <span class="q-part-tag">${escapeHtml(d.title)}</span>
+    <img class="q-pic" src="${escapeHtml(d.img)}" alt="" style="width:260px;max-width:90%;" onerror="this.style.display='none'">
+    <div class="book-dialogue">${linesHtml}</div>
+    <button type="button" class="eq-translate-btn" id="q-translate">🔤 Dịch</button>
+    <div class="q-vi" id="q-vi" style="display:none;">${escapeHtml(item.vi)}</div>
+    <div class="q-options">
+      ${item.options.map(o => `<button type="button" class="mcq-option" data-key="${o.key}"><span class="mcq-letter">${o.key}</span>${escapeHtml(o.text)}</button>`).join("")}
+    </div>
+    <div class="fitb-feedback" id="q-feedback"></div>`;
+  const feedback = host.querySelector("#q-feedback");
+  const trBtn = host.querySelector("#q-translate");
+  trBtn.addEventListener("click", () => {
+    const el = host.querySelector("#q-vi");
+    const showing = el.style.display !== "none";
+    el.style.display = showing ? "none" : "block";
+    trBtn.textContent = showing ? "🔤 Dịch" : "🔤 Ẩn nghĩa";
+  });
+  let answered = false;
+  host.querySelectorAll(".mcq-option").forEach(btn => {
+    btn.addEventListener("click", () => {
+      if (answered) return;
+      answered = true;
+      const chosen = btn.dataset.key;
+      const correct = chosen === item.answer;
+      host.querySelectorAll(".mcq-option").forEach(b => {
+        b.disabled = true;
+        if (b.dataset.key === item.answer) b.classList.add("correct");
+      });
+      if (!correct) btn.classList.add("wrong");
+      const ans = item.options.find(o => o.key === item.answer).text;
+      const blankEl = host.querySelector("#q-blank");
+      blankEl.textContent = ans;
+      sfx(correct);
+      say(fullSentence(item)); // the whole line with the right word, never "blank"
+      feedback.textContent = correct ? "✓ Chính xác!" : `Đáp án đúng: ${item.answer}. ${ans}`;
+      feedback.className = correct ? "fitb-feedback ok" : "fitb-feedback no";
+      ctx.done(correct, {
+        key: item.id,
+        question: fullSentence(item),
+        studentAnswer: `${chosen}. ${item.options.find(o => o.key === chosen).text}`,
+        correctAnswer: `${item.answer}. ${ans}`,
+      }, feedback);
+    });
+  });
+}
+
+// ============================================================
 // Sentence Ordering — tap words in order; tap a placed word to send just that one back
 // ============================================================
 function renderOrderItem(host, item, ctx) {
@@ -529,7 +676,7 @@ const SECTIONS = [
   { key: "meaning", panel: "panel-meaning", name: "Meaning", renderItem: renderWordItem("meaning") },
   { key: "missing", panel: "panel-missing", name: "Missing Word", renderItem: renderChoiceItem },
   { key: "order", panel: "panel-order", name: "Sentence Ordering", renderItem: renderOrderItem },
-  { key: "book", panel: "panel-book", name: "Workbook", renderItem: renderChoiceItem },
+  { key: "book", panel: "panel-book", name: "Read and complete", renderItem: renderBookItem },
 ];
 
 function activeSections() { return SECTIONS.filter(s => QUESTIONS[s.key].length > 0); }
