@@ -530,7 +530,7 @@ function renderBookItem(host, item, ctx) {
     let text = escapeHtml(ln.t);
     const filled = bookFilled[item.dialogueIdx + "-" + li];
     if (li === item.lineIdx) {
-      text = text.replace("___", `<span class="q-blank" id="q-blank">&nbsp;?&nbsp;</span>`);
+      text = text.replace("___", `<span class="q-blank" id="q-blank">...</span>`);
     } else if (filled) {
       text = text.replace("___", `<span style="color:#3fae4f;font-weight:800;text-decoration:underline;">${escapeHtml(filled)}</span>`);
     } else {
