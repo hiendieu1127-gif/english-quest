@@ -87,6 +87,11 @@ window.EQSound = (function () {
 // instead of guessing with a fixed setTimeout.
 window.EQSpeak = (function () {
   let gen = 0;
+  // Words the voice reads wrongly — only the SPOKEN text changes, the screen text stays the same.
+  //   PE (môn Thể dục) → "P. E." so it is read letter by letter ("pi i"), not "pe"
+  function fixPronunciation(text) {
+    return String(text).replace(/\bPE\b/g, "P. E.");
+  }
   function speak(text, onEnd) {
     try {
       if (!text || !("speechSynthesis" in window)) {
@@ -97,7 +102,7 @@ window.EQSpeak = (function () {
       window.speechSynthesis.cancel();
       setTimeout(() => {
         if (myGen !== gen) { onEnd && onEnd(); return; }
-        const utter = new SpeechSynthesisUtterance(text);
+        const utter = new SpeechSynthesisUtterance(fixPronunciation(text));
         utter.lang = "en-US";
         utter.rate = 0.9;
         utter.onstart = () => {
