@@ -275,6 +275,7 @@ const QUESTIONS = {
       return {
         id: `book-${di + 1}-${li + 1}`,
         dialogue: d,
+        dialogueIdx: di,
         lineIdx: li,
         stem: ln.t,
         options: opts.map((t, i) => ({ key: keys[i], text: t })),
@@ -521,12 +522,17 @@ function renderChoiceItem(host, item, ctx) {
 // ============================================================
 // Workbook "Read and complete" — whole dialogue + picture, current blank highlighted
 // ============================================================
+// blanks already answered correctly stay filled in on the next questions of the same dialogue
+const bookFilled = {};
 function renderBookItem(host, item, ctx) {
   const d = item.dialogue;
   const linesHtml = d.lines.map((ln, li) => {
     let text = escapeHtml(ln.t);
+    const filled = bookFilled[item.dialogueIdx + "-" + li];
     if (li === item.lineIdx) {
       text = text.replace("___", `<span class="q-blank" id="q-blank">&nbsp;?&nbsp;</span>`);
+    } else if (filled) {
+      text = text.replace("___", `<span style="color:#3fae4f;font-weight:800;text-decoration:underline;">${escapeHtml(filled)}</span>`);
     } else {
       text = text.replace("___", `<span style="letter-spacing:1px;color:#aaa;">______</span>`);
     }
@@ -567,6 +573,7 @@ function renderBookItem(host, item, ctx) {
       const ans = item.options.find(o => o.key === item.answer).text;
       const blankEl = host.querySelector("#q-blank");
       blankEl.textContent = ans;
+      if (correct) bookFilled[item.dialogueIdx + "-" + item.lineIdx] = ans;
       sfx(correct);
       say(fullSentence(item)); // the whole line with the right word, never "blank"
       feedback.textContent = correct ? "✓ Chính xác!" : `Đáp án đúng: ${item.answer}. ${ans}`;
