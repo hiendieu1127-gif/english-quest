@@ -129,6 +129,54 @@ var VOCAB_UNITS_G4 = [
       { id: "g4u3-s-weekend", en: "I stay at home at the weekend.", vi: "Mình ở nhà vào cuối tuần.", example: "I stay at home at the weekend.", blank: "weekend", viFull: "Mình ở nhà vào cuối tuần.", viBlanked: "Mình ở nhà vào ___.", chunks: ["I", "stay at home", "at", "the weekend."], stages: ["missing-word", "sentence-shuffle"] },
     ],
   },
+  {
+    id: "g4-unit4",
+    number: 4,
+    title: "My Birthday Party",
+    subtitle: "Global Success 4 · New Vocabulary",
+    hasExercises: false,
+
+    words: [
+      // Months — Picture Matching shows the Vietnamese month and 3 English words to pick from (textMatch, no image needed)
+      { id: "g4u4-january", en: "January", vi: "tháng Một", group: "months", textMatch: true, stages: ["picture-matching", "multiple-choice"] },
+      { id: "g4u4-february", en: "February", vi: "tháng Hai", group: "months", textMatch: true, stages: ["picture-matching", "multiple-choice"] },
+      { id: "g4u4-march", en: "March", vi: "tháng Ba", group: "months", textMatch: true, stages: ["picture-matching", "multiple-choice"] },
+      { id: "g4u4-april", en: "April", vi: "tháng Tư", group: "months", textMatch: true, stages: ["picture-matching", "multiple-choice"] },
+      { id: "g4u4-may", en: "May", vi: "tháng Năm", group: "months", textMatch: true, stages: ["picture-matching", "multiple-choice"] },
+      { id: "g4u4-june", en: "June", vi: "tháng Sáu", group: "months", textMatch: true, stages: ["picture-matching", "multiple-choice"] },
+      { id: "g4u4-july", en: "July", vi: "tháng Bảy", group: "months", textMatch: true, stages: ["picture-matching", "multiple-choice"] },
+      { id: "g4u4-august", en: "August", vi: "tháng Tám", group: "months", textMatch: true, stages: ["picture-matching", "multiple-choice"] },
+      { id: "g4u4-september", en: "September", vi: "tháng Chín", group: "months", textMatch: true, stages: ["picture-matching", "multiple-choice"] },
+      { id: "g4u4-october", en: "October", vi: "tháng Mười", group: "months", textMatch: true, stages: ["picture-matching", "multiple-choice"] },
+      { id: "g4u4-november", en: "November", vi: "tháng Mười Một", group: "months", textMatch: true, stages: ["picture-matching", "multiple-choice"] },
+      { id: "g4u4-december", en: "December", vi: "tháng Mười Hai", group: "months", textMatch: true, stages: ["picture-matching", "multiple-choice"] },
+
+      // Party food & drinks (photos) + words — Tap Pairs + Picture Matching + Multiple Choice
+      { id: "g4u4-chips", en: "some chips", vi: "một ít khoai tây chiên", group: "food", icon: "img/vocab-g4-u4-chips.jpg", stages: ["tap-pairs", "picture-matching", "multiple-choice"] },
+      { id: "g4u4-grapes", en: "some grapes", vi: "một ít nho", group: "food", icon: "img/vocab-g4-u4-grapes.jpg", stages: ["tap-pairs", "picture-matching", "multiple-choice"] },
+      { id: "g4u4-jam", en: "some jam", vi: "một ít mứt", group: "food", icon: "img/vocab-g4-u4-jam.jpg", stages: ["tap-pairs", "picture-matching", "multiple-choice"] },
+      { id: "g4u4-lemonade", en: "some lemonade", vi: "một ít nước chanh", group: "food", icon: "img/vocab-g4-u4-lemonade.jpg", stages: ["tap-pairs", "picture-matching", "multiple-choice"] },
+      { id: "g4u4-water", en: "some water", vi: "một ít nước", group: "food", icon: "img/vocab-g4-u4-water.jpg", stages: ["tap-pairs", "picture-matching", "multiple-choice"] },
+      { id: "g4u4-juice", en: "some juice", vi: "một ít nước trái cây", group: "food", icon: "img/vocab-g4-u4-juice.jpg", stages: ["tap-pairs", "picture-matching", "multiple-choice"] },
+      { id: "g4u4-birthday", en: "birthday", vi: "sinh nhật", group: "words", stages: ["tap-pairs", "multiple-choice"] },
+      { id: "g4u4-party", en: "birthday party", vi: "bữa tiệc sinh nhật", group: "words", stages: ["tap-pairs", "multiple-choice"] },
+      { id: "g4u4-hat", en: "hat", vi: "cái mũ", group: "words", stages: ["tap-pairs", "multiple-choice"] },
+      { id: "g4u4-q-when", en: "When's your birthday?", vi: "Sinh nhật của bạn là khi nào?", stages: ["tap-pairs"] },
+      { id: "g4u4-q-eat", en: "What do you want to eat?", vi: "Bạn muốn ăn gì?", stages: ["tap-pairs"] },
+
+      // Sentences — Missing Word + Sentence Shuffle (every blank is different, and no two blanks fit the same sentence)
+      { id: "g4u4-s-doing", en: "What are you doing?", vi: "Bạn đang làm gì vậy?", example: "What are you doing?", blank: "doing", viFull: "Bạn đang làm gì vậy?", viBlanked: "Bạn đang ___ gì vậy?", chunks: ["What", "are you", "doing?"], stages: ["missing-word", "sentence-shuffle"] },
+      { id: "g4u4-s-hat", en: "I'm making a hat for my birthday party.", vi: "Mình đang làm một cái mũ cho bữa tiệc sinh nhật của mình.", example: "I'm making a hat for my birthday party.", blank: "hat", viFull: "Mình đang làm một cái mũ cho bữa tiệc sinh nhật của mình.", viBlanked: "Mình đang làm một cái ___ cho bữa tiệc sinh nhật của mình.", chunks: ["I'm making", "a hat", "for", "my birthday party."], stages: ["missing-word", "sentence-shuffle"] },
+      { id: "g4u4-s-when", en: "When's your birthday?", vi: "Sinh nhật của bạn là khi nào?", example: "When's your birthday?", blank: "When's", viFull: "Sinh nhật của bạn là khi nào?", viBlanked: "Sinh nhật của bạn là ___?", chunks: ["When's", "your", "birthday?"], stages: ["missing-word", "sentence-shuffle"] },
+      { id: "g4u4-s-may", en: "It's in May.", vi: "Vào tháng Năm.", example: "It's in May.", blank: "May", viFull: "Vào tháng Năm.", viBlanked: "Vào ___.", chunks: ["It's", "in", "May."], stages: ["missing-word"] },
+      { id: "g4u4-s-january", en: "My birthday's in January.", vi: "Sinh nhật của mình vào tháng Một.", example: "My birthday's in January.", blank: "birthday's", viFull: "Sinh nhật của mình vào tháng Một.", viBlanked: "___ của mình vào tháng Một.", chunks: ["My birthday's", "in", "January."], stages: ["missing-word", "sentence-shuffle"] },
+      { id: "g4u4-s-happy", en: "Happy birthday, Lucy!", vi: "Chúc mừng sinh nhật, Lucy!", example: "Happy birthday, Lucy!", blank: "Happy", viFull: "Chúc mừng sinh nhật, Lucy!", viBlanked: "___ sinh nhật, Lucy!", chunks: ["Happy", "birthday,", "Lucy!"], stages: ["missing-word", "sentence-shuffle"] },
+      { id: "g4u4-s-eat", en: "What do you want to eat?", vi: "Bạn muốn ăn gì?", example: "What do you want to eat?", blank: "eat", viFull: "Bạn muốn ăn gì?", viBlanked: "Bạn muốn ___ gì?", chunks: ["What", "do you want", "to eat?"], stages: ["missing-word", "sentence-shuffle"] },
+      { id: "g4u4-s-jam", en: "I want some jam.", vi: "Mình muốn một ít mứt.", example: "I want some jam.", blank: "jam", viFull: "Mình muốn một ít mứt.", viBlanked: "Mình muốn một ít ___.", chunks: ["I", "want", "some jam."], stages: ["missing-word", "sentence-shuffle"] },
+      { id: "g4u4-s-drink", en: "What do you want to drink?", vi: "Bạn muốn uống gì?", example: "What do you want to drink?", blank: "What", viFull: "Bạn muốn uống gì?", viBlanked: "Bạn muốn uống ___?", chunks: ["What", "do you want", "to drink?"], stages: ["missing-word", "sentence-shuffle"] },
+      { id: "g4u4-s-juice", en: "I want some juice.", vi: "Mình muốn một ít nước trái cây.", example: "I want some juice.", blank: "want", viFull: "Mình muốn một ít nước trái cây.", viBlanked: "Mình ___ một ít nước trái cây.", chunks: ["I", "want", "some juice."], stages: ["missing-word", "sentence-shuffle"] },
+    ],
+  },
 ];
 
 (function () {
