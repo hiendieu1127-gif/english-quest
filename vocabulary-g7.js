@@ -64,6 +64,59 @@ var VOCAB_UNITS_G7 = [
       { id: "g7u1-love-ving", en: "love doing something", vi: "yêu thích làm cái gì", example: "I love gardening every weekend.", blank: "love gardening", stages: ["multiple-choice"], viFull: "Tôi thích làm vườn vào mỗi cuối tuần.", viBlanked: "Tôi ___ vào mỗi cuối tuần." },
     ],
   },
+  {
+    id: "g7-unit2",
+    number: 2,
+    title: "Healthy Living",
+    subtitle: "Global Success 7 · New Vocabulary",
+    hasGrammar: false, // Grammar Unit 2 chưa làm — ẩn nút "Tiếp tục sang phần Grammar"
+    words: [
+      // Tap Pairs (13 words)
+      { id: "g7u2-picture", en: "picture", vi: "ảnh, bức tranh", stages: ["tap-pairs"] },
+      { id: "g7u2-boat", en: "boat", vi: "chèo thuyền", stages: ["tap-pairs"] },
+      { id: "g7u2-neighbourhood", en: "neighbourhood", vi: "khu phố", stages: ["tap-pairs"] },
+      { id: "g7u2-outdoor-activities", en: "outdoor activities", vi: "hoạt động ngoài trời", stages: ["tap-pairs", "sentence-shuffle"], example: "Outdoor activities are good for you.", viFull: "Các hoạt động ngoài trời tốt cho bạn.", chunks: ["Outdoor activities", "are", "good for you."] },
+      { id: "g7u2-good-for", en: "good for something", vi: "tốt cho...", stages: ["tap-pairs"] },
+      { id: "g7u2-go-cycling", en: "go cycling", vi: "đi đạp xe đạp", stages: ["tap-pairs"] },
+      { id: "g7u2-countryside", en: "countryside", vi: "vùng nông thôn", stages: ["tap-pairs"] },
+      { id: "g7u2-fresh-air", en: "fresh air", vi: "không khí trong lành", stages: ["tap-pairs"] },
+      { id: "g7u2-a-lot-of", en: "a lot of", vi: "nhiều", stages: ["tap-pairs"] },
+      { id: "g7u2-bring", en: "bring", vi: "mang, đem", stages: ["tap-pairs"] },
+      { id: "g7u2-join-somebody", en: "join somebody", vi: "tham gia cùng với ai", stages: ["tap-pairs"] },
+      { id: "g7u2-at-noon", en: "at noon", vi: "vào buổi trưa", stages: ["tap-pairs"] },
+      { id: "g7u2-get-sunburn", en: "get sunburn", vi: "bị cháy nắng", stages: ["tap-pairs"] },
+
+      // Picture Matching (8 words) — ảnh do cô Hiền gửi
+      { id: "g7u2-lip-balm", en: "lip balm", vi: "son dưỡng môi", icon: "img/vocab-g7-u2-lip-balm.jpg", stages: ["picture-matching"] },
+      { id: "g7u2-chapped-lips", en: "chapped lips", vi: "môi khô nẻ, nứt nẻ", icon: "img/vocab-g7-u2-chapped-lips.jpg", stages: ["picture-matching"] },
+      { id: "g7u2-suncream", en: "suncream", vi: "kem chống nắng", icon: "img/vocab-g7-u2-suncream.jpg", stages: ["picture-matching"] },
+      { id: "g7u2-lunch-box", en: "lunch box", vi: "hộp cơm trưa", icon: "img/vocab-g7-u2-lunch-box.jpg", stages: ["picture-matching"] },
+      { id: "g7u2-boating", en: "boating", vi: "chèo thuyền", icon: "img/vocab-g7-u2-boating.jpg", stages: ["picture-matching"] },
+      { id: "g7u2-cycling", en: "cycling", vi: "đạp xe đạp", icon: "img/vocab-g7-u2-cycling.jpg", stages: ["picture-matching"] },
+      { id: "g7u2-red-spots", en: "red spots", vi: "các đốm đỏ", icon: "img/vocab-g7-u2-red-spots.jpg", stages: ["picture-matching"] },
+      { id: "g7u2-coloured-vegetables", en: "coloured vegetables", vi: "rau củ có màu sắc", icon: "img/vocab-g7-u2-coloured-vegetables.jpg", stages: ["picture-matching"] },
+
+      // Multiple Choice (10 words)
+      { id: "g7u2-dim-light", en: "dim light", vi: "ánh sáng mờ", stages: ["multiple-choice"] },
+      { id: "g7u2-keep-fit", en: "keep fit", vi: "giữ dáng", stages: ["multiple-choice"] },
+      { id: "g7u2-enough-sleep", en: "enough sleep", vi: "ngủ đủ", stages: ["multiple-choice", "sentence-shuffle"], example: "You should get enough sleep.", viFull: "Bạn nên ngủ đủ giấc.", chunks: ["You should", "get", "enough sleep."] },
+      { id: "g7u2-less", en: "less", vi: "ít", stages: ["multiple-choice"] },
+      { id: "g7u2-wash-your-face", en: "wash your face", vi: "rửa mặt", stages: ["multiple-choice", "sentence-shuffle"], example: "Wash your face twice a day.", viFull: "Hãy rửa mặt một ngày hai lần.", chunks: ["Wash your face", "twice a day."] },
+      { id: "g7u2-special-soap", en: "special soap", vi: "xà phòng đặc biệt", stages: ["multiple-choice"] },
+      { id: "g7u2-twice-a-day", en: "twice a day", vi: "1 ngày 2 lần", stages: ["multiple-choice"] },
+      { id: "g7u2-pop-spots", en: "pop spots", vi: "nặn mụn", stages: ["multiple-choice"] },
+      { id: "g7u2-common", en: "common", vi: "phổ biến, xuất hiện thường xuyên", stages: ["multiple-choice", "sentence-shuffle"], example: "This problem is very common.", viFull: "Vấn đề này rất phổ biến.", chunks: ["This problem", "is", "very common."] },
+      { id: "g7u2-id-love-to", en: "I'd love to", vi: "tôi muốn...", stages: ["multiple-choice", "sentence-shuffle"], example: "I'd love to go cycling in the countryside.", viFull: "Tôi muốn đi đạp xe ở vùng nông thôn.", chunks: ["I'd love to", "go cycling", "in the countryside."] },
+
+      // Missing Word (6 sentences)
+      { id: "g7u2-see-sb-ving", en: "see somebody doing something", vi: "nhìn thấy ai đó làm cái gì đó", example: "I see a lot of people exercising in the park.", blank: "exercising", stages: ["missing-word"], viFull: "Tôi thấy rất nhiều người đang tập thể dục trong công viên.", viBlanked: "Tôi thấy rất nhiều người đang ___ trong công viên." },
+      { id: "g7u2-popular", en: "popular", vi: "phổ biến, được nhiều người ưa thích", example: "This café is very popular.", blank: "popular", stages: ["missing-word"], viFull: "Quán cà phê này rất được nhiều người ưa thích.", viBlanked: "Quán cà phê này rất ___." },
+      { id: "g7u2-sound-adj", en: "sound + adjective", vi: "nghe có vẻ", example: "It sounds interesting.", blank: "sounds", stages: ["missing-word"], viFull: "Nghe có vẻ thú vị.", viBlanked: "___ thú vị." },
+      { id: "g7u2-get-sunburn-ex", en: "get sunburn", vi: "bị cháy nắng", example: "Put on suncream, or you will get sunburn.", blank: "get sunburn", stages: ["missing-word"], viFull: "Hãy thoa kem chống nắng, nếu không bạn sẽ bị cháy nắng.", viBlanked: "Hãy thoa kem chống nắng, nếu không bạn sẽ ___." },
+      { id: "g7u2-good-for-ex", en: "good for something", vi: "tốt cho...", example: "Cycling is good for your health.", blank: "good for", stages: ["missing-word"], viFull: "Đạp xe tốt cho sức khỏe của bạn.", viBlanked: "Đạp xe ___ sức khỏe của bạn." },
+      { id: "g7u2-bring-ex", en: "bring", vi: "mang, đem", example: "Don't forget to bring a lunch box.", blank: "bring", stages: ["missing-word"], viFull: "Đừng quên mang theo hộp cơm trưa.", viBlanked: "Đừng quên ___ theo hộp cơm trưa." },
+    ],
+  },
 ];
 
 
@@ -266,7 +319,7 @@ function onStageComplete(stageKey) {
         <p>${isLast ? "Em đã hoàn thành hết phần Vocabulary của Unit này." : "Sẵn sàng cho dạng bài tiếp theo chưa?"}</p>
         <div class="runner-actions" ${isLast ? 'style="flex-direction:column;align-items:stretch;"' : ""}>
           ${isLast
-            ? `<button class="btn btn-primary" id="btn-go-grammar" style="width:100%;white-space:normal;">Tiếp tục sang phần Grammar &rarr;</button><button class="btn btn-secondary" id="btn-back-units" style="width:100%;white-space:normal;">Quay lại danh sách Unit</button>`
+            ? `${currentUnit.hasGrammar === false ? "" : `<button class="btn btn-primary" id="btn-go-grammar" style="width:100%;white-space:normal;">Tiếp tục sang phần Grammar &rarr;</button>`}<button class="btn ${currentUnit.hasGrammar === false ? "btn-primary" : "btn-secondary"}" id="btn-back-units" style="width:100%;white-space:normal;">Quay lại danh sách Unit</button>`
             : `<button class="btn btn-primary" id="btn-next-stage">Dạng bài tiếp theo &rarr;</button>`}
         </div>
       </div>
@@ -305,7 +358,7 @@ function buildSequentialItems(stageKey, unit) {
 
   if (stageKey === "multiple-choice") {
     const pool = wordsForStage;
-    return pool.map((w, i) => {
+    return shuffle(pool.map((w, i) => {
       const distractors = sample(pool, 2, i).map(di => pool[di]);
       const correctPos = Math.floor(Math.random() * 3);
       const opts = [];
@@ -315,7 +368,7 @@ function buildSequentialItems(stageKey, unit) {
         else { opts.push(distractors[di].vi); di++; }
       }
       return { word: w, opts, correctIdx: correctPos };
-    });
+    }));
   }
 
   if (stageKey === "missing-word") {
@@ -640,6 +693,8 @@ function renderTapPairs(host, unit, onDone) {
 document.addEventListener("DOMContentLoaded", () => {
   if (!document.getElementById("unit-select-grid")) return; // not on vocabulary page
   renderUnitSelect();
+  const wantedUnit = new URLSearchParams(window.location.search).get("unit");
+  if (wantedUnit && VOCAB_UNITS_G7.some(u => u.id === wantedUnit)) openUnit(wantedUnit);
   document.getElementById("btn-back-to-units")?.addEventListener("click", (e) => { e.preventDefault(); backToUnits(); });
 });
 })();
