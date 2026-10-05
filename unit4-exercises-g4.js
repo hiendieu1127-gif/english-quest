@@ -101,8 +101,68 @@ const ORDER_ITEMS = [
 ];
 
 // ============================================================
-// 5) QUIZ — waiting for teacher Hien's workbook pages (shows "sắp có" until then)
+// 5) QUIZ — Sách bài tập Unit 4 (5 bài)
+//    Audio: teacher Hien makes it with Google AI Studio and uploads
+//    g4-u4-circle-1.wav, g4-u4-circle-2.wav, g4-u4-tick-1.wav … g4-u4-tick-4.wav.
+//    Until a file is uploaded, the page reads the same script aloud with the browser voice.
+//    Pictures: calendars drawn in code + the Unit 4 vocabulary photos (not cut from the book).
 // ============================================================
+
+// 5a) Listen and circle (scored: 2) — Track 7
+const CIRCLE_ITEMS = [
+  { id: 1, stem: "My birthday is in ___.", options: [{ key: "a", text: "March" }, { key: "b", text: "April" }, { key: "c", text: "January" }],
+    answer: "c", vi: "Sinh nhật của mình vào ___.", optVi: ["a. tháng Ba", "b. tháng Tư", "c. tháng Một"],
+    ttsScript: "When's your birthday? My birthday is in January." },
+  { id: 2, stem: "I want some ___.", options: [{ key: "a", text: "juice" }, { key: "b", text: "water" }, { key: "c", text: "jam" }],
+    answer: "b", vi: "Mình muốn một ít ___.", optVi: ["a. nước trái cây", "b. nước", "c. mứt"],
+    ttsScript: "What do you want to drink? I want some water." },
+].map(x => ({ ...x, audio: `g4-u4-circle-${x.id}.wav`, audioNote: "Bấm ▶ để nghe, rồi chọn đáp án đúng." }));
+
+// 5b) Listen and tick or cross (scored: 4) — Track 8: is the picture what you hear?
+const TICK_OPTIONS = [{ key: "✓", text: "Đúng với hình (tick)" }, { key: "✗", text: "Không đúng với hình (cross)" }];
+// A small month grid (1 … last day) shown inside the calendar picture
+const monthGrid = (days) => `<div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px 6px;font-size:13px;font-weight:700;color:#555;padding:0 10px;">` +
+  Array.from({ length: days }, (_, k) => `<span>${k + 1}</span>`).join("") + `</div>`;
+const TICK_ITEMS = [
+  { id: 1, cal: "February", date: monthGrid(28), answer: "✗", ttsScript: "When's your birthday? It's in January." },
+  { id: 2, cal: "April", date: monthGrid(30), answer: "✓", ttsScript: "When's your birthday? It's in April." },
+  { id: 3, image: "img/vocab-g4-u4-jam.jpg", answer: "✗", ttsScript: "What do you want to eat? I want some grapes." },
+  { id: 4, image: "img/vocab-g4-u4-water.jpg", answer: "✓", ttsScript: "What do you want to drink? I want some water. Here you are. Thank you." },
+].map(x => ({ ...x, stem: "Nghe rồi chọn: hình này đúng (✓) hay sai (✗)?", options: TICK_OPTIONS, noTranslate: true,
+              sayAfter: x.ttsScript, audio: `g4-u4-tick-${x.id}.wav`, audioNote: "Bấm ▶ để nghe, rồi chọn ✓ hoặc ✗." }));
+
+// 5c) Look, complete and read (scored: 4) — nhìn hình, TỰ GÕ
+const LOOK_ITEMS = [
+  { id: 1, before: "My birthday is in", after: ".", answer: ["march"], full: "My birthday is in March.", cal: "March", date: 20, vi: "Sinh nhật của mình vào tháng Ba." },
+  { id: 2, before: "My birthday is in", after: ".", answer: ["april"], full: "My birthday is in April.", cal: "April", date: 5, vi: "Sinh nhật của mình vào tháng Tư." },
+  { id: 3, before: "I want some", after: ".", answer: ["chips"], full: "I want some chips.", image: "img/vocab-g4-u4-chips.jpg", vi: "Mình muốn một ít khoai tây chiên." },
+  { id: 4, before: "I want some", after: ".", answer: ["lemonade"], full: "I want some lemonade.", image: "img/vocab-g4-u4-lemonade.jpg", vi: "Mình muốn một ít nước chanh." },
+];
+
+// 5d) Read and complete (scored: 4) — cùng một hộp từ a–d cho cả 4 câu
+const RC_OPTIONS = [{ key: "a", text: "your birthday" }, { key: "b", text: "chips" }, { key: "c", text: "May" }, { key: "d", text: "to drink" }];
+const RC_ITEMS = [
+  { id: 1, stem: "I want some ___.", answer: "b", vi: "Mình muốn một ít khoai tây chiên." },
+  { id: 2, stem: "What do you want ___?", answer: "d", vi: "Bạn muốn uống gì?" },
+  { id: 3, stem: "When's ___?", answer: "a", vi: "Sinh nhật của bạn là khi nào?" },
+  { id: 4, stem: "My birthday is in ___.", answer: "c", vi: "Sinh nhật của mình vào tháng Năm." },
+].map(x => ({ ...x, options: RC_OPTIONS }));
+
+// 5e) Read and match (scored: 4) — đọc câu, chọn câu đáp a–d
+const RM_OPTIONS = [
+  { key: "a", text: "I want some grapes." },
+  { key: "b", text: "I want some water." },
+  { key: "c", text: "It's in February." },
+  { key: "d", text: "Thank you." },
+];
+const RM_OPT_VI = ["a. Mình muốn một ít nho.", "b. Mình muốn một ít nước.", "c. Vào tháng Hai.", "d. Cảm ơn bạn."];
+const RM_ITEMS = [
+  { id: 1, stem: "When's your birthday?", answer: "c", vi: "Sinh nhật của bạn là khi nào?" },
+  { id: 2, stem: "Happy birthday to you!", answer: "d", vi: "Chúc mừng sinh nhật bạn!" },
+  { id: 3, stem: "What do you want to eat?", answer: "a", vi: "Bạn muốn ăn gì?" },
+  { id: 4, stem: "What do you want to drink?", answer: "b", vi: "Bạn muốn uống gì?" },
+].map(x => ({ ...x, options: RM_OPTIONS, optVi: RM_OPT_VI, speakBefore: x.stem,
+              answerSentence: RM_OPTIONS.find(o => o.key === x.answer).text }));
 // ============================================================
 // Results saving — FIRST attempt only
 // ============================================================
@@ -114,7 +174,7 @@ let eqRetries = []; // answers given in retry rounds (Vòng 2, 3…) — scored 
 let saveQueue = Promise.resolve();
 
 function eqTotalItems() {
-  return FITB_ITEMS.length + ORDER_ITEMS.length;
+  return FITB_ITEMS.length + ORDER_ITEMS.length + CIRCLE_ITEMS.length + TICK_ITEMS.length + LOOK_ITEMS.length + RC_ITEMS.length + RM_ITEMS.length;
 }
 
 function eqRecordAndSave(key, question, studentAnswer, correctAnswer, correct) {
@@ -301,6 +361,23 @@ function picHtml(item) {
     `</div>`;
 }
 
+// Audio file not uploaded yet (or fails to load)? Swap the player for a "🔊 Nghe" button that
+// reads the same script with the browser voice, so the listening question still works.
+function audioFallback(host, item) {
+  const au = host.querySelector("#q-audio");
+  if (!au || !item.ttsScript) return;
+  au.addEventListener("error", () => {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "q-listen-btn";
+    btn.textContent = "🔊 Nghe";
+    btn.addEventListener("click", () => say(item.ttsScript));
+    const note = au.nextElementSibling;
+    if (note && note.classList.contains("q-vi")) note.textContent = note.textContent.replace("▶", "🔊 Nghe");
+    au.replaceWith(btn);
+  });
+}
+
 function renderChoiceItem(host, item, ctx) {
   const stemHtml = escapeHtml(item.stem).replace("___", `<span class="q-blank" id="q-blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>`);
   const hasListen = !!(item.listenFull || item.speakBefore);
@@ -327,6 +404,7 @@ function renderChoiceItem(host, item, ctx) {
     </div>
     <div class="fitb-feedback" id="q-feedback"></div>`;
 
+  audioFallback(host, item);
   const feedback = host.querySelector("#q-feedback");
   const blank = host.querySelector("#q-blank");
   const listenBtn = host.querySelector("#q-listen");
@@ -584,7 +662,15 @@ function renderWriteItem(host, item, ctx) {
 // 5) Quiz — parts run one after another
 // ============================================================
 function buildQuizParts() {
-  return []; // Quiz parts go here once the workbook pages arrive
+  const seq = (items, prefix, renderItem) => (host, pre, done) =>
+    runSequence(host, items.map(x => ({ ...x, keyPrefix: prefix })), 1, { scored: true, preHtml: pre, renderItem: renderItem || renderChoiceItem, onComplete: done });
+  return [
+    { title: "Listen and circle", instruction: "Nghe rồi chọn đáp án đúng (a, b hoặc c).", run: seq(CIRCLE_ITEMS, "circle") },
+    { title: "Listen and tick or cross", instruction: "Nghe rồi chọn ✓ nếu đúng với hình, ✗ nếu không đúng.", run: seq(TICK_ITEMS, "tick") },
+    { title: "Look, complete and read", instruction: "Nhìn hình rồi tự gõ chữ còn thiếu.", run: seq(LOOK_ITEMS, "look", renderWriteItem) },
+    { title: "Read and complete", instruction: "Chọn cụm từ trong hộp (a, b, c, d) để hoàn thành câu.", run: seq(RC_ITEMS, "rc") },
+    { title: "Read and match", instruction: "Đọc câu rồi chọn câu đáp đúng.", run: seq(RM_ITEMS, "match") },
+  ];
 }
 
 function runQuiz() {
