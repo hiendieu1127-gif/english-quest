@@ -536,7 +536,7 @@ function renderBookItem(host, item, ctx) {
   host.innerHTML = `
     ${ctx.top}
     <span class="q-part-tag">${escapeHtml(d.title)}</span>
-    <img class="q-pic" src="${escapeHtml(d.img)}" alt="" style="width:260px;max-width:90%;" onerror="this.style.display='none'">
+    <img class="q-pic" src="${escapeHtml(d.img)}" alt="" style="width:auto;max-width:100%;max-height:260px;" onerror="this.style.display='none'">
     <div class="book-dialogue">${linesHtml}</div>
     <button type="button" class="eq-translate-btn" id="q-translate">🔤 Dịch</button>
     <div class="q-vi" id="q-vi" style="display:none;">${escapeHtml(item.vi)}</div>
