@@ -134,7 +134,6 @@ var VOCAB_UNITS_G4 = [
     number: 4,
     title: "My Birthday Party",
     subtitle: "Global Success 4 · New Vocabulary",
-    hasExercises: false,
 
     words: [
       // Months — Picture Matching shows the Vietnamese month and 3 English words to pick from (textMatch, no image needed)
