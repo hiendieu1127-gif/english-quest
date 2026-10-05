@@ -125,7 +125,17 @@
       </${live ? "a" : "div"}>`;
   }).join("");
 
-  const anyLive = activities.some((a) => unit[a.key]);
+  // "Review N" — wide card under the 3 activities, only for units that have one
+  if (unit.review) {
+    grid.insertAdjacentHTML("beforeend", `
+      <a href="${unit.review}" class="activity-card is-live" style="grid-column:1/-1; border:2px solid var(--c-progress);">
+        <div class="activity-icon" style="background:var(--c-progress)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 12a8 8 0 1 0 2.3-5.6" stroke-linecap="round"/><path d="M4 4v4h4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <h3>Unit ${unit.id} (Review ${unit.id})</h3>
+        <p>Ôn tập: nghe, nhìn hình, nghĩa, điền từ, sắp xếp câu của Unit ${unit.id}.</p>
+      </a>`);
+  }
+
+  const anyLive = activities.some((a) => unit[a.key]) || Boolean(unit.review);
   document.getElementById("unit-empty-note").style.display = anyLive ? "none" : "flex";
 })();
 </script>

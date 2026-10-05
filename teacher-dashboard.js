@@ -13,9 +13,9 @@
 // "g<N>-unit1". Unprefixed ids are treated as Khối 5.
 // ============================================================
 
-const SECTION_LABELS = { vocabulary: "Từ vựng", grammar: "Ngữ pháp", exercises: "Bài tập" };
-const SECTION_LABELS_LONG = { vocabulary: "Vocabulary", grammar: "Grammar", exercises: "Exercises" };
-const SECTION_ORDER = ["vocabulary", "grammar", "exercises"];
+const SECTION_LABELS = { vocabulary: "Từ vựng", grammar: "Ngữ pháp", exercises: "Bài tập", review: "Ôn tập" };
+const SECTION_LABELS_LONG = { vocabulary: "Vocabulary", grammar: "Grammar", exercises: "Exercises", review: "Review" };
+const SECTION_ORDER = ["vocabulary", "grammar", "exercises", "review"];
 const TAB_KEY = "eq_dashboard_grade";
 
 function gradeNumFromUnitId(unitId) {

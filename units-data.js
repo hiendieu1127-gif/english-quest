@@ -4,7 +4,7 @@
 //
 // status: "not-started" | "in-progress" | "completed"
 // vocabulary / grammar / exercises: relative URL to the real page for that
-// unit's activity, or null if that activity isn't built yet (shows as
+// unit's activity (review = the "Review N" ôn tập page), or null if that activity isn't built yet (shows as
 // "Sắp có nội dung" / coming soon on the Unit page).
 
 const EQ_UNITS = [
@@ -15,9 +15,10 @@ const EQ_UNITS = [
     vocabulary: "vocabulary.html",
     grammar: null,
     exercises: "unit1-exercises.html",
+    review: "review-g5.html?u=1",
   },
-  { id: 2, title: "Our Homes", status: "in-progress", vocabulary: "vocabulary.html?unit=unit2", grammar: null, exercises: "unit2-exercises.html" },
-  { id: 3, title: "My Foreign Friends", status: "in-progress", vocabulary: "vocabulary.html?unit=unit3", grammar: null, exercises: "unit3-exercises.html" },
+  { id: 2, title: "Our Homes", status: "in-progress", vocabulary: "vocabulary.html?unit=unit2", grammar: null, exercises: "unit2-exercises.html", review: "review-g5.html?u=2" },
+  { id: 3, title: "My Foreign Friends", status: "in-progress", vocabulary: "vocabulary.html?unit=unit3", grammar: null, exercises: "unit3-exercises.html", review: "review-g5.html?u=3" },
   { id: 4, title: "Our Free-time Activities", status: "not-started", vocabulary: null, grammar: null, exercises: null },
   { id: 5, title: "My Future Job", status: "not-started", vocabulary: null, grammar: null, exercises: null },
   { id: 6, title: "Our School Rooms", status: "not-started", vocabulary: null, grammar: null, exercises: null },
