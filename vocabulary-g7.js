@@ -69,7 +69,6 @@ var VOCAB_UNITS_G7 = [
     number: 2,
     title: "Healthy Living",
     subtitle: "Global Success 7 · New Vocabulary",
-    hasGrammar: false, // Grammar Unit 2 chưa làm — ẩn nút "Tiếp tục sang phần Grammar"
     words: [
       // Tap Pairs (13 words)
       { id: "g7u2-picture", en: "picture", vi: "ảnh, bức tranh", stages: ["tap-pairs"] },

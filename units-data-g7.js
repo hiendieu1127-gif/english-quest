@@ -16,7 +16,7 @@ const EQ_UNITS = [
     grammar: "unit1-grammar-g7.html",
     exercises: "unit1-exercises-g7.html",
   },
-  { id: 2, title: "Healthy Living", status: "in-progress", vocabulary: "vocabulary-g7.html?unit=g7-unit2", grammar: null, exercises: null },
+  { id: 2, title: "Healthy Living", status: "in-progress", vocabulary: "vocabulary-g7.html?unit=g7-unit2", grammar: "unit2-grammar-g7.html", exercises: null },
   { id: 3, title: "Community Service", status: "not-started", vocabulary: null, grammar: null, exercises: null },
   { id: 4, title: "Music And Arts", status: "not-started", vocabulary: null, grammar: null, exercises: null },
   { id: 5, title: "Food And Drink", status: "not-started", vocabulary: null, grammar: null, exercises: null },
