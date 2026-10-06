@@ -327,8 +327,46 @@ function openUnit(unitId) {
   document.getElementById("path-view").classList.add("active");
   window.scrollTo(0, 0);
   document.getElementById("path-title").textContent = `Unit ${currentUnit.number}: ${currentUnit.title}`;
-  renderStepper();
-  renderStage(0);
+  resumeOrStart(currentUnit);
+}
+
+// ---- Remembered progress (eq-progress.js): resume at the first unfinished stage ----
+function progressId(unit) {
+  return `vocabulary__${unit.id}`;
+}
+
+function persistProgress() {
+  if (!window.EQProgress || !eqStudent || !currentUnit) return;
+  window.EQProgress.save(progressId(currentUnit), eqStudent, {
+    done: Object.keys(stageDone),
+    answers: eqAnswers,
+    retries: eqRetries,
+  });
+}
+
+async function resumeOrStart(unit) {
+  const saved = window.EQProgress ? window.EQProgress.load(progressId(unit), eqStudent) : null;
+  if (saved) {
+    renderStepper();
+    document.getElementById("runner-host").innerHTML = `<div class="runner-card"><p style="text-align:center;color:var(--ink-soft)">Đang tải bài em đã làm…</p></div>`;
+    const valid = await window.EQProgress.stillOnDashboard(saved, { student: eqStudent, unitId: unit.id, section: "vocabulary" });
+    if (currentUnit !== unit) return; // student already left this unit
+    if (valid) {
+      saved.done.forEach(k => { stageDone[k] = true; });
+      eqAnswers = saved.answers || {};
+      eqRetries = saved.retries || [];
+    } else {
+      window.EQProgress.clear(progressId(unit), eqStudent);
+    }
+  }
+  const next = STAGES.findIndex(s => !stageDone[s.key]);
+  if (next === -1) {
+    // Everything was already finished — show the "done" screen instead of restarting.
+    currentStageIdx = STAGES.length - 1;
+    onStageComplete(STAGES[currentStageIdx].key);
+  } else {
+    renderStage(next);
+  }
 }
 
 function backToUnits() {
@@ -378,6 +416,7 @@ function renderStage(idx) {
     const items = buildSequentialItems(stage.key, currentUnit);
     if (items.length === 0) {
       stageDone[stage.key] = true;
+      persistProgress();
       renderStepper();
       const hasNext = idx < STAGES.length - 1;
       host.innerHTML = `<div class="runner-card"><p style="text-align:center;color:var(--ink-soft)">Chưa có dữ liệu phù hợp cho dạng bài này ở Unit này.</p>${hasNext ? `<div class="runner-actions"><button class="btn btn-primary" id="btn-skip-stage">Dạng bài tiếp theo &rarr;</button></div>` : ""}</div>`;
@@ -391,6 +430,7 @@ function renderStage(idx) {
 
 function onStageComplete(stageKey) {
   stageDone[stageKey] = true;
+  persistProgress();
   renderStepper();
   const host = document.getElementById("runner-host");
   const isLast = currentStageIdx === STAGES.length - 1;

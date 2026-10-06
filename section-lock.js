@@ -9,12 +9,23 @@
 //  - a practice section (Reading / Vocabulary) — the student taps its
 //    "next" button (existing #…-to-…-btn, or the one added here), or
 //  - the page script calls window.EQSectionLock.markDone(panelId).
-// Progress is kept for this page visit only: after a reload the answers
-// start fresh, so the sections must be done again in order.
+// Finished sections + their answers are remembered on this device
+// (eq-progress.js), so after a flat battery / reload the student resumes
+// at the first unfinished section instead of starting over.
 // ============================================================
 (function () {
   const TAB_SELECTOR = ".ex-tab[data-target], .eq-crumb[data-target]";
   const PRACTICE_PANELS = ["panel-reading", "panel-vocab"];
+  const SECTION = /grammar/.test(location.pathname) ? "grammar" : "exercises";
+
+  // The page script's own score state (top-level `let`/`const` in its classic script).
+  function hasPageState() {
+    return typeof eqAnswers !== "undefined" && typeof eqRetries !== "undefined"
+      && typeof eqStudent !== "undefined" && typeof UNIT_ID !== "undefined" && !!eqStudent;
+  }
+  function progressId() {
+    return `${SECTION}__${UNIT_ID}`;
+  }
 
   const style = document.createElement("style");
   style.textContent = `
@@ -64,6 +75,9 @@
       if (!order.includes(id) || done.has(id)) return;
       done.add(id);
       refresh();
+      if (window.EQProgress && hasPageState()) {
+        window.EQProgress.save(progressId(), eqStudent, { done: [...done], answers: eqAnswers, retries: eqRetries });
+      }
     }
 
     let toastTimer = null;
@@ -121,6 +135,31 @@
 
     window.EQSectionLock = { markDone, isUnlocked };
     refresh();
+    resume();
+
+    async function resume() {
+      if (!window.EQProgress || !hasPageState()) return;
+      const saved = window.EQProgress.load(progressId(), eqStudent);
+      if (!saved) return;
+      const valid = await window.EQProgress.stillOnDashboard(saved, { student: eqStudent, unitId: UNIT_ID, section: SECTION });
+      if (!valid) {
+        window.EQProgress.clear(progressId(), eqStudent);
+        return;
+      }
+      saved.done.forEach(id => { if (order.includes(id)) done.add(id); });
+      // Saved first attempts win over anything answered while this was loading.
+      eqAnswers = Object.assign({}, eqAnswers, saved.answers || {});
+      eqRetries = (saved.retries || []).concat(eqRetries);
+      refresh();
+      const next = order.find(id => !done.has(id));
+      if (next) {
+        const tab = tabs.find(t => t.dataset.target === next);
+        tab && tab.click();
+        toast("Em làm tiếp từ phần đang dở nhé! 💪");
+      } else {
+        toast("Em đã làm xong hết phần này rồi 🎉");
+      }
+    }
   }
 
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
