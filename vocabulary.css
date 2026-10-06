@@ -84,6 +84,14 @@
 .stage-pill.active .stage-dot{ background:rgba(255,255,255,.3); color:#fff; }
 .stage-pill.done .stage-dot{ background: var(--c-progress); color:#fff; }
 .stage-pill.done:not(.active){ border-color: color-mix(in srgb, var(--c-progress) 40%, white); }
+.stage-pill.locked{ opacity:.5; cursor:not-allowed; background:#f6f3ec; }
+.stage-pill.locked .stage-dot{ background:transparent; font-size:.8rem; }
+.stage-pill.shake{ animation: stage-shake .35s ease; }
+@keyframes stage-shake{
+  0%,100%{ transform:translateX(0); }
+  25%{ transform:translateX(-5px); }
+  75%{ transform:translateX(5px); }
+}
 
 /* ---------- Runner shell ---------- */
 .runner-card{

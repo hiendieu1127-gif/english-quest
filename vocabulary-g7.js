@@ -277,17 +277,35 @@ function backToUnits() {
 
 function renderStepper() {
   const el = document.getElementById("stage-stepper");
-  el.innerHTML = STAGES.map((s, i) => `
-    <button class="stage-pill ${i === currentStageIdx ? "active" : ""} ${stageDone[s.key] ? "done" : ""}" data-stage="${i}">
-      <span class="stage-dot">${stageDone[s.key] ? "✓" : i + 1}</span>${s.title}
+  el.innerHTML = STAGES.map((s, i) => {
+    const locked = !isStageUnlocked(i);
+    return `
+    <button class="stage-pill ${i === currentStageIdx ? "active" : ""} ${stageDone[s.key] ? "done" : ""} ${locked ? "locked" : ""}" data-stage="${i}" ${locked ? 'aria-disabled="true" title="Hoàn thành dạng bài trước để mở khoá"' : ""}>
+      <span class="stage-dot">${stageDone[s.key] ? "✓" : locked ? "🔒" : i + 1}</span>${s.title}
     </button>
-  `).join("");
+  `;
+  }).join("");
   el.querySelectorAll(".stage-pill").forEach(btn => {
-    btn.addEventListener("click", () => renderStage(Number(btn.dataset.stage)));
+    btn.addEventListener("click", () => {
+      const idx = Number(btn.dataset.stage);
+      if (!isStageUnlocked(idx)) {
+        btn.classList.remove("shake");
+        void btn.offsetWidth;
+        btn.classList.add("shake");
+        return;
+      }
+      renderStage(idx);
+    });
   });
 }
 
+// Stages unlock in order: a student must finish stage N before opening stage N+1.
+function isStageUnlocked(idx) {
+  return STAGES.slice(0, idx).every(s => stageDone[s.key]);
+}
+
 function renderStage(idx) {
+  if (!isStageUnlocked(idx)) return;
   currentStageIdx = idx;
   renderStepper();
   const stage = STAGES[idx];
@@ -297,7 +315,12 @@ function renderStage(idx) {
   } else {
     const items = buildSequentialItems(stage.key, currentUnit);
     if (items.length === 0) {
-      host.innerHTML = `<div class="runner-card"><p style="text-align:center;color:var(--ink-soft)">Chưa có dữ liệu phù hợp cho dạng bài này ở Unit này.</p></div>`;
+      stageDone[stage.key] = true;
+      renderStepper();
+      const hasNext = idx < STAGES.length - 1;
+      host.innerHTML = `<div class="runner-card"><p style="text-align:center;color:var(--ink-soft)">Chưa có dữ liệu phù hợp cho dạng bài này ở Unit này.</p>${hasNext ? `<div class="runner-actions"><button class="btn btn-primary" id="btn-skip-stage">Dạng bài tiếp theo &rarr;</button></div>` : ""}</div>`;
+      const skipBtn = document.getElementById("btn-skip-stage");
+      if (skipBtn) skipBtn.addEventListener("click", () => renderStage(idx + 1));
       return;
     }
     runSequential(host, stage.key, items, () => onStageComplete(stage.key));

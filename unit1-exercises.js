@@ -410,6 +410,12 @@ function buildOrderItem(container, words, answerText) {
     window.EQMascot && window.EQMascot.show("mascot-box", correct ? "correct" : "wrong");
     feedback.textContent = correct ? "✓ Đúng rồi!" : "✗ Chưa đúng, thử lại nhé";
     feedback.className = "order-feedback " + (correct ? "ok" : "no");
+    // Sentence Ordering has no "Xong rồi!" card — unlock the next section once every sentence is right.
+    const panel = wrap.closest(".ex-panel");
+    if (panel && window.EQSectionLock) {
+      const fbs = panel.querySelectorAll(".order-feedback");
+      if (Array.from(fbs).every(f => f.classList.contains("ok"))) window.EQSectionLock.markDone(panel.id);
+    }
   });
   wrap.querySelector(".order-reset").addEventListener("click", () => {
     target.innerHTML = "";
