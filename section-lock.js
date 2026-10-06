@@ -29,9 +29,13 @@
 
   const style = document.createElement("style");
   style.textContent = `
-    .ex-tab.locked, .eq-crumb.locked { opacity:.45; cursor:not-allowed; filter:grayscale(.6); }
-    .ex-tab.locked::after, .eq-crumb.locked::after { content:" 🔒"; font-size:.85em; }
-    .ex-tab.section-done::after, .eq-crumb.section-done::after { content:" ✓"; color:#3fae4f; font-weight:900; }
+    /* Same look as the Vocabulary stepper: greyed pill, 🔒 in place of the number, ✓ when done */
+    .ex-tab.locked, .eq-crumb.locked { opacity:.5; cursor:not-allowed; background:#f6f3ec !important; }
+    .ex-tab.locked .tab-num, .eq-crumb.locked .eq-crumb-num { background:transparent !important; font-size:.8rem; }
+    .ex-tab.section-done:not(.active) .tab-num, .eq-crumb.section-done:not(.active) .eq-crumb-num { background:#3fae4f; color:#fff; }
+    /* tabs without a number circle: show the lock / tick after the label */
+    .ex-tab.locked:not(.has-num)::after, .eq-crumb.locked:not(.has-num)::after { content:" 🔒"; font-size:.85em; }
+    .ex-tab.section-done:not(.has-num)::after, .eq-crumb.section-done:not(.has-num)::after { content:" ✓"; color:#3fae4f; font-weight:900; }
     .section-lock-shake { animation: section-lock-shake .35s ease; }
     @keyframes section-lock-shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-5px)} 75%{transform:translateX(5px)} }
     .section-lock-toast {
@@ -67,6 +71,12 @@
         const locked = !isUnlocked(id);
         t.classList.toggle("locked", locked);
         t.classList.toggle("section-done", done.has(id));
+        const num = t.querySelector(".tab-num, .eq-crumb-num");
+        if (num) {
+          t.classList.add("has-num");
+          if (num.dataset.num === undefined) num.dataset.num = num.textContent;
+          num.textContent = locked ? "🔒" : done.has(id) ? "✓" : num.dataset.num;
+        }
         if (locked) {
           t.setAttribute("aria-disabled", "true");
           t.title = "Hoàn thành phần trước để mở khoá";
