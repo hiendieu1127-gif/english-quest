@@ -41,6 +41,11 @@
       text-align:center; box-shadow:0 8px 24px rgba(0,0,0,.18);
     }
     .section-lock-next { text-align:center; margin-top:22px; }
+    .section-lock-loading .ex-panel { opacity:.5; pointer-events:none; }
+    .review-note {
+      margin:0 0 14px; padding:10px 14px; border-radius:12px;
+      background:#fff7e6; color:#7a5b00; font-weight:700; font-size:.9rem; text-align:center;
+    }
   `;
   document.head.appendChild(style);
 
@@ -133,31 +138,51 @@
       }
     });
 
-    window.EQSectionLock = { markDone, isUnlocked };
+    // True while the student is in a section that is already finished → the page must not save answers.
+    function isReviewing() {
+      const active = document.querySelector(".ex-panel.active");
+      return !!active && done.has(active.id);
+    }
+
+    window.EQSectionLock = { markDone, isUnlocked, isReviewing };
     refresh();
     resume();
 
     async function resume() {
       if (!window.EQProgress || !hasPageState()) return;
       const saved = window.EQProgress.load(progressId(), eqStudent);
-      if (!saved) return;
-      const valid = await window.EQProgress.stillOnDashboard(saved, { student: eqStudent, unitId: UNIT_ID, section: SECTION });
-      if (!valid) {
+      // Hold the questions until we know what is already on the Dashboard,
+      // so nothing answered in this moment can overwrite the first attempt.
+      document.body.classList.add("section-lock-loading");
+      const dash = await window.EQProgress.checkDashboard(saved, { student: eqStudent, unitId: UNIT_ID, section: SECTION });
+      document.body.classList.remove("section-lock-loading");
+      if (saved && dash.savedValid) {
+        saved.done.forEach(id => { if (order.includes(id)) done.add(id); });
+        eqAnswers = Object.assign({}, saved.answers || {});
+        eqRetries = (saved.retries || []).slice();
+      } else if (saved) {
         window.EQProgress.clear(progressId(), eqStudent);
-        return;
       }
-      saved.done.forEach(id => { if (order.includes(id)) done.add(id); });
-      // Saved first attempts win over anything answered while this was loading.
-      eqAnswers = Object.assign({}, eqAnswers, saved.answers || {});
-      eqRetries = (saved.retries || []).concat(eqRetries);
+      // Already fully answered on the Dashboard (maybe on another device): everything is review.
+      if (dash.finished) order.forEach(id => done.add(id));
+      if (!done.size) return;
       refresh();
+      // Sections finished before this visit are review only: answers there are not saved.
+      done.forEach(id => {
+        const panel = document.getElementById(id);
+        if (PRACTICE_PANELS.includes(id) || panel.querySelector(":scope > .review-note")) return;
+        const note = document.createElement("p");
+        note.className = "review-note";
+        note.textContent = "🔁 Em đã làm phần này rồi — ôn lại thoải mái, không tính điểm nhé!";
+        panel.prepend(note);
+      });
       const next = order.find(id => !done.has(id));
       if (next) {
         const tab = tabs.find(t => t.dataset.target === next);
         tab && tab.click();
         toast("Em làm tiếp từ phần đang dở nhé! 💪");
       } else {
-        toast("Em đã làm xong hết phần này rồi 🎉");
+        toast("Em đã làm xong bài này rồi 🎉 Ôn lại thoải mái, không tính điểm nhé!");
       }
     }
   }
