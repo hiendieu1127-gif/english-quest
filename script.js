@@ -1,21 +1,27 @@
-// English Quest — if this browser has no text-to-speech at all,
-// nudge the student to open the page in Chrome instead
+// English Quest — if this browser has no text-to-speech at all (e.g. Zalo/Facebook in-app browser),
+// cover the whole page with one big "open in Chrome" screen so students tap it straight away
 (function () {
   if ("speechSynthesis" in window) return; // TTS already works here, nothing to do
-  var banner = document.createElement("div");
-  banner.style.cssText =
-    "position:fixed;top:0;left:0;right:0;z-index:9999;background:#fff3cd;color:#664d03;" +
-    "padding:10px 12px;font-size:14px;display:flex;align-items:center;justify-content:space-between;" +
-    "gap:8px;box-shadow:0 2px 6px rgba(0,0,0,.15);";
-  banner.innerHTML =
-    '<span>🔊 Để nghe giọng đọc, mở bằng Chrome nhé</span>' +
-    '<div style="display:flex;gap:6px;">' +
-    '<button id="open-chrome-btn" style="background:#4285F4;color:#fff;border:none;padding:8px 12px;' +
-    'border-radius:6px;font-size:13px;white-space:nowrap;">Mở Chrome</button>' +
-    '<button id="close-banner-btn" style="background:transparent;color:#664d03;border:none;' +
-    'font-size:18px;padding:0 6px;">×</button></div>';
-  document.body.prepend(banner);
-  document.body.style.paddingTop = banner.offsetHeight + "px";
+  var isAndroid = /Android/i.test(navigator.userAgent);
+  var overlay = document.createElement("div");
+  overlay.style.cssText =
+    "position:fixed;inset:0;z-index:99999;background:#fff3cd;color:#664d03;" +
+    "display:flex;flex-direction:column;align-items:center;justify-content:center;" +
+    "gap:28px;padding:24px 16px;text-align:center;font-family:inherit;";
+  overlay.innerHTML =
+    '<div style="font-size:72px;line-height:1;">🔊</div>' +
+    '<div style="font-size:24px;font-weight:700;line-height:1.4;max-width:420px;">' +
+    "Để nghe giọng đọc,<br>mở bằng Chrome nhé</div>" +
+    '<button id="open-chrome-btn" style="background:#4285F4;color:#fff;border:none;' +
+    "padding:20px 40px;border-radius:16px;font-size:24px;font-weight:700;font-family:inherit;" +
+    'box-shadow:0 6px 16px rgba(66,133,244,.4);cursor:pointer;">Mở Chrome</button>' +
+    // Off Android the Chrome intent can't work, so leave a small way through to the page
+    (isAndroid ? "" :
+      '<button id="close-banner-btn" style="background:transparent;color:#664d03;border:none;' +
+      'font-size:14px;text-decoration:underline;opacity:.7;cursor:pointer;">Ở lại trang này</button>');
+  document.body.appendChild(overlay);
+  var prevOverflow = document.documentElement.style.overflow;
+  document.documentElement.style.overflow = "hidden";
   document.getElementById("open-chrome-btn").addEventListener("click", function () {
     // Always jump to the Units list page (not whatever page the student happened to be on)
     // so students land somewhere they can pick a Unit right away.
@@ -27,9 +33,10 @@
       encodeURIComponent(lessonsUrl) + ";end";
     window.location.href = intentUrl;
   });
-  document.getElementById("close-banner-btn").addEventListener("click", function () {
-    banner.remove();
-    document.body.style.paddingTop = "";
+  var closeBtn = document.getElementById("close-banner-btn");
+  if (closeBtn) closeBtn.addEventListener("click", function () {
+    overlay.remove();
+    document.documentElement.style.overflow = prevOverflow;
   });
 })();
 // English Quest — shared sound effects (plays uploaded mp3 files, falls back to a generated tone if a file fails to load)
