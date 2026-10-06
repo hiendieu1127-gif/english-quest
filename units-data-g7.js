@@ -12,7 +12,7 @@ const EQ_UNITS = [
     id: 1,
     title: "Hobbies",
     status: "in-progress",
-    vocabulary: "vocabulary-g7.html",
+    vocabulary: "vocabulary-g7.html?unit=g7-unit1",
     grammar: "unit1-grammar-g7.html",
     exercises: "unit1-exercises-g7.html",
   },
