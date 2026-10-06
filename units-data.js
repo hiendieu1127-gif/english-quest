@@ -12,7 +12,7 @@ const EQ_UNITS = [
     id: 1,
     title: "All About Me",
     status: "in-progress",
-    vocabulary: "vocabulary.html",
+    vocabulary: "vocabulary.html?unit=unit1",
     grammar: null,
     exercises: "unit1-exercises.html",
     review: "review-g5.html?u=1",
