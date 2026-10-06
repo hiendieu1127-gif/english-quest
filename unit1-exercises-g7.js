@@ -149,6 +149,8 @@ function eqTotalItems() {
 }
 
 function eqRecordAndSave(key, question, studentAnswer, correctAnswer, correct) {
+  // Review of a section that was already finished: practice only, the Dashboard keeps the first attempt.
+  if (window.EQSectionLock && window.EQSectionLock.isReviewing()) return;
   // The FIRST attempt is the main score (L1). Answers in retry rounds ("làm lại các câu sai",
   // Vòng 2, 3…) never change it — they are saved separately as the retry score (L2/L3).
   if (eqAnswers[key]) eqRetries.push({ question, studentAnswer, correctAnswer, correct });

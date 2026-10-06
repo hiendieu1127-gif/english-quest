@@ -238,3 +238,9 @@
 .stage-complete .badge-circle svg{ width:38px; height:38px; }
 .stage-complete h3{ margin-bottom:6px; }
 .stage-complete p{ color:var(--ink-soft); margin-bottom:22px; }
+
+/* "Ôn tập — không tính điểm" note under the stage stepper / section tabs */
+.review-note{
+  margin:-18px 0 22px; padding:10px 14px; border-radius:12px;
+  background:#fff7e6; color:#7a5b00; font-weight:700; font-size:.9rem; text-align:center;
+}

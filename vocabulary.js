@@ -210,6 +210,7 @@ function getMasteredCount(unit) {
 let currentUnit = null;
 let currentStageIdx = 0;
 const stageDone = {}; // stageKey -> true
+let reviewingStage = false; // current stage was already finished when opened → answers are not saved
 let eqStudent = "";
 let eqAnswers = {}; // key -> {question, studentAnswer, correctAnswer, correct}
 let eqRetries = []; // answers given in retry rounds (Vòng 2, 3…) — scored separately from the first attempt
@@ -226,6 +227,8 @@ function eqTotalItems(unit) {
 let saveQueue = Promise.resolve();
 
 function eqRecordAndSave(key, question, studentAnswer, correctAnswer, correct) {
+  // Review of a stage that was already finished: practice only, the Dashboard keeps the first attempt.
+  if (reviewingStage) return;
   // The FIRST attempt is the main score (L1). Answers in retry rounds ("làm lại các câu sai",
   // Vòng 2, 3…) never change it — they are saved separately as the retry score (L2/L3).
   if (eqAnswers[key]) eqRetries.push({ question, studentAnswer, correctAnswer, correct });
@@ -292,6 +295,7 @@ function openUnit(unitId) {
   currentUnit = VOCAB_UNITS_G5.find(u => u.id === unitId);
   if (!currentUnit) return;
   currentStageIdx = 0;
+  reviewingStage = false;
   Object.keys(stageDone).forEach(k => delete stageDone[k]);
   eqAnswers = {};
   eqRetries = [];
@@ -310,8 +314,48 @@ function openUnit(unitId) {
   document.getElementById("path-view").classList.add("active");
   window.scrollTo(0, 0);
   document.getElementById("path-title").textContent = `Unit ${currentUnit.number}: ${currentUnit.title}`;
-  renderStepper();
-  renderStage(0);
+  resumeOrStart(currentUnit);
+}
+
+// ---- Remembered progress (eq-progress.js): resume at the first unfinished stage ----
+function progressId(unit) {
+  return `vocabulary__${unit.id}`;
+}
+
+function persistProgress() {
+  if (!window.EQProgress || !eqStudent || !currentUnit) return;
+  window.EQProgress.save(progressId(currentUnit), eqStudent, {
+    done: Object.keys(stageDone),
+    answers: eqAnswers,
+    retries: eqRetries,
+  });
+}
+
+async function resumeOrStart(unit) {
+  if (window.EQProgress && eqStudent) {
+    const saved = window.EQProgress.load(progressId(unit), eqStudent);
+    renderStepper();
+    document.getElementById("runner-host").innerHTML = `<div class="runner-card"><p style="text-align:center;color:var(--ink-soft)">Đang tải bài em đã làm…</p></div>`;
+    const dash = await window.EQProgress.checkDashboard(saved, { student: eqStudent, unitId: unit.id, section: "vocabulary" });
+    if (currentUnit !== unit) return; // student already left this unit
+    if (saved && dash.savedValid) {
+      saved.done.forEach(k => { stageDone[k] = true; });
+      eqAnswers = saved.answers || {};
+      eqRetries = saved.retries || [];
+    } else if (saved) {
+      window.EQProgress.clear(progressId(unit), eqStudent);
+    }
+    // Already fully answered on the Dashboard (maybe on another device): everything is review.
+    if (dash.finished) STAGES.forEach(s => { stageDone[s.key] = true; });
+  }
+  const next = STAGES.findIndex(s => !stageDone[s.key]);
+  if (next === -1) {
+    // Everything was already finished — show the "done" screen instead of restarting.
+    currentStageIdx = STAGES.length - 1;
+    onStageComplete(STAGES[currentStageIdx].key);
+  } else {
+    renderStage(next);
+  }
 }
 
 function backToUnits() {
@@ -330,6 +374,15 @@ function renderStepper() {
     </button>
   `;
   }).join("");
+  let note = document.getElementById("review-note");
+  if (!note) {
+    note = document.createElement("p");
+    note.id = "review-note";
+    note.className = "review-note";
+    el.insertAdjacentElement("afterend", note);
+  }
+  note.textContent = "🔁 Em đã làm phần này rồi — ôn lại thoải mái, không tính điểm nhé!";
+  note.style.display = reviewingStage ? "" : "none";
   el.querySelectorAll(".stage-pill").forEach(btn => {
     btn.addEventListener("click", () => {
       const idx = Number(btn.dataset.stage);
@@ -352,6 +405,7 @@ function isStageUnlocked(idx) {
 function renderStage(idx) {
   if (!isStageUnlocked(idx)) return;
   currentStageIdx = idx;
+  reviewingStage = !!stageDone[STAGES[idx].key];
   renderStepper();
   const stage = STAGES[idx];
   const host = document.getElementById("runner-host");
@@ -361,6 +415,7 @@ function renderStage(idx) {
     const items = buildSequentialItems(stage.key, currentUnit);
     if (items.length === 0) {
       stageDone[stage.key] = true;
+      persistProgress();
       renderStepper();
       const hasNext = idx < STAGES.length - 1;
       host.innerHTML = `<div class="runner-card"><p style="text-align:center;color:var(--ink-soft)">Dạng bài này đang được cập nhật cho Unit này.</p>${hasNext ? `<div class="runner-actions"><button class="btn btn-primary" id="btn-skip-stage">Dạng bài tiếp theo &rarr;</button></div>` : ""}</div>`;
@@ -374,6 +429,7 @@ function renderStage(idx) {
 
 function onStageComplete(stageKey) {
   stageDone[stageKey] = true;
+  persistProgress();
   renderStepper();
   const host = document.getElementById("runner-host");
   const isLast = currentStageIdx === STAGES.length - 1;

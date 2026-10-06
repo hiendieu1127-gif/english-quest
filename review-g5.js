@@ -300,6 +300,8 @@ function eqTotalItems() {
 }
 
 function eqRecordAndSave(key, question, studentAnswer, correctAnswer, correct) {
+  // Review of a section that was already finished: practice only, the Dashboard keeps the first attempt.
+  if (window.EQSectionLock && window.EQSectionLock.isReviewing()) return;
   if (eqAnswers[key]) eqRetries.push({ question, studentAnswer, correctAnswer, correct });
   else eqAnswers[key] = { question, studentAnswer, correctAnswer, correct };
   if (!window.EQResults || !eqStudent) return;

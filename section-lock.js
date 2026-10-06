@@ -9,32 +9,53 @@
 //  - a practice section (Reading / Vocabulary) — the student taps its
 //    "next" button (existing #…-to-…-btn, or the one added here), or
 //  - the page script calls window.EQSectionLock.markDone(panelId).
-// Progress is kept for this page visit only: after a reload the answers
-// start fresh, so the sections must be done again in order.
+// Finished sections + their answers are remembered on this device
+// (eq-progress.js), so after a flat battery / reload the student resumes
+// at the first unfinished section instead of starting over.
 // ============================================================
 (function () {
   const TAB_SELECTOR = ".ex-tab[data-target], .eq-crumb[data-target]";
   const PRACTICE_PANELS = ["panel-reading", "panel-vocab"];
+  const SECTION = /grammar/.test(location.pathname) ? "grammar" : /review/.test(location.pathname) ? "review" : "exercises";
+
+  // The page script's own score state (top-level `let`/`const` in its classic script).
+  function hasPageState() {
+    return typeof eqAnswers !== "undefined" && typeof eqRetries !== "undefined"
+      && typeof eqStudent !== "undefined" && typeof UNIT_ID !== "undefined" && !!eqStudent;
+  }
+  function progressId() {
+    return `${SECTION}__${UNIT_ID}`;
+  }
 
   const style = document.createElement("style");
   style.textContent = `
-    .ex-tab.locked, .eq-crumb.locked { opacity:.45; cursor:not-allowed; filter:grayscale(.6); }
-    .ex-tab.locked::after, .eq-crumb.locked::after { content:" 🔒"; font-size:.85em; }
-    .ex-tab.section-done::after, .eq-crumb.section-done::after { content:" ✓"; color:#3fae4f; font-weight:900; }
+    /* Same look as the Vocabulary stepper: greyed pill, 🔒 in place of the number, ✓ when done */
+    .ex-tab.locked, .eq-crumb.locked { opacity:.5; cursor:not-allowed; background:#f6f3ec !important; }
+    .ex-tab.locked .tab-num, .eq-crumb.locked .eq-crumb-num { background:transparent !important; font-size:.8rem; }
+    .ex-tab.section-done:not(.active) .tab-num, .eq-crumb.section-done:not(.active) .eq-crumb-num { background:#3fae4f; color:#fff; }
+    /* tabs without a number circle: show the lock / tick after the label */
+    .ex-tab.locked:not(.has-num)::after, .eq-crumb.locked:not(.has-num)::after { content:" 🔒"; font-size:.85em; }
+    .ex-tab.section-done:not(.has-num)::after, .eq-crumb.section-done:not(.has-num)::after { content:" ✓"; color:#3fae4f; font-weight:900; }
     .section-lock-shake { animation: section-lock-shake .35s ease; }
     @keyframes section-lock-shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-5px)} 75%{transform:translateX(5px)} }
     .section-lock-toast {
       position:fixed; left:50%; bottom:24px; transform:translateX(-50%);
       background:#2b2a4c; color:#fff; padding:12px 18px; border-radius:14px;
-      font-weight:700; font-size:.92rem; z-index:9999; max-width:calc(100% - 32px);
+      font-weight:700; font-size:.92rem; z-index:9999; width:max-content; max-width:calc(100% - 32px); box-sizing:border-box;
       text-align:center; box-shadow:0 8px 24px rgba(0,0,0,.18);
     }
     .section-lock-next { text-align:center; margin-top:22px; }
+    .section-lock-loading .ex-panel { opacity:.5; pointer-events:none; }
+    .review-note {
+      margin:0 0 14px; padding:10px 14px; border-radius:12px;
+      background:#fff7e6; color:#7a5b00; font-weight:700; font-size:.9rem; text-align:center;
+    }
   `;
   document.head.appendChild(style);
 
   function init() {
-    const tabs = Array.from(document.querySelectorAll(TAB_SELECTOR));
+    // Tabs the page hid (e.g. a Review section with no questions for this unit) are not part of the order.
+    const tabs = Array.from(document.querySelectorAll(TAB_SELECTOR)).filter(t => t.style.display !== "none");
     const order = [...new Set(tabs.map(t => t.dataset.target))].filter(id => document.getElementById(id));
     if (order.length < 2) return;
     const done = new Set();
@@ -50,6 +71,12 @@
         const locked = !isUnlocked(id);
         t.classList.toggle("locked", locked);
         t.classList.toggle("section-done", done.has(id));
+        const num = t.querySelector(".tab-num, .eq-crumb-num");
+        if (num) {
+          t.classList.add("has-num");
+          if (num.dataset.num === undefined) num.dataset.num = num.textContent;
+          num.textContent = locked ? "🔒" : done.has(id) ? "✓" : num.dataset.num;
+        }
         if (locked) {
           t.setAttribute("aria-disabled", "true");
           t.title = "Hoàn thành phần trước để mở khoá";
@@ -64,6 +91,9 @@
       if (!order.includes(id) || done.has(id)) return;
       done.add(id);
       refresh();
+      if (window.EQProgress && hasPageState()) {
+        window.EQProgress.save(progressId(), eqStudent, { done: [...done], answers: eqAnswers, retries: eqRetries });
+      }
     }
 
     let toastTimer = null;
@@ -119,8 +149,53 @@
       }
     });
 
-    window.EQSectionLock = { markDone, isUnlocked };
+    // True while the student is in a section that is already finished → the page must not save answers.
+    function isReviewing() {
+      const active = document.querySelector(".ex-panel.active");
+      return !!active && done.has(active.id);
+    }
+
+    window.EQSectionLock = { markDone, isUnlocked, isReviewing };
     refresh();
+    resume();
+
+    async function resume() {
+      if (!window.EQProgress || !hasPageState()) return;
+      const saved = window.EQProgress.load(progressId(), eqStudent);
+      // Hold the questions until we know what is already on the Dashboard,
+      // so nothing answered in this moment can overwrite the first attempt.
+      document.body.classList.add("section-lock-loading");
+      const dash = await window.EQProgress.checkDashboard(saved, { student: eqStudent, unitId: UNIT_ID, section: SECTION });
+      document.body.classList.remove("section-lock-loading");
+      if (saved && dash.savedValid) {
+        saved.done.forEach(id => { if (order.includes(id)) done.add(id); });
+        eqAnswers = Object.assign({}, saved.answers || {});
+        eqRetries = (saved.retries || []).slice();
+      } else if (saved) {
+        window.EQProgress.clear(progressId(), eqStudent);
+      }
+      // Already fully answered on the Dashboard (maybe on another device): everything is review.
+      if (dash.finished) order.forEach(id => done.add(id));
+      if (!done.size) return;
+      refresh();
+      // Sections finished before this visit are review only: answers there are not saved.
+      done.forEach(id => {
+        const panel = document.getElementById(id);
+        if (PRACTICE_PANELS.includes(id) || panel.querySelector(":scope > .review-note")) return;
+        const note = document.createElement("p");
+        note.className = "review-note";
+        note.textContent = "🔁 Em đã làm phần này rồi — ôn lại thoải mái, không tính điểm nhé!";
+        panel.prepend(note);
+      });
+      const next = order.find(id => !done.has(id));
+      if (next) {
+        const tab = tabs.find(t => t.dataset.target === next);
+        tab && tab.click();
+        toast("Em làm tiếp từ phần đang dở nhé! 💪");
+      } else {
+        toast("Em đã làm xong bài này rồi 🎉 Ôn lại thoải mái, không tính điểm nhé!");
+      }
+    }
   }
 
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
