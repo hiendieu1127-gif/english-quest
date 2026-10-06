@@ -16,7 +16,7 @@
 (function () {
   const TAB_SELECTOR = ".ex-tab[data-target], .eq-crumb[data-target]";
   const PRACTICE_PANELS = ["panel-reading", "panel-vocab"];
-  const SECTION = /grammar/.test(location.pathname) ? "grammar" : "exercises";
+  const SECTION = /grammar/.test(location.pathname) ? "grammar" : /review/.test(location.pathname) ? "review" : "exercises";
 
   // The page script's own score state (top-level `let`/`const` in its classic script).
   function hasPageState() {
@@ -37,7 +37,7 @@
     .section-lock-toast {
       position:fixed; left:50%; bottom:24px; transform:translateX(-50%);
       background:#2b2a4c; color:#fff; padding:12px 18px; border-radius:14px;
-      font-weight:700; font-size:.92rem; z-index:9999; max-width:calc(100% - 32px);
+      font-weight:700; font-size:.92rem; z-index:9999; width:max-content; max-width:calc(100% - 32px); box-sizing:border-box;
       text-align:center; box-shadow:0 8px 24px rgba(0,0,0,.18);
     }
     .section-lock-next { text-align:center; margin-top:22px; }
@@ -50,7 +50,8 @@
   document.head.appendChild(style);
 
   function init() {
-    const tabs = Array.from(document.querySelectorAll(TAB_SELECTOR));
+    // Tabs the page hid (e.g. a Review section with no questions for this unit) are not part of the order.
+    const tabs = Array.from(document.querySelectorAll(TAB_SELECTOR)).filter(t => t.style.display !== "none");
     const order = [...new Set(tabs.map(t => t.dataset.target))].filter(id => document.getElementById(id));
     if (order.length < 2) return;
     const done = new Set();
