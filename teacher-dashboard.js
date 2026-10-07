@@ -174,7 +174,7 @@ whenResultsReady(async () => {
     updateDeleteBar();
 
     body.querySelectorAll(".td-cell[data-key]").forEach(cell => {
-      cell.addEventListener("click", () => openDetail(cell.dataset.student, cell.dataset.key, students));
+      cell.addEventListener("click", () => openDetail(cell.dataset.student, cell.dataset.key, students, removeRow));
     });
   }
 
@@ -190,15 +190,27 @@ whenResultsReady(async () => {
     const key = `${c.unitId}__${c.section}`;
     const r = s.rows[key];
     if (!r) return `<td class="${cls}"><span class="td-cell todo">·</span></td>`;
+    const sk = Object.keys(students).find(k => students[k] === s);
     if (!isFinished(r)) {
       const n = Array.isArray(r.answers) ? r.answers.length : 0;
-      return `<td class="${cls}"><span class="td-cell progress" title="Em chưa làm hết bài lần 1">đang làm${r.total ? ` ${n}/${r.total}` : ""}</span></td>`;
+      return `<td class="${cls}"><span class="td-cell progress" data-student="${escapeHtml(sk)}" data-key="${escapeHtml(key)}" title="Em chưa làm hết bài lần 1">đang làm${r.total ? ` ${n}/${r.total}` : ""}</span></td>`;
     }
-    const sk = Object.keys(students).find(k => students[k] === s);
     const tip = `${r.correct} đúng · ${(Array.isArray(r.answers) ? r.answers.length : r.total) - r.correct} sai`;
     // Retry rounds (L2, L3…) are shown as a separate small score under the first-attempt (L1) score
     const fix = r.retryTotal ? `<span class="td-fix" title="Các vòng làm lại (L2, L3…): ${r.retryCorrect} đúng / ${r.retryTotal} lượt">Sửa ${r.retryCorrect}/${r.retryTotal}</span>` : "";
     return `<td class="${cls}"><span class="td-cell ${band(r.percent || 0)}" data-student="${escapeHtml(sk)}" data-key="${escapeHtml(key)}" title="${tip}">${r.percent}%</span>${fix}</td>`;
+  }
+
+  // One unit + section removed from the detail window: the student does that part again from scratch.
+  function removeRow(studentKey, key) {
+    const s = students[studentKey];
+    if (!s) return;
+    delete s.rows[key];
+    if (!Object.keys(s.rows).length) {
+      delete students[studentKey];
+      studentList.splice(studentList.indexOf(s), 1);
+    }
+    render();
   }
 
   function updateDeleteBar() {
@@ -259,7 +271,7 @@ function escapeHtml(s) {
   return d.innerHTML.replace(/"/g, "&quot;");
 }
 
-function openDetail(studentKey, key, students) {
+function openDetail(studentKey, key, students, onDeleted) {
   const student = students[studentKey];
   const r = student && student.rows[key];
   if (!r) return;
@@ -288,6 +300,10 @@ function openDetail(studentKey, key, students) {
     <h3>${escapeHtml(student.name)}</h3>
     <div class="td-modal-meta">Khối ${gradeNumFromUnitId(r.unitId)} · ${escapeHtml(r.unitLabel || r.unitId)} · ${sectionLabel}<br>
       Lần đầu (L1): <b>${r.percent}%</b> · <span class="a-right">${r.correct} câu đúng</span>${answers.length ? ` · <span class="a-wrong">${wrong} câu sai</span>` : ""}${answers.length && answers.length < r.total ? ` · <b>${r.total - answers.length} câu chưa làm</b> (em chưa làm hết bài)` : ""} <span style="opacity:.7">(tổng ${r.total} câu)</span></div>
+    <div class="td-modal-del">
+      <button type="button" class="td-del-btn" id="td-del-one">🗑 Xoá bài này để em làm lại</button>
+      <span>Chỉ xoá ${escapeHtml(r.unitLabel || r.unitId)} · ${sectionLabel} của em này. Em vào lại sẽ làm từ đầu, điểm mới được tính lại.</span>
+    </div>
     ${answers.length ? `<label class="td-toggle" style="margin-bottom:8px;"><input type="checkbox" id="td-only-wrong"> Chỉ xem câu sai</label>` : ""}
     <div id="td-qlist">${rows(false)}</div>
     ${retries.length ? `<h4 style="margin:18px 0 4px;">Sửa bài — các vòng làm lại (L2, L3…)</h4>
@@ -295,6 +311,21 @@ function openDetail(studentKey, key, students) {
     ${rows(false, retries)}` : ""}`;
   const ow = document.getElementById("td-only-wrong");
   ow && ow.addEventListener("change", () => { document.getElementById("td-qlist").innerHTML = rows(ow.checked); });
+  const delBtn = document.getElementById("td-del-one");
+  delBtn.addEventListener("click", async () => {
+    if (!window.confirm(`Xoá bài ${r.unitLabel || r.unitId} · ${sectionLabel} của ${student.name}?\n\nEm sẽ phải làm lại phần này từ đầu. Không khôi phục lại được.`)) return;
+    delBtn.disabled = true; delBtn.textContent = "Đang xoá...";
+    try {
+      await window.EQResults.deleteResult(r);
+      backdrop.classList.remove("open");
+      onDeleted && onDeleted(studentKey, key);
+    } catch (e) {
+      window.alert("Không xoá được: " + (e && e.code === "permission-denied"
+        ? "Firestore Rules chưa cho phép xoá. Vào Firebase Console → Firestore Database → Rules và thêm quyền delete cho collection results."
+        : (e && e.message) || e));
+      delBtn.disabled = false; delBtn.textContent = "🗑 Xoá bài này để em làm lại";
+    }
+  });
   backdrop.classList.add("open");
 }
 
