@@ -355,11 +355,13 @@ async function resumeOrStart(unit) {
     document.getElementById("runner-host").innerHTML = `<div class="runner-card"><p style="text-align:center;color:var(--ink-soft)">Đang tải bài em đã làm…</p></div>`;
     const dash = await window.EQProgress.checkDashboard(saved, { student: eqStudent, unitId: unit.id, section: "vocabulary" });
     if (currentUnit !== unit) return; // student already left this unit
-    if (saved && dash.savedValid) {
-      saved.done.forEach(k => { stageDone[k] = true; });
-      eqAnswers = saved.answers || {};
-      eqRetries = saved.retries || [];
-    } else if (saved) {
+    const progress = dash.progress;
+    if (progress) {
+      progress.done.forEach(k => { stageDone[k] = true; });
+      eqAnswers = Object.assign({}, progress.answers || {});
+      eqRetries = (progress.retries || []).slice();
+    }
+    if (saved && !dash.savedValid) {
       window.EQProgress.clear(progressId(unit), eqStudent);
     }
     // Already fully answered on the Dashboard (maybe on another device): everything is review.

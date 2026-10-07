@@ -167,11 +167,13 @@
       document.body.classList.add("section-lock-loading");
       const dash = await window.EQProgress.checkDashboard(saved, { student: eqStudent, unitId: UNIT_ID, section: SECTION });
       document.body.classList.remove("section-lock-loading");
-      if (saved && dash.savedValid) {
-        saved.done.forEach(id => { if (order.includes(id)) done.add(id); });
-        eqAnswers = Object.assign({}, saved.answers || {});
-        eqRetries = (saved.retries || []).slice();
-      } else if (saved) {
+      const progress = dash.progress;
+      if (progress) {
+        progress.done.forEach(id => { if (order.includes(id)) done.add(id); });
+        eqAnswers = Object.assign({}, progress.answers || {});
+        eqRetries = (progress.retries || []).slice();
+      }
+      if (saved && !dash.savedValid) {
         window.EQProgress.clear(progressId(), eqStudent);
       }
       // Already fully answered on the Dashboard (maybe on another device): everything is review.
