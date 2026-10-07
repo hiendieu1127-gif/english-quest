@@ -130,10 +130,10 @@ whenResultsReady(async () => {
       (!q || s.name.toLowerCase().includes(q)));
 
     // summary
-    const done = studentList.flatMap(s => studentGradeRows(s, current)).filter(r => r.status !== "in_progress");
+    const done = studentList.flatMap(s => studentGradeRows(s, current)).filter(r => isFinished(r));
     const avg = done.length ? Math.round(done.reduce((t, r) => t + (r.percent || 0), 0) / done.length) : null;
     const needHelp = studentList.filter(s => {
-      const d = studentGradeRows(s, current).filter(r => r.status !== "in_progress");
+      const d = studentGradeRows(s, current).filter(r => isFinished(r));
       return d.length && d.reduce((t, r) => t + (r.percent || 0), 0) / d.length < 50;
     }).length;
     document.getElementById("td-summary").innerHTML = `
@@ -159,7 +159,7 @@ whenResultsReady(async () => {
       const pick = deleteMode ? `<input type="checkbox" class="td-pick" data-sk="${escapeHtml(sk)}" ${picked.has(sk) ? "checked" : ""}>` : "";
       let row = `<td class="td-name" title="${escapeHtml(s.name)}">${pick}${escapeHtml(s.name)}</td>`;
       cols.forEach(c => { row += cellHtml(s, c); });
-      const d = studentGradeRows(s, current).filter(r => r.status !== "in_progress");
+      const d = studentGradeRows(s, current).filter(r => isFinished(r));
       const a = d.length ? Math.round(d.reduce((t, r) => t + (r.percent || 0), 0) / d.length) : null;
       row += `<td class="ustart td-avg">${a === null ? `<span class="td-cell todo">·</span>` : `<span class="td-cell ${band(a)}" style="cursor:default">${a}%</span>`}</td>`;
       return `<tr>${row}</tr>`;
@@ -178,19 +178,27 @@ whenResultsReady(async () => {
     });
   }
 
+  // The first attempt (L1) counts only when every question has an answer (right or wrong).
+  // Older results were saved as "completed" after the first answer, so check the count too.
+  function isFinished(r) {
+    if (r.status === "in_progress") return false;
+    return !Array.isArray(r.answers) || r.answers.length >= r.total;
+  }
+
   function cellHtml(s, c) {
     const cls = `${c.alt ? "alt" : ""} ${c.first ? "ustart" : ""}`;
     const key = `${c.unitId}__${c.section}`;
     const r = s.rows[key];
     if (!r) return `<td class="${cls}"><span class="td-cell todo">·</span></td>`;
-    if (r.status === "in_progress") return `<td class="${cls}"><span class="td-cell progress">đang làm</span></td>`;
+    if (!isFinished(r)) {
+      const n = Array.isArray(r.answers) ? r.answers.length : 0;
+      return `<td class="${cls}"><span class="td-cell progress" title="Em chưa làm hết bài lần 1">đang làm${r.total ? ` ${n}/${r.total}` : ""}</span></td>`;
+    }
     const sk = Object.keys(students).find(k => students[k] === s);
-    const answered = Array.isArray(r.answers) ? r.answers.length : r.total;
-    const partial = answered < r.total;
-    const tip = `${r.correct} đúng · ${answered - r.correct} sai` + (partial ? ` · ${r.total - answered} chưa làm` : "");
+    const tip = `${r.correct} đúng · ${(Array.isArray(r.answers) ? r.answers.length : r.total) - r.correct} sai`;
     // Retry rounds (L2, L3…) are shown as a separate small score under the first-attempt (L1) score
     const fix = r.retryTotal ? `<span class="td-fix" title="Các vòng làm lại (L2, L3…): ${r.retryCorrect} đúng / ${r.retryTotal} lượt">Sửa ${r.retryCorrect}/${r.retryTotal}</span>` : "";
-    return `<td class="${cls}"><span class="td-cell ${band(r.percent || 0)}${partial ? " partial" : ""}" data-student="${escapeHtml(sk)}" data-key="${escapeHtml(key)}" title="${tip}">${r.percent}%</span>${fix}</td>`;
+    return `<td class="${cls}"><span class="td-cell ${band(r.percent || 0)}" data-student="${escapeHtml(sk)}" data-key="${escapeHtml(key)}" title="${tip}">${r.percent}%</span>${fix}</td>`;
   }
 
   function updateDeleteBar() {

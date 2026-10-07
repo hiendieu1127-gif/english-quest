@@ -24,7 +24,7 @@
 import { firebaseConfig } from "./firebase-config.js";
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import {
-  getFirestore, doc, setDoc, getDoc, getDocs, deleteDoc, collection, serverTimestamp,
+  getFirestore, doc, setDoc, updateDoc, getDoc, getDocs, deleteDoc, collection, serverTimestamp,
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const app = initializeApp(firebaseConfig);
@@ -77,17 +77,28 @@ async function saveResult({ student, unitId, unitLabel, section, correct, total,
   const studentKey = slugify(student);
   const id = resultId(studentKey, unitId, section);
   const percent = total > 0 ? Math.round((correct / total) * 100) : 0;
+  // The first attempt (L1) only counts as done once EVERY question has an answer,
+  // right or wrong. Until then the Dashboard shows "đang làm", not a partial score.
+  const finished = total > 0 && (answers || []).length >= total;
   await setDoc(doc(db, "results", id), {
     student, studentKey, unitId, unitLabel, section,
-    status: "completed",
+    status: finished ? "completed" : "in_progress",
     correct, total, percent,
     answers: answers || [],
     retries: retries || [],
     retryCorrect: (retries || []).filter(a => a.correct).length,
     retryTotal: (retries || []).length,
-    completedAt: serverTimestamp(),
+    ...(finished ? { completedAt: serverTimestamp() } : {}),
   }, { merge: true });
   return { correct, total, percent };
+}
+
+// Remember which parts of the lesson are finished (+ their answers) on the
+// result doc too, so a student can carry on from another device (eq-progress.js).
+// updateDoc, not setDoc: if the teacher removed the result, don't bring it back.
+async function saveProgress({ student, unitId, section, progress }) {
+  const id = resultId(slugify(student), unitId, section);
+  await updateDoc(doc(db, "results", id), { progress: JSON.parse(JSON.stringify(progress)) });
 }
 
 // ---------- read ----------
@@ -117,7 +128,7 @@ async function deleteResult({ student, studentKey, unitId, section }) {
 
 window.EQResults = {
   getStudentName, setStudentName,
-  markInProgress, saveResult, getResult,
+  markInProgress, saveResult, saveProgress, getResult,
   getAllResults, deleteResult,
   slugify,
 };

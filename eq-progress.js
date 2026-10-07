@@ -24,23 +24,44 @@
     } catch (e) { return null; }
   }
 
+  // Saved on this device AND on the Dashboard doc, so the student can carry on
+  // from another device (phone → computer) at the right section.
   function save(id, student, data) {
     if (!student) return;
     try { localStorage.setItem(storageKey(id, student), JSON.stringify(data)); } catch (e) {}
+    const sep = id.indexOf("__");
+    if (sep < 0 || !window.EQResults || !window.EQResults.saveProgress) return;
+    window.EQResults.saveProgress({
+      student, section: id.slice(0, sep), unitId: id.slice(sep + 2), progress: data,
+    }).catch(() => {});
   }
 
   function clear(id, student) {
     try { localStorage.removeItem(storageKey(id, student)); } catch (e) {}
   }
 
+  // Every answer remembered in `progress` is also on the Dashboard (same question,
+  // same answer). Fails for progress left over from an older attempt — e.g. this
+  // device was used before, then the teacher removed the result and the student
+  // started again on another device — so it must not mark sections as done.
+  function matchesDashboard(progress, dashAnswers) {
+    const answers = Object.values((progress && progress.answers) || {});
+    return answers.every(a => a && dashAnswers.some(d =>
+      d && d.question === a.question && d.studentAnswer === a.studentAnswer));
+  }
+
   // Reads this student's Dashboard result once and answers:
   //  - finished:   every question already has a first answer on the Dashboard
   //                (even if it was done on another device) → the whole lesson is review
-  //  - savedValid: false when the teacher removed the result ("Xoá học sinh"),
-  //                so the remembered progress is stale and the student starts over
+  //  - progress:   where to resume — the progress saved on this device or the one
+  //                saved on the Dashboard by another device, whichever has more
+  //                sections done AND agrees with the answers on the Dashboard
+  //                (null → start from the beginning)
+  //  - savedValid: false when this device's progress is stale (teacher removed the
+  //                result, or the Dashboard holds a different attempt) → clear it
   // Offline / Firebase not reachable → keep whatever is on this device.
   async function checkDashboard(saved, { student, unitId, section }) {
-    const unknown = { finished: false, savedValid: true };
+    const unknown = { finished: false, savedValid: true, progress: saved };
     if (!window.EQResults || !window.EQResults.getResult || !student) return unknown;
     let r;
     try {
@@ -51,11 +72,16 @@
     } catch (e) {
       return unknown;
     }
-    const hasAnswers = !!(r && Array.isArray(r.answers));
-    const savedHasAnswers = !!(saved && saved.answers && Object.keys(saved.answers).length);
+    const dashAnswers = r && Array.isArray(r.answers) ? r.answers : [];
+    const cloud = r && r.progress && Array.isArray(r.progress.done) ? r.progress : null;
+    const savedValid = !saved || matchesDashboard(saved, dashAnswers);
+    const candidates = [savedValid ? saved : null, cloud && matchesDashboard(cloud, dashAnswers) ? cloud : null]
+      .filter(Boolean);
+    const progress = candidates.reduce((best, p) => (!best || p.done.length > best.done.length ? p : best), null);
     return {
-      finished: hasAnswers && r.total > 0 && r.answers.length >= r.total,
-      savedValid: !savedHasAnswers || hasAnswers,
+      finished: dashAnswers.length > 0 && r.total > 0 && dashAnswers.length >= r.total,
+      savedValid,
+      progress,
     };
   }
 
