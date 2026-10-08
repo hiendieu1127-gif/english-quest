@@ -176,6 +176,44 @@ var VOCAB_UNITS_G4 = [
       { id: "g4u4-s-juice", en: "I want some juice.", vi: "Mình muốn một ít nước trái cây.", example: "I want some juice.", blank: "want", viFull: "Mình muốn một ít nước trái cây.", viBlanked: "Mình ___ một ít nước trái cây.", chunks: ["I", "want", "some juice."], stages: ["missing-word", "sentence-shuffle"] },
     ],
   },
+  {
+    id: "g4-unit5",
+    number: 5,
+    title: "Things We Can Do",
+    subtitle: "Global Success 4 · New Vocabulary",
+
+    words: [
+      // Activities with photos — Tap Pairs + Picture Matching + Multiple Choice
+      { id: "g4u5-fly-kite", en: "fly a kite", vi: "thả diều", group: "activities", icon: "img/vocab-g4-u5-fly-a-kite.jpg", stages: ["tap-pairs", "picture-matching", "multiple-choice"] },
+      { id: "g4u5-skip", en: "skip", vi: "nhảy dây", group: "activities", icon: "img/vocab-g4-u5-skip.jpg", stages: ["tap-pairs", "picture-matching", "multiple-choice"] },
+      { id: "g4u5-ride-bike", en: "ride a bike", vi: "đạp xe", group: "activities", icon: "img/vocab-g4-u5-ride-a-bike.jpg", stages: ["tap-pairs", "picture-matching", "multiple-choice"] },
+      { id: "g4u5-ride-horse", en: "ride a horse", vi: "cưỡi ngựa", group: "activities", icon: "img/vocab-g4-u5-ride-a-horse.jpg", stages: ["tap-pairs", "picture-matching", "multiple-choice"] },
+      { id: "g4u5-swim", en: "swim", vi: "bơi", group: "activities", icon: "img/vocab-g4-u5-swim.jpg", stages: ["tap-pairs", "picture-matching", "multiple-choice"] },
+      { id: "g4u5-play-football", en: "play football", vi: "chơi bóng đá", group: "activities", icon: "img/vocab-g4-u5-play-football.jpg", stages: ["tap-pairs", "picture-matching", "multiple-choice"] },
+      { id: "g4u5-roller-skate", en: "roller skate", vi: "trượt pa-tanh", group: "activities", icon: "img/vocab-g4-u5-roller-skate.jpg", stages: ["tap-pairs", "picture-matching", "multiple-choice"] },
+      { id: "g4u5-cook", en: "cook", vi: "nấu ăn", group: "activities", icon: "img/vocab-g4-u5-cook.jpg", stages: ["tap-pairs", "picture-matching", "multiple-choice"] },
+
+      // Activities without photos — Tap Pairs + Multiple Choice
+      { id: "g4u5-play-piano", en: "play the piano", vi: "chơi đàn piano", group: "activities", stages: ["tap-pairs", "multiple-choice"] },
+      { id: "g4u5-play-guitar", en: "play the guitar", vi: "chơi đàn ghi-ta", group: "activities", stages: ["tap-pairs", "multiple-choice"] },
+      { id: "g4u5-play-badminton", en: "play badminton", vi: "chơi cầu lông", group: "activities", stages: ["tap-pairs", "multiple-choice"] },
+      { id: "g4u5-draw", en: "draw", vi: "vẽ", group: "activities", stages: ["tap-pairs", "multiple-choice"] },
+      { id: "g4u5-q-you", en: "Can you ride a bike?", vi: "Bạn có thể đạp xe không?", stages: ["tap-pairs"] },
+      { id: "g4u5-q-he", en: "Can he swim?", vi: "Cậu ấy có thể bơi không?", stages: ["tap-pairs"] },
+
+      // Sentences — Missing Word + Sentence Shuffle (every blank is different, and no two blanks fit the same sentence)
+      { id: "g4u5-s-kite", en: "I can fly a kite.", vi: "Mình có thể thả diều.", example: "I can fly a kite.", blank: "kite", viFull: "Mình có thể thả diều.", viBlanked: "Mình có thể thả ___.", chunks: ["I", "can", "fly a kite."], stages: ["missing-word", "sentence-shuffle"] },
+      { id: "g4u5-s-bike", en: "Can you ride a bike?", vi: "Bạn có thể đạp xe không?", example: "Can you ride a bike?", blank: "ride", viFull: "Bạn có thể đạp xe không?", viBlanked: "Bạn có thể ___ xe không?", chunks: ["Can", "you", "ride", "a bike?"], stages: ["missing-word", "sentence-shuffle"] },
+      { id: "g4u5-s-yes", en: "Yes, I can.", vi: "Có, mình có thể.", example: "Yes, I can.", blank: "Yes", viFull: "Có, mình có thể.", viBlanked: "___, mình có thể.", stages: ["missing-word"] },
+      { id: "g4u5-s-no", en: "No, I can't.", vi: "Không, mình không thể.", example: "No, I can't.", blank: "can't", viFull: "Không, mình không thể.", viBlanked: "Không, mình ___.", stages: ["missing-word"] },
+      { id: "g4u5-s-swim", en: "Can he swim?", vi: "Cậu ấy có thể bơi không?", example: "Can he swim?", blank: "he", viFull: "Cậu ấy có thể bơi không?", viBlanked: "___ có thể bơi không?", chunks: ["Can", "he", "swim?"], stages: ["missing-word", "sentence-shuffle"] },
+      { id: "g4u5-s-cook", en: "No, he can't, but he can cook.", vi: "Không, cậu ấy không thể, nhưng cậu ấy có thể nấu ăn.", example: "No, he can't, but he can cook.", blank: "but", viFull: "Không, cậu ấy không thể, nhưng cậu ấy có thể nấu ăn.", viBlanked: "Không, cậu ấy không thể, ___ cậu ấy có thể nấu ăn.", chunks: ["No,", "he can't,", "but", "he can cook."], stages: ["missing-word", "sentence-shuffle"] },
+      { id: "g4u5-s-guitar", en: "I can play the guitar.", vi: "Mình có thể chơi đàn ghi-ta.", example: "I can play the guitar.", blank: "guitar", viFull: "Mình có thể chơi đàn ghi-ta.", viBlanked: "Mình có thể chơi đàn ___.", chunks: ["I", "can", "play", "the guitar."], stages: ["missing-word", "sentence-shuffle"] },
+      { id: "g4u5-s-horse", en: "She can ride a horse.", vi: "Cô ấy có thể cưỡi ngựa.", example: "She can ride a horse.", blank: "horse", viFull: "Cô ấy có thể cưỡi ngựa.", viBlanked: "Cô ấy có thể cưỡi ___.", chunks: ["She", "can", "ride", "a horse."], stages: ["missing-word", "sentence-shuffle"] },
+      { id: "g4u5-s-badminton", en: "Can she play badminton?", vi: "Cô ấy có thể chơi cầu lông không?", example: "Can she play badminton?", blank: "play", viFull: "Cô ấy có thể chơi cầu lông không?", viBlanked: "Cô ấy có thể ___ cầu lông không?", chunks: ["Can", "she", "play", "badminton?"], stages: ["missing-word", "sentence-shuffle"] },
+      { id: "g4u5-s-skate", en: "He can roller skate.", vi: "Cậu ấy có thể trượt pa-tanh.", example: "He can roller skate.", blank: "skate", viFull: "Cậu ấy có thể trượt pa-tanh.", viBlanked: "Cậu ấy có thể ___ pa-tanh.", chunks: ["He", "can", "roller skate."], stages: ["missing-word", "sentence-shuffle"] },
+    ],
+  },
 ];
 
 (function () {
