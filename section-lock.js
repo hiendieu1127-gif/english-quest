@@ -126,7 +126,15 @@
       const panel = document.getElementById(id);
 
       // Scored sections: finished when their "Xong rồi!" card appears.
-      const check = () => { if (panel.querySelector(".stage-complete")) markDone(id); };
+      // A Quiz made of several parts (Listen and circle → Tick or cross → …) shows a "Xong rồi!"
+      // card after EACH part, with a "Phần tiếp theo: …" button. That is NOT the end of the section,
+      // so it must not lock the section — otherwise the answers of the later parts are never saved.
+      const isPartCard = card => Array.from(card.querySelectorAll("button"))
+        .some(b => /^\s*Phần tiếp theo/.test(b.textContent));
+      const check = () => {
+        const card = panel.querySelector(".stage-complete");
+        if (card && !isPartCard(card)) markDone(id);
+      };
       new MutationObserver(check).observe(panel, { childList: true, subtree: true });
       check();
 
@@ -178,6 +186,10 @@
       }
       // Already fully answered on the Dashboard (maybe on another device): everything is review.
       if (dash.finished) order.forEach(id => done.add(id));
+      // Repair for the old multi-part Quiz bug: every section is marked done but the Dashboard
+      // still says "đang làm" (questions missing) → reopen the last section so the student can
+      // finish the parts that were never saved. Answers already on the Dashboard stay as they are.
+      else if (order.every(id => done.has(id))) done.delete(order[order.length - 1]);
       if (!done.size) return;
       refresh();
       // Sections finished before this visit are review only: answers there are not saved.
