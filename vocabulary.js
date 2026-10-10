@@ -158,6 +158,53 @@ var VOCAB_UNITS_G5 = [
       { id: "u3-s-clever", en: "She's clever.", vi: "Cô ấy thông minh.", example: "She's clever.", blank: "clever", viFull: "Cô ấy thông minh. (She's = She is)", viBlanked: "Cô ấy ___.", stages: ["missing-word", "sentence-shuffle"] },
     ],
   },
+
+  {
+    id: "unit4",
+    number: 4,
+    title: "Our Free-time Activities",
+    subtitle: "Global Success 5 · New Vocabulary",
+    hasExercises: false, // Exercises page not built yet
+    words: [
+      // Tap Pairs + Picture Matching — slides 1, 2 & 4 (photos from Hiền; ride a bike / roller skating / table tennis reuse earlier photos)
+      { id: "u4-water-the-flowers", en: "water the flowers", vi: "tưới nước cho hoa", group: "activities", icon: "img/vocab-g5-u4-water-the-flowers.jpg", stages: ["tap-pairs", "picture-matching"] },
+      { id: "u4-surf-the-internet", en: "surf the Internet", vi: "lướt mạng", group: "activities", icon: "img/vocab-g5-u4-surf-the-internet.jpg", stages: ["tap-pairs", "picture-matching"] },
+      { id: "u4-play-the-violin", en: "play the violin", vi: "chơi violin", group: "activities", icon: "img/vocab-g5-u4-play-the-violin.jpg", stages: ["tap-pairs", "picture-matching"] },
+      { id: "u4-listen-to-music", en: "listen to music", vi: "nghe nhạc", group: "activities", icon: "img/vocab-g5-u4-listen-to-music.jpg", stages: ["tap-pairs", "picture-matching"] },
+      { id: "u4-play-table-tennis", en: "play table tennis", vi: "chơi bóng bàn", group: "activities", icon: "img/vocab-table-tennis.jpg", stages: ["tap-pairs", "picture-matching"] },
+      { id: "u4-read-stories", en: "read stories", vi: "đọc truyện", group: "activities", icon: "img/vocab-g5-u4-read-stories.jpg", stages: ["tap-pairs", "picture-matching"] },
+      { id: "u4-ride-a-bike", en: "ride a bike", vi: "đạp xe", group: "activities", icon: "img/vocab-g4-u5-ride-a-bike.jpg", stages: ["tap-pairs", "picture-matching"] },
+      { id: "u4-play-volleyball", en: "play volleyball", vi: "chơi bóng chuyền", group: "activities", icon: "img/vocab-g5-u4-play-volleyball.jpg", stages: ["tap-pairs", "picture-matching"] },
+      { id: "u4-go-shopping", en: "go shopping", vi: "đi mua sắm", group: "activities", icon: "img/vocab-g5-u4-go-shopping.jpg", stages: ["tap-pairs", "picture-matching"] },
+      { id: "u4-go-roller-skating", en: "go roller skating", vi: "đi trượt pa-tanh", group: "activities", icon: "img/vocab-g4-u5-roller-skate.jpg", stages: ["tap-pairs", "picture-matching"] },
+
+      // Tap Pairs + Multiple Choice — no photo for these
+      // (slide 1 says "watching cartoon" — written here as "watch cartoons", Hiền to confirm)
+      { id: "u4-watch-cartoons", en: "watch cartoons", vi: "xem phim hoạt hình", group: "phrases", stages: ["tap-pairs", "multiple-choice"] },
+      { id: "u4-go-for-a-walk", en: "go for a walk", vi: "đi bộ", group: "phrases", stages: ["tap-pairs", "multiple-choice"] },
+      { id: "u4-play-the-piano", en: "play the piano", vi: "chơi đàn piano", group: "phrases", stages: ["tap-pairs", "multiple-choice"] },
+      { id: "u4-help-with-cooking", en: "help (someone) with the cooking", vi: "giúp ai nấu ăn", group: "phrases", stages: ["multiple-choice"] },
+      { id: "u4-entertain", en: "entertain", vi: "giải trí, làm vui", group: "phrases", stages: ["tap-pairs", "multiple-choice"] },
+      { id: "u4-sports-and-games", en: "sports and games", vi: "thể thao và trò chơi", group: "phrases", stages: ["tap-pairs", "multiple-choice"] },
+      { id: "u4-on-saturdays", en: "on Saturdays", vi: "vào các ngày thứ Bảy", group: "days", stages: ["multiple-choice"] },
+      { id: "u4-on-sundays", en: "on Sundays", vi: "vào các ngày Chủ nhật", group: "days", stages: ["multiple-choice"] },
+
+      // Multiple Choice — adverbs of frequency (slide 2). Distractors come from the same group.
+      { id: "u4-always", en: "always", vi: "luôn luôn", group: "frequency", stages: ["multiple-choice"] },
+      { id: "u4-usually", en: "usually", vi: "thường xuyên", group: "frequency", stages: ["multiple-choice"] },
+      { id: "u4-often", en: "often", vi: "thường", group: "frequency", stages: ["multiple-choice"] },
+      { id: "u4-sometimes", en: "sometimes", vi: "thỉnh thoảng", group: "frequency", stages: ["multiple-choice"] },
+      { id: "u4-rarely", en: "rarely", vi: "hiếm khi", group: "frequency", stages: ["multiple-choice"] },
+      { id: "u4-never", en: "never", vi: "không bao giờ", group: "frequency", stages: ["multiple-choice"] },
+
+      // Missing Word + Sentence Shuffle — slides 1 & 2 (sentence 5 written by Claude from slide 4 words)
+      { id: "u4-s-free-time", en: "What do you like doing in your free time?", vi: "Bạn thích làm gì vào thời gian rảnh?", example: "What do you like doing in your free time?", blank: "doing", viFull: "Bạn thích làm gì vào thời gian rảnh?", viBlanked: "Bạn thích ___ gì vào thời gian rảnh?", stages: ["missing-word", "sentence-shuffle"] },
+      { id: "u4-s-violin", en: "I like playing the violin.", vi: "Mình thích chơi violin.", example: "I like playing the violin.", blank: "playing", viFull: "Mình thích chơi violin. (like + V-ing)", viBlanked: "Mình thích ___ violin.", stages: ["missing-word", "sentence-shuffle"] },
+      { id: "u4-s-weekend", en: "What do you do at the weekend?", vi: "Bạn làm gì vào cuối tuần?", example: "What do you do at the weekend?", blank: "weekend", viFull: "Bạn làm gì vào cuối tuần?", viBlanked: "Bạn làm gì vào ___?", stages: ["missing-word", "sentence-shuffle"] },
+      { id: "u4-s-music", en: "I usually listen to music.", vi: "Mình thường xuyên nghe nhạc.", example: "I usually listen to music.", blank: "usually", viFull: "Mình thường xuyên nghe nhạc.", viBlanked: "Mình ___ nghe nhạc.", stages: ["missing-word", "sentence-shuffle"] },
+      { id: "u4-s-shopping", en: "I rarely go shopping on Sundays.", vi: "Mình hiếm khi đi mua sắm vào Chủ nhật.", example: "I rarely go shopping on Sundays.", blank: "rarely", viFull: "Mình hiếm khi đi mua sắm vào Chủ nhật.", viBlanked: "Mình ___ đi mua sắm vào Chủ nhật.", stages: ["missing-word", "sentence-shuffle"] },
+    ],
+  },
 ];
 
 
