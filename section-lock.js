@@ -129,8 +129,8 @@
       // A Quiz made of several parts (Listen and circle → Tick or cross → …) shows a "Xong rồi!"
       // card after EACH part, with a "Phần tiếp theo: …" button. That is NOT the end of the section,
       // so it must not lock the section — otherwise the answers of the later parts are never saved.
-      const isPartCard = card => Array.from(card.querySelectorAll("button"))
-        .some(b => /^\s*Phần tiếp theo/.test(b.textContent));
+      const isPartCard = card => card.hasAttribute("data-part-done")
+        || Array.from(card.querySelectorAll("button")).some(b => /^\s*Phần tiếp theo/.test(b.textContent));
       const check = () => {
         const card = panel.querySelector(".stage-complete");
         if (card && !isPartCard(card)) markDone(id);

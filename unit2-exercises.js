@@ -349,7 +349,7 @@ function fullSentence(item) {
 function showSectionComplete(host, message, hasNext, mascotType, onNext, nextLabel) {
   window.EQMascot && window.EQMascot.show("mascot-box", mascotType || "complete_exercise");
   host.innerHTML = `
-    <div class="stage-complete">
+    <div class="stage-complete"${onNext ? ' data-part-done="1"' : ""}>
       <div class="badge-circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
       <h3>Xong rồi!</h3>
       <p>${message}</p>
