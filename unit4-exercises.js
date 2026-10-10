@@ -9,8 +9,8 @@
 // Sentence Ordering = 4 sentences made by Claude from the passage (approved by Hien).
 // Quiz: Listen and circle (Track 7) → Listen and number (Track 8) → Circle and write →
 //   Match and read aloud → Read and match.
-//   The two listening parts stay hidden until AUDIO_READY is set to true
-//   (Hien uploads g5-u4-circle-1/2.mp3 and g5-u4-number-1..4.mp3 to the repo root).
+//   The two listening parts turn on by themselves once all 6 recordings are on the site
+//   (g5-u4-circle-1/2.wav and g5-u4-number-1..4.wav in the repo root) — see checkAudio().
 //
 // Vietnamese: vocab meanings come from Hien's slides; the passage / sentence
 // translations were written by Claude — please review.
@@ -18,8 +18,9 @@
 
 const SCORE_ORDERING = true;
 
-// Flip to true once the 6 recordings are in the repo (and bump ?v= in unit4-exercises.html).
-const AUDIO_READY = false;
+// Set at start-up by checkAudio(): true only when every recording below is reachable,
+// so the listening parts (and their questions in eqTotalItems) appear together.
+let AUDIO_READY = false;
 
 // ============================================================
 // 1) READING  (practice only)
@@ -139,7 +140,7 @@ const LISTEN_ITEMS = [
     stem: "She ___ plays the piano in her free time.",
     options: [{ key: "a", text: "often" }, { key: "b", text: "sometimes" }, { key: "c", text: "never" }],
     answer: "a",
-    audio: "g5-u4-circle-1.mp3",
+    audio: "g5-u4-circle-1.wav",
     audioNote: "Bấm ▶ để nghe, rồi chọn đáp án.",
     noTranslate: true,
   },
@@ -148,7 +149,7 @@ const LISTEN_ITEMS = [
     stem: "I ___ go roller skating on Sundays.",
     options: [{ key: "a", text: "always" }, { key: "b", text: "never" }, { key: "c", text: "sometimes" }],
     answer: "c",
-    audio: "g5-u4-circle-2.mp3",
+    audio: "g5-u4-circle-2.wav",
     audioNote: "Bấm ▶ để nghe, rồi chọn đáp án.",
     noTranslate: true,
   },
@@ -163,7 +164,7 @@ const NUMBER_ITEMS = [
   { id: 3, answer: "a" }, // roller skating
   { id: 4, answer: "c" }, // swimming
 ].map(x => ({ ...x, stem: `Đoạn ${x.id}: chọn hình đúng.`, options: NUMBER_OPTIONS, pics: NUMBER_PICS, noTranslate: true, noSay: true,
-              audio: `g5-u4-number-${x.id}.mp3`, audioNote: "Bấm ▶ để nghe, rồi chọn hình đúng." }));
+              audio: `g5-u4-number-${x.id}.wav`, audioNote: "Bấm ▶ để nghe, rồi chọn hình đúng." }));
 
 // ---- 5c) Circle and write — 2 choices ----
 const CIRCLE_ITEMS = [
@@ -779,11 +780,22 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   renderReading();
   renderVocab();
-  runFITB();
-  runOrdering();
-  runQuiz();
   setupCrumbNav();
+  // Scored sections start only after the audio check, so the total (25, or 31 with audio)
+  // is settled before the first answer is saved.
+  checkAudio().then((ok) => {
+    AUDIO_READY = ok;
+    runFITB();
+    runOrdering();
+    runQuiz();
+  });
 });
+
+function checkAudio() {
+  const urls = LISTEN_ITEMS.concat(NUMBER_ITEMS).map(x => x.audio);
+  return Promise.all(urls.map(u => fetch(u, { method: "HEAD", cache: "no-store" }).then(r => r.ok).catch(() => false)))
+    .then(res => res.every(Boolean));
+}
 
 function switchPanel(targetId) {
   document.querySelectorAll(".ex-panel").forEach(p => p.classList.remove("active"));
