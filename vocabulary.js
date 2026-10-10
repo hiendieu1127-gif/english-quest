@@ -164,7 +164,6 @@ var VOCAB_UNITS_G5 = [
     number: 4,
     title: "Our Free-time Activities",
     subtitle: "Global Success 5 · New Vocabulary",
-    hasExercises: false, // Exercises page not built yet
     words: [
       // Tap Pairs + Picture Matching — slides 1, 2 & 4 (photos from Hiền; ride a bike / roller skating / table tennis reuse earlier photos)
       { id: "u4-water-the-flowers", en: "water the flowers", vi: "tưới nước cho hoa", group: "activities", icon: "img/vocab-g5-u4-water-the-flowers.jpg", stages: ["tap-pairs", "picture-matching"] },

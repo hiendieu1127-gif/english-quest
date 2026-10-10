@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Review · English Quest</title>
+<title>Unit 4 Exercises · English Quest</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
@@ -100,6 +100,11 @@
     cursor:pointer; margin:6px 8px 10px 0;
   }
   .q-audio { display:block; width:100%; max-width:420px; margin:6px 0 8px; }
+  /* Listen and number: 4 pictures a–d */
+  .q-pic-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; max-width:380px; margin:0 0 12px; }
+  .q-pic-cell { position:relative; }
+  .q-pic-cell img { display:block; width:100%; height:130px; object-fit:cover; border-radius:12px; background:#f1f1f4; }
+  .q-pic-cell span { position:absolute; left:6px; top:6px; width:28px; height:28px; border-radius:999px; background:#232966; color:#fff; border:2px solid #fff; font-weight:800; display:flex; align-items:center; justify-content:center; }
   .q-part-tag { display:inline-block; background:#eef2ff; color:#5b7cfa; font-weight:800; font-size:.8rem; padding:4px 12px; border-radius:999px; margin-bottom:10px; }
   .q-pic { display:block; width:150px; max-width:60%; height:auto; border-radius:14px; border:1px solid #e2e2e2; margin:4px auto 12px; }
   .cw-row { display:flex; align-items:center; gap:8px; flex-wrap:wrap; justify-content:center; margin:6px 0 4px; font-size:1.15rem; font-weight:800; }
@@ -131,16 +136,9 @@
   .stage-complete .badge-circle svg { width:38px; height:38px; }
   .stage-complete h3 { margin-bottom:6px; }
   .stage-complete p { margin-bottom:6px; }
-  /* --- Review page additions --- */
-  .big-listen-btn { width:84px; height:84px; border-radius:50%; border:none; background: var(--page-color); color:#fff; font-size:2.2rem; cursor:pointer; box-shadow:0 6px 16px rgba(0,0,0,.12); }
-  .big-listen-btn:active { transform: scale(.95); }
-  .book-dialogue { background:#fff; border:1px solid #e2e2e2; border-radius:12px; padding:12px 14px; margin:4px 0 6px; line-height:1.7; }
-  .book-line { padding:2px 6px; border-radius:8px; }
-  .book-line.current { background:#fff7e6; font-weight:800; }
-  .book-line .q-blank { color:#5b7cfa; letter-spacing:1px; }
 </style>
 </head>
-<body data-page="lessons" style="--page-color: var(--c-progress);">
+<body data-page="lessons" style="--page-color: var(--c-exercises);">
   <header class="site-header">
     <nav class="container nav-row" aria-label="Main navigation">
       <a class="brand" href="index.html">
@@ -151,7 +149,7 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke-linecap="round"/></svg>
       </button>
       <ul class="nav-links">
-        <li><a class="navlink unit-back-link" href="unit-g5.html?u=1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 5.5C4 4.7 4.7 4 5.5 4H12v16H5.5A1.5 1.5 0 0 1 4 18.5v-13Z" stroke-linejoin="round"/><path d="M20 5.5c0-.8-.7-1.5-1.5-1.5H12v16h6.5a1.5 1.5 0 0 0 1.5-1.5v-13Z" stroke-linejoin="round"/></svg><span id="nav-unit-label">Unit</span></a></li>
+        <li><a class="navlink" href="unit-g5.html?u=4"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 5.5C4 4.7 4.7 4 5.5 4H12v16H5.5A1.5 1.5 0 0 1 4 18.5v-13Z" stroke-linejoin="round"/><path d="M20 5.5c0-.8-.7-1.5-1.5-1.5H12v16h6.5a1.5 1.5 0 0 0 1.5-1.5v-13Z" stroke-linejoin="round"/></svg><span>Unit 4</span></a></li>
       </ul>
     </nav>
   </header>
@@ -160,64 +158,63 @@
   <main>
     <section class="page-hero">
       <div class="container">
-        <span class="eyebrow" style="border-color: var(--page-color);"><a class="unit-back-link" id="unit-eyebrow" href="unit-g5.html?u=1" style="color:inherit;">Unit</a></span>
-        <h1 style="margin-bottom:4px;" id="review-title">Review</h1>
-        <p>Ôn lại từ vựng và mẫu câu của Unit. Mỗi lần vào, câu hỏi sẽ được xáo lại.</p>
+        <span class="eyebrow" style="border-color: var(--page-color);"><a href="unit-g5.html?u=4" style="color:inherit;">Unit 4: Our Free-time Activities</a></span>
+        <h1 style="margin-bottom:4px;">Exercises</h1>
+        <p>Reading, Vocabulary, Fill in the Blank, Sentence Ordering, Quiz.</p>
       </div>
     </section>
 
     <section class="section" style="padding-top:10px;">
       <div class="container">
         <div class="eq-crumb-row" id="eq-crumb-row">
-          <button class="eq-crumb" data-target="panel-listen"><span class="eq-crumb-num">1</span>Listen</button>
-          <button class="eq-crumb" data-target="panel-picture"><span class="eq-crumb-num">2</span>Pictures</button>
-          <button class="eq-crumb" data-target="panel-meaning"><span class="eq-crumb-num">3</span>Meaning</button>
-          <button class="eq-crumb" data-target="panel-missing"><span class="eq-crumb-num">4</span>Missing Word</button>
-          <button class="eq-crumb" data-target="panel-order"><span class="eq-crumb-num">5</span>Sentence Ordering</button>
-          <button class="eq-crumb" data-target="panel-book"><span class="eq-crumb-num">6</span>Read and complete</button>
+          <button class="eq-crumb" data-target="panel-reading"><span class="eq-crumb-num">1</span>Reading</button>
+          <button class="eq-crumb" data-target="panel-vocab"><span class="eq-crumb-num">2</span>Vocabulary</button>
+          <button class="eq-crumb" data-target="panel-fitb"><span class="eq-crumb-num">3</span>Fill in the Blank</button>
+          <button class="eq-crumb" data-target="panel-order"><span class="eq-crumb-num">4</span>Sentence Ordering</button>
+          <button class="eq-crumb" data-target="panel-quiz"><span class="eq-crumb-num">5</span>Quiz</button>
         </div>
 
         <div id="mascot-box" class="mascot-box"></div>
 
-        <div class="ex-panel" id="panel-listen">
+        <div class="ex-panel active" id="panel-reading">
           <div class="runner-card">
-            <p class="eq-instruction">Nghe rồi chọn từ đúng.</p>
-            <div id="listen-wrap"></div>
+            <p class="eq-instruction">Đọc đoạn văn. Những từ tô màu là từ mới của bài.</p>
+            <p class="reading-card reading-passage" id="reading-text" style="line-height:2;"></p>
+            <div>
+              <button type="button" class="btn btn-secondary btn-sm" id="reading-to-vocab-btn" style="margin-top:12px;">Xem từ vựng mới →</button>
+            </div>
           </div>
         </div>
 
-        <div class="ex-panel" id="panel-picture">
+        <div class="ex-panel" id="panel-vocab">
+          <button type="button" class="eq-back-link" data-target="panel-reading">← Quay lại Reading để tìm ý</button>
           <div class="runner-card">
-            <p class="eq-instruction">Nhìn hình rồi chọn từ đúng.</p>
-            <div id="picture-wrap"></div>
+            <p class="eq-instruction">Chạm vào thẻ để nghe và xem nghĩa.</p>
+            <div class="vocab-grid" id="vocab-grid"></div>
+            <div>
+              <button type="button" class="btn btn-secondary btn-sm" id="vocab-to-fitb-btn" style="margin-top:14px;">Làm bài Fill in the Blank →</button>
+            </div>
           </div>
         </div>
 
-        <div class="ex-panel" id="panel-meaning">
+        <div class="ex-panel" id="panel-fitb">
+          <button type="button" class="eq-back-link" data-target="panel-reading">← Quay lại Reading để tìm ý</button>
           <div class="runner-card">
-            <p class="eq-instruction">Đọc nghĩa rồi chọn từ tiếng Anh đúng.</p>
-            <div id="meaning-wrap"></div>
-          </div>
-        </div>
-
-        <div class="ex-panel" id="panel-missing">
-          <div class="runner-card">
-            <p class="eq-instruction">Chọn từ còn thiếu trong câu.</p>
-            <div id="missing-wrap"></div>
+            <p class="eq-instruction">Đọc đoạn văn rồi chọn đáp án đúng.</p>
+            <div id="fitb-wrap"></div>
           </div>
         </div>
 
         <div class="ex-panel" id="panel-order">
           <div class="runner-card">
-            <p class="eq-instruction">Chạm các từ theo đúng thứ tự để tạo thành câu.</p>
+            <p class="eq-instruction">Sentence Ordering — chạm các cụm từ theo đúng thứ tự để tạo thành câu.</p>
             <div id="order-wrap"></div>
           </div>
         </div>
 
-        <div class="ex-panel" id="panel-book">
+        <div class="ex-panel" id="panel-quiz">
           <div class="runner-card">
-            <p class="eq-instruction">Đọc đoạn hội thoại rồi chọn từ đúng cho chỗ trống được tô màu.</p>
-            <div id="book-wrap"></div>
+            <div id="quiz-wrap"></div>
           </div>
         </div>
       </div>
@@ -234,7 +231,7 @@
         <div class="footer-col">
           <h4>Learn</h4>
           <ul>
-            <li><a class="unit-back-link" href="unit-g5.html?u=1">Về Unit</a></li>
+            <li><a href="unit-g5.html?u=4">Unit 4</a></li>
             <li><a href="lessons-g5.html">Lessons</a></li>
           </ul>
         </div>
@@ -256,8 +253,7 @@
 <script src="student-gate.js"></script>
 <script type="module" src="results-service.js?v=4"></script>
 <script src="eq-progress.js?v=3"></script>
-<script src="vocabulary.js?v=20261010b"></script>
-<script src="review-g5.js?v=3"></script>
+<script src="unit4-exercises.js?v=20261010"></script>
 <script src="section-lock.js?v=20261010"></script>
 <script src="mascot.js"></script>
 </body>
