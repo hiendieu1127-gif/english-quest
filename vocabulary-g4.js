@@ -214,6 +214,36 @@ var VOCAB_UNITS_G4 = [
       { id: "g4u5-s-skate", en: "He can roller skate.", vi: "Cậu ấy có thể trượt pa-tanh.", example: "He can roller skate.", blank: "skate", viFull: "Cậu ấy có thể trượt pa-tanh.", viBlanked: "Cậu ấy có thể ___ pa-tanh.", chunks: ["He", "can", "roller skate."], stages: ["missing-word", "sentence-shuffle"] },
     ],
   },
+  {
+    id: "g4-unit6",
+    number: 6,
+    title: "Our School Facilities",
+    subtitle: "Global Success 4 · New Vocabulary",
+
+    words: [
+      // Places & school facilities with photos — Tap Pairs + Picture Matching + Multiple Choice
+      { id: "g4u6-mountains", en: "mountains", vi: "vùng núi", group: "places", icon: "img/vocab-g4-u6-mountains.jpg", stages: ["tap-pairs", "picture-matching", "multiple-choice"] },
+      { id: "g4u6-village", en: "village", vi: "ngôi làng", group: "places", icon: "img/vocab-g4-u6-village.jpg", stages: ["tap-pairs", "picture-matching", "multiple-choice"] },
+      { id: "g4u6-city", en: "city", vi: "thành phố", group: "places", icon: "img/vocab-g4-u6-city.jpg", stages: ["tap-pairs", "picture-matching", "multiple-choice"] },
+      { id: "g4u6-town", en: "town", vi: "thị trấn", group: "places", icon: "img/vocab-g4-u6-town.jpg", stages: ["tap-pairs", "picture-matching", "multiple-choice"] },
+      { id: "g4u6-playground", en: "playground", vi: "sân chơi", group: "facilities", icon: "img/vocab-g4-u6-playground.jpg", stages: ["tap-pairs", "picture-matching", "multiple-choice"] },
+      { id: "g4u6-computer-room", en: "computer room", vi: "phòng máy tính", group: "facilities", icon: "img/vocab-g4-u6-computer-room.jpg", stages: ["tap-pairs", "picture-matching", "multiple-choice"] },
+      { id: "g4u6-garden", en: "garden", vi: "khu vườn", group: "facilities", icon: "img/vocab-g4-u6-garden.jpg", stages: ["tap-pairs", "picture-matching", "multiple-choice"] },
+      { id: "g4u6-building", en: "building", vi: "tòa nhà", group: "facilities", icon: "img/vocab-g4-u6-building.jpg", stages: ["tap-pairs", "picture-matching", "multiple-choice"] },
+      { id: "g4u6-q-where", en: "Where's your school?", vi: "Trường của bạn ở đâu?", stages: ["tap-pairs"] },
+      { id: "g4u6-q-how-many", en: "How many buildings are there at your school?", vi: "Trường bạn có bao nhiêu tòa nhà?", stages: ["tap-pairs"] },
+
+      // Sentences — Missing Word + Sentence Shuffle (every blank is different, and no two blanks fit the same sentence)
+      { id: "g4u6-s-where", en: "Where's your school?", vi: "Trường của bạn ở đâu?", example: "Where's your school?", blank: "Where's", viFull: "Trường của bạn ở đâu?", viBlanked: "Trường của bạn ___?", chunks: ["Where's", "your", "school?"], stages: ["missing-word", "sentence-shuffle"] },
+      { id: "g4u6-s-city", en: "It's in the city.", vi: "Trường mình ở thành phố.", example: "It's in the city.", blank: "city", viFull: "Trường mình ở thành phố.", viBlanked: "Trường mình ở ___.", chunks: ["It's", "in", "the city."], stages: ["missing-word", "sentence-shuffle"] },
+      { id: "g4u6-s-mountains", en: "My school is in the mountains.", vi: "Trường mình ở vùng núi.", example: "My school is in the mountains.", blank: "mountains", viFull: "Trường mình ở vùng núi.", viBlanked: "Trường mình ở vùng ___.", chunks: ["My school", "is", "in", "the mountains."], stages: ["missing-word", "sentence-shuffle"] },
+      { id: "g4u6-s-village", en: "There are two villages near my school.", vi: "Có hai ngôi làng gần trường mình.", example: "There are two villages near my school.", blank: "villages", viFull: "Có hai ngôi làng gần trường mình.", viBlanked: "Có hai ___ gần trường mình.", chunks: ["There are", "two villages", "near", "my school."], stages: ["missing-word", "sentence-shuffle"] },
+      { id: "g4u6-s-how-many", en: "How many buildings are there at your school?", vi: "Trường bạn có bao nhiêu tòa nhà?", example: "How many buildings are there at your school?", blank: "many", viFull: "Trường bạn có bao nhiêu tòa nhà?", viBlanked: "Trường bạn có ___ tòa nhà?", chunks: ["How many", "buildings", "are there", "at your school?"], stages: ["missing-word", "sentence-shuffle"] },
+      { id: "g4u6-s-one", en: "There is one computer room.", vi: "Có một phòng máy tính.", example: "There is one computer room.", blank: "one", viFull: "Có một phòng máy tính.", viBlanked: "Có ___ phòng máy tính.", chunks: ["There is", "one", "computer room."], stages: ["missing-word", "sentence-shuffle"] },
+      { id: "g4u6-s-three", en: "There are three playgrounds.", vi: "Có ba sân chơi.", example: "There are three playgrounds.", blank: "playgrounds", viFull: "Có ba sân chơi.", viBlanked: "Có ba ___.", chunks: ["There are", "three", "playgrounds."], stages: ["missing-word", "sentence-shuffle"] },
+      { id: "g4u6-s-garden", en: "There is a big garden at my school.", vi: "Có một khu vườn lớn ở trường mình.", example: "There is a big garden at my school.", blank: "garden", viFull: "Có một khu vườn lớn ở trường mình.", viBlanked: "Có một khu ___ lớn ở trường mình.", chunks: ["There is", "a big garden", "at my school."], stages: ["missing-word", "sentence-shuffle"] },
+    ],
+  },
 ];
 
 (function () {
