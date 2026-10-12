@@ -14,6 +14,61 @@
 
 // Units are added here one by one (id "g6-unit1", "g6-unit2", ...).
 var VOCAB_UNITS_G6 = [
+  {
+    id: "g6-unit1",
+    number: 1,
+    title: "My New School",
+    subtitle: "Global Success 6 · New Vocabulary",
+    hasExercises: false, // chưa có trang Exercises — nút cuối chỉ quay lại danh sách Unit
+    words: [
+      // Tap Pairs (12 words)
+      { id: "g6u1-new-school", en: "new school", vi: "trường mới", stages: ["tap-pairs"] },
+      { id: "g6u1-classmate", en: "classmate", vi: "bạn cùng lớp", stages: ["tap-pairs"] },
+      { id: "g6u1-uniform", en: "uniform", vi: "đồng phục", stages: ["tap-pairs"] },
+      { id: "g6u1-lesson", en: "lesson", vi: "bài học, tiết học", stages: ["tap-pairs"] },
+      { id: "g6u1-homework", en: "homework", vi: "bài tập về nhà", stages: ["tap-pairs"] },
+      { id: "g6u1-subject", en: "subject", vi: "môn học", stages: ["tap-pairs"] },
+      { id: "g6u1-library", en: "library", vi: "thư viện", stages: ["tap-pairs"] },
+      { id: "g6u1-playground", en: "playground", vi: "sân chơi", stages: ["tap-pairs"] },
+      { id: "g6u1-gym", en: "gym", vi: "phòng thể dục", stages: ["tap-pairs"] },
+      { id: "g6u1-garden", en: "school garden", vi: "vườn trường", stages: ["tap-pairs"] },
+      { id: "g6u1-break-time", en: "break time", vi: "giờ ra chơi", stages: ["tap-pairs"] },
+      { id: "g6u1-first-day", en: "first day", vi: "ngày đầu tiên", stages: ["tap-pairs"] },
+
+      // Picture Matching — school things: shows the Vietnamese word and 3 English words to pick from (textMatch, no image needed)
+      { id: "g6u1-school-bag", en: "school bag", vi: "cặp sách", group: "things", textMatch: true, stages: ["picture-matching"] },
+      { id: "g6u1-pencil-case", en: "pencil case", vi: "hộp bút", group: "things", textMatch: true, stages: ["picture-matching"] },
+      { id: "g6u1-pencil-sharpener", en: "pencil sharpener", vi: "gọt bút chì", group: "things", textMatch: true, stages: ["picture-matching"] },
+      { id: "g6u1-compass", en: "compass", vi: "com-pa", group: "things", textMatch: true, stages: ["picture-matching"] },
+      { id: "g6u1-calculator", en: "calculator", vi: "máy tính cầm tay", group: "things", textMatch: true, stages: ["picture-matching"] },
+      { id: "g6u1-rubber", en: "rubber", vi: "cục tẩy", group: "things", textMatch: true, stages: ["picture-matching"] },
+      { id: "g6u1-ruler", en: "ruler", vi: "thước kẻ", group: "things", textMatch: true, stages: ["picture-matching"] },
+      { id: "g6u1-notebook", en: "notebook", vi: "vở, sổ ghi chép", group: "things", textMatch: true, stages: ["picture-matching"] },
+      // School subjects
+      { id: "g6u1-maths", en: "maths", vi: "môn Toán", group: "subjects", textMatch: true, stages: ["picture-matching"] },
+      { id: "g6u1-science", en: "science", vi: "môn Khoa học", group: "subjects", textMatch: true, stages: ["picture-matching"] },
+      { id: "g6u1-history", en: "history", vi: "môn Lịch sử", group: "subjects", textMatch: true, stages: ["picture-matching"] },
+      { id: "g6u1-physics", en: "physics", vi: "môn Vật lí", group: "subjects", textMatch: true, stages: ["picture-matching"] },
+
+      // Multiple Choice (10 words) — some also used in Missing Word / Sentence Shuffle
+      { id: "g6u1-boarding-school", en: "boarding school", vi: "trường nội trú", stages: ["multiple-choice", "missing-word"], example: "Students live and study at a boarding school.", blank: "boarding school", viFull: "Học sinh sống và học tập ở trường nội trú.", viBlanked: "Học sinh sống và học tập ở ___." },
+      { id: "g6u1-international", en: "international", vi: "quốc tế", stages: ["multiple-choice", "missing-word"], example: "My cousin studies at an international school.", blank: "international", viFull: "Anh họ tôi học ở một trường quốc tế.", viBlanked: "Anh họ tôi học ở một trường ___." },
+      { id: "g6u1-equipment", en: "equipment", vi: "thiết bị", stages: ["multiple-choice", "missing-word"], example: "Our school has modern equipment.", blank: "equipment", viFull: "Trường chúng tôi có thiết bị hiện đại.", viBlanked: "Trường chúng tôi có ___ hiện đại." },
+      { id: "g6u1-excited", en: "excited", vi: "phấn khích, hào hứng", stages: ["multiple-choice", "missing-word"], example: "I am excited about my first day at school.", blank: "excited", viFull: "Tôi rất hào hứng về ngày đầu tiên đi học.", viBlanked: "Tôi rất ___ về ngày đầu tiên đi học." },
+      { id: "g6u1-share", en: "share", vi: "chia sẻ", stages: ["multiple-choice", "missing-word"], example: "Can I share your book?", blank: "share", viFull: "Mình có thể dùng chung sách với bạn không?", viBlanked: "Mình có thể ___ sách với bạn không?" },
+      { id: "g6u1-knock", en: "knock", vi: "gõ (cửa)", stages: ["multiple-choice", "missing-word"], example: "Please knock on the door before you come in.", blank: "knock", viFull: "Hãy gõ cửa trước khi bạn vào.", viBlanked: "Hãy ___ cửa trước khi bạn vào." },
+      { id: "g6u1-smart", en: "smart", vi: "thông minh; gọn gàng", stages: ["multiple-choice", "sentence-shuffle"], example: "You look smart in your new uniform.", viFull: "Trông bạn thật gọn gàng trong bộ đồng phục mới.", chunks: ["You look smart", "in your", "new uniform."] },
+      { id: "g6u1-activity", en: "activity", vi: "hoạt động", stages: ["multiple-choice", "sentence-shuffle"], example: "There are many activities at my school.", viFull: "Có nhiều hoạt động ở trường tôi.", chunks: ["There are", "many activities", "at my school."] },
+      { id: "g6u1-creative", en: "creative", vi: "sáng tạo", stages: ["multiple-choice", "sentence-shuffle"], example: "Our art teacher is very creative.", viFull: "Cô giáo dạy mĩ thuật của chúng tôi rất sáng tạo.", chunks: ["Our art teacher", "is", "very creative."] },
+      { id: "g6u1-remember", en: "remember", vi: "nhớ", stages: ["multiple-choice", "sentence-shuffle"], example: "Remember to do your homework.", viFull: "Hãy nhớ làm bài tập về nhà.", chunks: ["Remember", "to do", "your homework."] },
+
+      // Sentence Shuffle — collocations with do / play / have / study
+      { id: "g6u1-do-judo", en: "do judo", vi: "tập judo", stages: ["sentence-shuffle"], example: "I do judo after school.", viFull: "Tôi tập judo sau giờ học.", chunks: ["I do", "judo", "after school."] },
+      { id: "g6u1-play-football", en: "play football", vi: "chơi bóng đá", stages: ["sentence-shuffle"], example: "We play football at break time.", viFull: "Chúng tôi chơi bóng đá vào giờ ra chơi.", chunks: ["We play", "football", "at break time."] },
+      { id: "g6u1-have-lessons", en: "have lessons", vi: "có tiết học", stages: ["sentence-shuffle"], example: "We have English lessons on Monday.", viFull: "Chúng tôi có tiết tiếng Anh vào thứ Hai.", chunks: ["We have", "English lessons", "on Monday."] },
+      { id: "g6u1-study-vocabulary", en: "study vocabulary", vi: "học từ vựng", stages: ["sentence-shuffle"], example: "She studies new vocabulary every day.", viFull: "Cô ấy học từ vựng mới mỗi ngày.", chunks: ["She studies", "new vocabulary", "every day."] },
+    ],
+  },
 ];
 
 (function () {

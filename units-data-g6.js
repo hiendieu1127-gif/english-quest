@@ -8,7 +8,7 @@
 // "Sắp có nội dung" / coming soon on the Unit page).
 
 const EQ_UNITS = [
-  { id: 1, title: "My New School", status: "not-started", vocabulary: null, grammar: null, exercises: null },
+  { id: 1, title: "My New School", status: "in-progress", vocabulary: "vocabulary-g6.html?unit=g6-unit1", grammar: null, exercises: null },
   { id: 2, title: "My House", status: "not-started", vocabulary: null, grammar: null, exercises: null },
   { id: 3, title: "My Friends", status: "not-started", vocabulary: null, grammar: null, exercises: null },
   { id: 4, title: "My Neighbourhood", status: "not-started", vocabulary: null, grammar: null, exercises: null },
