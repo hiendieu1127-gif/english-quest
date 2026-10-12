@@ -14,6 +14,73 @@
 
 // Units are added here one by one (id "g6-unit1", "g6-unit2", ...).
 var VOCAB_UNITS_G6 = [
+  {
+    id: "g6-unit1",
+    number: 1,
+    title: "My New School",
+    subtitle: "Global Success 6 · New Vocabulary",
+    // 36 scored items: Picture Matching 8 + Multiple Choice 12 + Missing Word 8 + Sentence Shuffle 8.
+    // Tap Pairs (12) is practice only. Words / sentences approved by cô Hiền.
+    words: [
+      // Tap Pairs (12 words, practice only)
+      { id: "g6u1-textbook", en: "textbook", vi: "sách giáo khoa", stages: ["tap-pairs"] },
+      { id: "g6u1-notebook", en: "notebook", vi: "vở, sổ ghi chép", stages: ["tap-pairs"] },
+      { id: "g6u1-uniform", en: "uniform", vi: "đồng phục", stages: ["tap-pairs"] },
+      { id: "g6u1-classroom", en: "classroom", vi: "lớp học", stages: ["tap-pairs"] },
+      { id: "g6u1-library", en: "library", vi: "thư viện", stages: ["tap-pairs"] },
+      { id: "g6u1-playground", en: "playground", vi: "sân chơi", stages: ["tap-pairs"] },
+      { id: "g6u1-gym", en: "gym", vi: "phòng tập thể dục", stages: ["tap-pairs"] },
+      { id: "g6u1-swimming-pool", en: "swimming pool", vi: "bể bơi", stages: ["tap-pairs"] },
+      { id: "g6u1-computer-room", en: "computer room", vi: "phòng máy tính", stages: ["tap-pairs"] },
+      { id: "g6u1-garden", en: "garden", vi: "khu vườn", stages: ["tap-pairs"] },
+      { id: "g6u1-classmate-tp", en: "classmate", vi: "bạn cùng lớp", stages: ["tap-pairs"] },
+      { id: "g6u1-lunch-break", en: "lunch break", vi: "giờ nghỉ trưa", stages: ["tap-pairs"] },
+
+      // Picture Matching (8 words) — ảnh do cô Hiền gửi
+      { id: "g6u1-school-bag", en: "school bag", vi: "cặp sách", icon: "img/vocab-g6-u1-school-bag.jpg", stages: ["picture-matching"] },
+      { id: "g6u1-pencil-case", en: "pencil case", vi: "hộp bút", icon: "img/vocab-g6-u1-pencil-case.jpg", stages: ["picture-matching"] },
+      { id: "g6u1-pencil-sharpener", en: "pencil sharpener", vi: "gọt bút chì", icon: "img/vocab-g6-u1-pencil-sharpener.jpg", stages: ["picture-matching"] },
+      { id: "g6u1-rubber", en: "rubber", vi: "cục tẩy", icon: "img/vocab-g6-u1-rubber.jpg", stages: ["picture-matching"] },
+      { id: "g6u1-ruler", en: "ruler", vi: "thước kẻ", icon: "img/vocab-g6-u1-ruler.jpg", stages: ["picture-matching"] },
+      { id: "g6u1-compass", en: "compass", vi: "com-pa", icon: "img/vocab-g6-u1-compass.jpg", stages: ["picture-matching"] },
+      { id: "g6u1-calculator", en: "calculator", vi: "máy tính cầm tay", icon: "img/vocab-g6-u1-calculator.jpg", stages: ["picture-matching"] },
+      { id: "g6u1-bicycle", en: "bicycle", vi: "xe đạp", icon: "img/vocab-g6-u1-bicycle.jpg", stages: ["picture-matching"] },
+
+      // Multiple Choice (12 words) — choose the Vietnamese meaning
+      { id: "g6u1-maths", en: "maths", vi: "môn Toán", group: "subjects", stages: ["multiple-choice"] },
+      { id: "g6u1-english", en: "English", vi: "môn Tiếng Anh", group: "subjects", stages: ["multiple-choice"] },
+      { id: "g6u1-science", en: "science", vi: "môn Khoa học", group: "subjects", stages: ["multiple-choice"] },
+      { id: "g6u1-history", en: "history", vi: "môn Lịch sử", group: "subjects", stages: ["multiple-choice"] },
+      { id: "g6u1-geography", en: "geography", vi: "môn Địa lí", group: "subjects", stages: ["multiple-choice"] },
+      { id: "g6u1-music", en: "music", vi: "môn Âm nhạc", group: "subjects", stages: ["multiple-choice"] },
+      { id: "g6u1-art", en: "art", vi: "môn Mĩ thuật", group: "subjects", stages: ["multiple-choice"] },
+      { id: "g6u1-pe", en: "PE", vi: "môn Thể dục", group: "subjects", stages: ["multiple-choice"] },
+      { id: "g6u1-it", en: "IT", vi: "môn Tin học", group: "subjects", stages: ["multiple-choice"] },
+      { id: "g6u1-boarding-school", en: "boarding school", vi: "trường nội trú", group: "school", stages: ["multiple-choice"] },
+      { id: "g6u1-international-school", en: "international school", vi: "trường quốc tế", group: "school", stages: ["multiple-choice"] },
+      { id: "g6u1-classmate", en: "classmate", vi: "bạn cùng lớp", group: "school", stages: ["multiple-choice"] },
+
+      // Missing Word (8 sentences)
+      { id: "g6u1-excited", en: "excited", vi: "hào hứng", example: "I'm very excited about my first day at my new school.", blank: "excited", stages: ["missing-word"], viFull: "Tớ rất hào hứng về ngày đầu tiên ở trường mới.", viBlanked: "Tớ rất ___ về ngày đầu tiên ở trường mới." },
+      { id: "g6u1-smart", en: "smart", vi: "bảnh, gọn gàng", example: "You look smart in your new uniform.", blank: "smart", stages: ["missing-word"], viFull: "Trông bạn thật bảnh trong bộ đồng phục mới.", viBlanked: "Trông bạn thật ___ trong bộ đồng phục mới." },
+      { id: "g6u1-share", en: "share", vi: "chia sẻ, dùng chung", example: "Can you share your book with me?", blank: "share", stages: ["missing-word"], viFull: "Bạn có thể dùng chung sách với tớ không?", viBlanked: "Bạn có thể ___ sách với tớ không?" },
+      { id: "g6u1-knock", en: "knock", vi: "gõ (cửa)", example: "Please knock at the door before you come in.", blank: "knock", stages: ["missing-word"], viFull: "Hãy gõ cửa trước khi vào nhé.", viBlanked: "Hãy ___ cửa trước khi vào nhé." },
+      { id: "g6u1-creative", en: "creative", vi: "sáng tạo", example: "Our art teacher is very creative.", blank: "creative", stages: ["missing-word"], viFull: "Cô giáo dạy Mĩ thuật của chúng tớ rất sáng tạo.", viBlanked: "Cô giáo dạy Mĩ thuật của chúng tớ rất ___." },
+      { id: "g6u1-remember", en: "remember", vi: "nhớ", example: "Remember to bring your calculator tomorrow.", blank: "Remember", stages: ["missing-word"], viFull: "Nhớ mang máy tính cầm tay vào ngày mai nhé.", viBlanked: "___ mang máy tính cầm tay vào ngày mai nhé." },
+      { id: "g6u1-do-judo", en: "do judo", vi: "tập judo", example: "We do judo after school.", blank: "do", stages: ["missing-word"], viFull: "Chúng tớ tập judo sau giờ học.", viBlanked: "Chúng tớ ___ judo sau giờ học." },
+      { id: "g6u1-play-football", en: "play football", vi: "chơi bóng đá", example: "They play football at break time.", blank: "play", stages: ["missing-word"], viFull: "Họ chơi bóng đá vào giờ ra chơi.", viBlanked: "Họ ___ bóng đá vào giờ ra chơi." },
+
+      // Sentence Shuffle (8 sentences)
+      { id: "g6u1-ss-english-lessons", en: "have English lessons", vi: "có tiết Tiếng Anh", example: "We have English lessons on Monday.", viFull: "Chúng tớ có tiết Tiếng Anh vào thứ Hai.", chunks: ["We have", "English lessons", "on Monday."], stages: ["sentence-shuffle"] },
+      { id: "g6u1-ss-study-vocabulary", en: "study vocabulary", vi: "học từ vựng", example: "She studies new vocabulary every day.", viFull: "Cô ấy học từ vựng mới mỗi ngày.", chunks: ["She studies", "new vocabulary", "every day."], stages: ["sentence-shuffle"] },
+      { id: "g6u1-ss-do-homework", en: "do my homework", vi: "làm bài tập về nhà", example: "I always do my homework after dinner.", viFull: "Tớ luôn làm bài tập về nhà sau bữa tối.", chunks: ["I always", "do my homework", "after dinner."], stages: ["sentence-shuffle"] },
+      { id: "g6u1-ss-doesnt-play", en: "doesn't play football", vi: "không chơi bóng đá", example: "My brother doesn't play football at school.", viFull: "Anh trai tớ không chơi bóng đá ở trường.", chunks: ["My brother", "doesn't play", "football at school."], stages: ["sentence-shuffle"] },
+      { id: "g6u1-ss-new-calculator", en: "a new calculator", vi: "một chiếc máy tính cầm tay mới", example: "Do you have a new calculator?", viFull: "Bạn có máy tính cầm tay mới không?", chunks: ["Do you have", "a new calculator?"], stages: ["sentence-shuffle"] },
+      { id: "g6u1-ss-never-late", en: "never late", vi: "không bao giờ muộn", example: "She is never late for school.", viFull: "Cô ấy không bao giờ đi học muộn.", chunks: ["She is never", "late", "for school."], stages: ["sentence-shuffle"] },
+      { id: "g6u1-ss-school-like", en: "What's your school like?", vi: "Trường bạn thế nào?", example: "What's your school like?", viFull: "Trường của bạn như thế nào?", chunks: ["What's", "your school", "like?"], stages: ["sentence-shuffle"] },
+      { id: "g6u1-ss-lunch-at-school", en: "have lunch at school", vi: "ăn trưa ở trường", example: "My classmates usually have lunch at school.", viFull: "Các bạn cùng lớp của tớ thường ăn trưa ở trường.", chunks: ["My classmates", "usually have lunch", "at school."], stages: ["sentence-shuffle"] },
+    ],
+  },
 ];
 
 (function () {
@@ -299,7 +366,7 @@ function onStageComplete(stageKey) {
         <p>${isLast ? "Em đã hoàn thành hết các bài trong Unit này." : "Sẵn sàng cho dạng bài tiếp theo chưa?"}</p>
         <div class="runner-actions" ${isLast ? 'style="flex-direction:column;align-items:stretch;"' : ""}>
           ${isLast
-            ? `${currentUnit.hasExercises === false ? "" : `<button class="btn btn-primary" id="btn-go-exercises" style="width:100%;white-space:normal;">Tiếp tục sang phần Exercise &rarr;</button>`}<button class="btn ${currentUnit.hasExercises === false ? "btn-primary" : "btn-secondary"}" id="btn-back-units" style="width:100%;white-space:normal;">Quay lại danh sách Unit</button>`
+            ? `${currentUnit.hasGrammar === false ? "" : `<button class="btn btn-primary" id="btn-go-grammar" style="width:100%;white-space:normal;">Tiếp tục sang phần Grammar &rarr;</button>`}<button class="btn ${currentUnit.hasGrammar === false ? "btn-primary" : "btn-secondary"}" id="btn-back-units" style="width:100%;white-space:normal;">Quay lại danh sách Unit</button>`
             : `<button class="btn btn-primary" id="btn-next-stage">Dạng bài tiếp theo &rarr;</button>`}
         </div>
       </div>
@@ -308,9 +375,9 @@ function onStageComplete(stageKey) {
   if (nextBtn) nextBtn.addEventListener("click", () => renderStage(currentStageIdx + 1));
   const backBtn = document.getElementById("btn-back-units");
   if (backBtn) backBtn.addEventListener("click", backToUnits);
-  const goExercisesBtn = document.getElementById("btn-go-exercises");
-  if (goExercisesBtn) goExercisesBtn.addEventListener("click", () => {
-    window.location.href = `unit${currentUnit.number}-exercises-g6.html`;
+  const goGrammarBtn = document.getElementById("btn-go-grammar");
+  if (goGrammarBtn) goGrammarBtn.addEventListener("click", () => {
+    window.location.href = `unit${currentUnit.number}-grammar-g6.html`;
   });
 }
 

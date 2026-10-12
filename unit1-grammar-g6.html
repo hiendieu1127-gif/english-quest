@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unit 1 Grammar · English Quest</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="unit1-exercises.css">
+<style>
+  /* Small additions only for this page — reuses the shared classes everywhere else */
+
+  /* --- Numbered tab nav (bigger font, numbered circle, matches the old Grade 5 style) --- */
+  .eq-crumb-row { display:flex; flex-wrap:wrap; gap:10px; margin-bottom:16px; }
+  .eq-crumb {
+    display:flex; align-items:center; gap:9px;
+    background:#fff; border:1px solid #ddd; border-radius:999px;
+    padding:8px 18px 8px 8px; font-size:1rem; font-weight:700;
+    cursor:pointer; opacity:.62;
+  }
+  .eq-crumb-num {
+    width:28px; height:28px; border-radius:50%; flex-shrink:0;
+    background:#ececec; color:#888; font-size:.9rem; font-weight:800;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .eq-crumb.active { opacity:1; border-color: var(--page-color); color: var(--page-color); }
+  .eq-crumb.active .eq-crumb-num { background: var(--page-color); color:#fff; }
+  .eq-back-link { display:inline-block; margin-bottom:14px; font-size:.9rem; text-decoration:underline; cursor:pointer; color: var(--page-color); background:none; border:none; padding:0; }
+  .reading-passage mark { background: #cfe8ff; padding:0 2px; border-radius:3px; }
+
+  /* --- Vocabulary: 3-column flip-card grid, always with audio --- */
+  .vocab-grid { display:grid; grid-template-columns: repeat(3, 1fr); gap:12px; }
+  @media (max-width: 640px) { .vocab-grid { grid-template-columns: repeat(2, 1fr); } }
+  .vocab-card {
+    background:#fff; border:1px solid #e2e2e2; border-radius:14px;
+    padding:16px 10px; text-align:center; cursor:pointer;
+    min-height:96px; display:flex; align-items:center; justify-content:center;
+  }
+  .vocab-card.flipped { background:#fff7e6; border-color:#f5b942; }
+  .vocab-card .vocab-front { font-weight:800; line-height:1.35; }
+  .vocab-card .vocab-hint { display:block; font-size:.7rem; color:#999; font-weight:400; margin-top:4px; }
+  .vocab-card .vocab-back { display:none; }
+  .vocab-card.flipped .vocab-front { display:none; }
+  .vocab-card.flipped .vocab-back { display:block; font-weight:700; color:#7a5b00; }
+
+  /* --- Match A with B → one-at-a-time multiple choice, mobile-friendly --- */
+  .mcq-def { font-size:1.08rem; font-weight:800; margin-bottom:2px; text-align:center; }
+  .mcq-def-vi { color:#666; font-size:.9rem; margin-bottom:16px; text-align:center; }
+  .eq-instruction { font-size:1.02rem; font-weight:800; color:#222; margin:0 0 12px; }
+  .mcq-options { display:grid; grid-template-columns: 1fr 1fr; gap:10px; }
+  @media (max-width: 480px) { .mcq-options { grid-template-columns: 1fr; } }
+  .mcq-option {
+    display:flex; align-items:center; gap:9px; text-align:left;
+    background:#fff; border:2px solid #e2e2e2; border-radius:12px;
+    padding:12px 14px; font-weight:700; cursor:pointer;
+  }
+  .mcq-option .mcq-letter {
+    width:26px; height:26px; border-radius:50%; background:#eee; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center; font-size:.82rem; font-weight:800;
+  }
+  .mcq-option.correct { border-color:#3fae4f; background:#eafbea; }
+  .mcq-option.wrong { border-color:#e05c5c; background:#fdeaea; }
+  .mcq-option[disabled] { cursor:default; }
+
+  /* --- Shared "Dịch" (translate-on-demand) button --- */
+  .eq-translate-btn {
+    display:inline-flex; align-items:center; gap:6px;
+    background:#eef2ff; border:1px solid #c7d2ff; color:#5b7cfa;
+    border-radius:999px; padding:6px 14px; font-size:.85rem; font-weight:800;
+    cursor:pointer; margin:6px 0 10px;
+  }
+
+  /* --- True / False --- */
+  .tf-item { background:#fff; border:1px solid #e2e2e2; border-radius:12px; padding:14px; margin-bottom:12px; }
+  .tf-vi { color:#666; font-size:.88rem; margin:0 0 10px; }
+  .tf-btn-row { display:flex; gap:8px; }
+  .tf-btn { border:2px solid #e2e2e2; background:#fff; border-radius:10px; padding:8px 16px; font-weight:800; cursor:pointer; }
+  .tf-btn.selected-correct { border-color:#3fae4f; background:#eafbea; }
+  .tf-btn.selected-wrong { border-color:#e05c5c; background:#fdeaea; }
+
+  /* --- Make sentences --- */
+  .sentence-answer-strip { min-height:52px; border:2px dashed #ccc; border-radius:12px; padding:10px; display:flex; flex-wrap:wrap; gap:8px; margin:12px 0; }
+  .sentence-chunks { display:flex; flex-wrap:wrap; gap:8px; }
+  .sentence-chunk { background:#fff; border:2px solid #e2e2e2; border-radius:10px; padding:8px 12px; cursor:pointer; text-align:center; }
+  .sentence-chunk .chunk-vi { display:none; font-size:.75rem; color:#888; font-weight:400; }
+  .sentence-chunks.show-vi .sentence-chunk .chunk-vi { display:block; }
+  .sentence-chunk.used { opacity:.35; pointer-events:none; }
+  .sentence-chunk.placed { background:#eef2ff; border-color:#5b7cfa; }
+
+  /* --- Put the verbs: sentence with inline typing boxes --- */
+  .verb-sentence { font-size:1.05rem; font-weight:700; line-height:2.3; color:#222; }
+  .verb-sentence .verb-num { color: var(--page-color); font-weight:900; }
+  .verb-sentence .verb-blank { width:130px; display:inline-block; margin:0 2px; }
+
+  /* --- Grammar theory card --- */
+  .grammar-theory { margin-bottom:18px; }
+  .grammar-theory summary { cursor:pointer; font-weight:800; font-size:1.05rem; color: var(--page-color); }
+  .grammar-theory h3 { margin:18px 0 6px; font-size:1.05rem; }
+  .grammar-theory p, .grammar-theory li { line-height:1.6; }
+  .grammar-theory ul { margin:6px 0; padding-left:20px; }
+  .theory-table-wrap { overflow-x:auto; }
+  .theory-table { border-collapse:collapse; width:100%; min-width:420px; font-size:.95rem; }
+  .theory-table th, .theory-table td { border:1px solid #e2e2e2; padding:8px 10px; text-align:left; vertical-align:top; }
+  .theory-table th { background:#f6f3ec; }
+  .theory-warn { background:#fdeaea; border-radius:10px; padding:8px 12px; }
+  .theory-scale { font-weight:800; background:#eef2ff; border-radius:10px; padding:8px 12px; }
+</style>
+</head>
+<body data-page="lessons" style="--page-color: var(--c-grammar);">
+  <header class="site-header">
+    <nav class="container nav-row" aria-label="Main navigation">
+      <a class="brand" href="index.html">
+        <span class="brand-mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 5.5C4 4.7 4.7 4 5.5 4H12v16H5.5A1.5 1.5 0 0 1 4 18.5v-13Z" stroke-linejoin="round"/><path d="M20 5.5c0-.8-.7-1.5-1.5-1.5H12v16h6.5a1.5 1.5 0 0 0 1.5-1.5v-13Z" stroke-linejoin="round"/></svg></span>
+        English Quest
+      </a>
+      <button class="nav-toggle" aria-label="Open menu" aria-expanded="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke-linecap="round"/></svg>
+      </button>
+      <ul class="nav-links">
+        <li><a class="navlink" href="unit-g6.html?u=1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 5.5C4 4.7 4.7 4 5.5 4H12v16H5.5A1.5 1.5 0 0 1 4 18.5v-13Z" stroke-linejoin="round"/><path d="M20 5.5c0-.8-.7-1.5-1.5-1.5H12v16h6.5a1.5 1.5 0 0 0 1.5-1.5v-13Z" stroke-linejoin="round"/></svg><span>Unit 1</span></a></li>
+      </ul>
+    </nav>
+  </header>
+  <div class="nav-scrim"></div>
+
+  <main>
+    <section class="page-hero">
+      <div class="container">
+        <span class="eyebrow" style="border-color: var(--page-color);"><a href="unit-g6.html?u=1" style="color:inherit;">Unit 1: My New School</a></span>
+        <h1 style="margin-bottom:4px;">Grammar</h1>
+        <p>Present simple &amp; adverbs of frequency. Đọc lý thuyết, làm Put the verbs rồi chuyển sang Correct order nhé.</p>
+      </div>
+    </section>
+
+    <section class="section" style="padding-top:10px;">
+      <div class="container">
+        <details class="runner-card grammar-theory" open>
+          <summary>📘 Lý thuyết — bấm để ẩn / hiện</summary>
+
+          <h3>1. Thì hiện tại đơn (Present simple)</h3>
+          <p><b>Dùng khi:</b> nói về thói quen, việc lặp đi lặp lại, sự thật.</p>
+          <div class="theory-table-wrap">
+            <table class="theory-table">
+              <tr><th></th><th>I / You / We / They</th><th>He / She / It</th></tr>
+              <tr><td>(+)</td><td>I <b>study</b> English.</td><td>She <b>studies</b> English.</td></tr>
+              <tr><td>(–)</td><td>I <b>don't</b> study English.</td><td>She <b>doesn't</b> study English.</td></tr>
+              <tr><td>(?)</td><td><b>Do</b> you study English?<br>– Yes, I do. / No, I don't.</td><td><b>Does</b> she study English?<br>– Yes, she does. / No, she doesn't.</td></tr>
+            </table>
+          </div>
+
+          <h3>2. Quy tắc thêm -s / -es (He / She / It)</h3>
+          <ul>
+            <li>Đa số động từ thêm <b>-s</b>: play → plays, ride → rides</li>
+            <li>Tận cùng <b>-o, -s, -sh, -ch, -x, -z</b> → thêm <b>-es</b>: do → does, go → goes, watch → watches, wash → washes</li>
+            <li>Phụ âm + <b>y</b> → bỏ y, thêm <b>-ies</b>: study → studies</li>
+            <li>Đặc biệt: <b>have → has</b></li>
+          </ul>
+          <p class="theory-warn"><b>Lỗi hay gặp:</b> <s>She doesn't studies</s> → She doesn't <b>study</b> (sau don't / doesn't, động từ giữ nguyên mẫu).</p>
+
+          <h3>3. Trạng từ chỉ tần suất (Adverbs of frequency)</h3>
+          <p class="theory-scale">always (100%) → usually → often → sometimes → rarely → never (0%)</p>
+          <ul>
+            <li><b>Đứng trước động từ thường:</b> I <b>always</b> do my homework.</li>
+            <li><b>Đứng sau động từ "to be":</b> She <b>is never</b> late for school.</li>
+          </ul>
+        </details>
+
+        <div class="ex-tabs">
+          <button class="ex-tab active" data-target="panel-verbs">Put the verbs</button>
+          <button class="ex-tab" data-target="panel-order">Correct order</button>
+        </div>
+
+        <div id="mascot-box" class="mascot-box"></div>
+
+        <div class="ex-panel active" id="panel-verbs">
+          <div class="runner-card">
+            <div class="quiz-q" style="margin-bottom:8px;">Put the verbs in brackets in the correct form — chia động từ trong ngoặc.</div>
+            <div id="verb-runner"></div>
+          </div>
+        </div>
+
+        <div class="ex-panel" id="panel-order">
+          <div class="runner-card">
+            <div class="quiz-q" style="margin-bottom:8px;">Correct order — sắp xếp các từ / cụm từ thành câu hoàn chỉnh.</div>
+            <div id="order-runner"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <div class="footer-brand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 5.5C4 4.7 4.7 4 5.5 4H12v16H5.5A1.5 1.5 0 0 1 4 18.5v-13Z" stroke-linejoin="round"/><path d="M20 5.5c0-.8-.7-1.5-1.5-1.5H12v16h6.5a1.5 1.5 0 0 0 1.5-1.5v-13Z" stroke-linejoin="round"/></svg> English Quest</div>
+          <p style="max-width:32ch; font-size:.9rem; opacity:.85;">A friendly place for Grade 6 students to read, play, and practise English every week.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Learn</h4>
+          <ul>
+            <li><a href="unit-g6.html?u=1">Unit 1</a></li>
+            <li><a href="lessons-g6.html">Lessons</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>You</h4>
+          <ul>
+            <li><a href="lessons.html">Đổi khối</a></li>
+            <li><a href="index.html">Home</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; 2026 English Quest &mdash; a class website by teacher Hien.</span>
+      </div>
+    </div>
+  </footer>
+
+<script src="script.js?v=2"></script>
+<script src="student-gate.js"></script>
+<script type="module" src="results-service.js?v=4"></script>
+<script src="eq-progress.js?v=3"></script>
+<script src="unit1-grammar-g6.js?v=1"></script>
+<script src="section-lock.js?v=20261010"></script>
+<script src="mascot.js"></script>
+</body>
+</html>
