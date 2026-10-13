@@ -244,6 +244,34 @@ var VOCAB_UNITS_G4 = [
       { id: "g4u6-s-garden", en: "There is a big garden at my school.", vi: "Có một khu vườn lớn ở trường mình.", example: "There is a big garden at my school.", blank: "garden", viFull: "Có một khu vườn lớn ở trường mình.", viBlanked: "Có một khu ___ lớn ở trường mình.", chunks: ["There is", "a big garden", "at my school."], stages: ["missing-word", "sentence-shuffle"] },
     ],
   },
+  {
+    id: "g4-unit7",
+    number: 7,
+    title: "Our Timetables",
+    subtitle: "Global Success 4 · New Vocabulary",
+
+    words: [
+      // School subjects with photos — Tap Pairs + Picture Matching + Multiple Choice
+      { id: "g4u7-vietnamese", en: "Vietnamese", vi: "môn Tiếng Việt", group: "subjects", icon: "img/vocab-g4-u7-vietnamese.jpg", stages: ["tap-pairs", "picture-matching", "multiple-choice"] },
+      { id: "g4u7-english", en: "English", vi: "môn Tiếng Anh", group: "subjects", icon: "img/vocab-g4-u7-english.jpg", stages: ["tap-pairs", "picture-matching", "multiple-choice"] },
+      { id: "g4u7-maths", en: "maths", vi: "môn Toán", group: "subjects", icon: "img/vocab-g4-u7-maths.jpg", stages: ["tap-pairs", "picture-matching", "multiple-choice"] },
+      { id: "g4u7-science", en: "science", vi: "môn Khoa học", group: "subjects", icon: "img/vocab-g4-u7-science.jpg", stages: ["tap-pairs", "picture-matching", "multiple-choice"] },
+      { id: "g4u7-art", en: "art", vi: "môn Mĩ thuật", group: "subjects", icon: "img/vocab-g4-u7-art.jpg", stages: ["tap-pairs", "picture-matching", "multiple-choice"] },
+      { id: "g4u7-music", en: "music", vi: "môn Âm nhạc", group: "subjects", icon: "img/vocab-g4-u7-music.jpg", stages: ["tap-pairs", "picture-matching", "multiple-choice"] },
+      { id: "g4u7-history-geography", en: "history and geography", vi: "môn Lịch sử và Địa lí", group: "subjects", icon: "img/vocab-g4-u7-history-geography.jpg", stages: ["tap-pairs", "picture-matching", "multiple-choice"] },
+      { id: "g4u7-q-what", en: "What subjects do you have today?", vi: "Hôm nay bạn có những môn học nào?", stages: ["tap-pairs"] },
+      { id: "g4u7-q-when", en: "When do you have maths?", vi: "Khi nào bạn có môn Toán?", stages: ["tap-pairs"] },
+
+      // Sentences — Missing Word + Sentence Shuffle (every blank is different, and no two blanks fit the same sentence)
+      { id: "g4u7-s-what", en: "What subjects do you have today?", vi: "Hôm nay bạn có những môn học nào?", example: "What subjects do you have today?", blank: "subjects", viFull: "Hôm nay bạn có những môn học nào?", viBlanked: "Hôm nay bạn có những ___ nào?", chunks: ["What subjects", "do you have", "today?"], stages: ["missing-word", "sentence-shuffle"] },
+      { id: "g4u7-s-maths", en: "I have Vietnamese and maths.", vi: "Mình có môn Tiếng Việt và môn Toán.", example: "I have Vietnamese and maths.", blank: "maths", viFull: "Mình có môn Tiếng Việt và môn Toán.", viBlanked: "Mình có môn Tiếng Việt và môn ___.", chunks: ["I", "have", "Vietnamese", "and maths."], stages: ["missing-word", "sentence-shuffle"] },
+      { id: "g4u7-s-science", en: "I have English and science.", vi: "Mình có môn Tiếng Anh và môn Khoa học.", example: "I have English and science.", blank: "science", viFull: "Mình có môn Tiếng Anh và môn Khoa học.", viBlanked: "Mình có môn Tiếng Anh và môn ___.", chunks: ["I", "have", "English", "and science."], stages: ["missing-word", "sentence-shuffle"] },
+      { id: "g4u7-s-when", en: "When do you have maths?", vi: "Khi nào bạn có môn Toán?", example: "When do you have maths?", blank: "When", viFull: "Khi nào bạn có môn Toán?", viBlanked: "___ bạn có môn Toán?", chunks: ["When", "do you have", "maths?"], stages: ["missing-word", "sentence-shuffle"] },
+      { id: "g4u7-s-fridays", en: "I have it on Mondays and Fridays.", vi: "Mình có môn đó vào thứ Hai và thứ Sáu.", example: "I have it on Mondays and Fridays.", blank: "Fridays", viFull: "Mình có môn đó vào thứ Hai và thứ Sáu.", viBlanked: "Mình có môn đó vào thứ Hai và ___.", chunks: ["I have it", "on Mondays", "and Fridays."], stages: ["missing-word", "sentence-shuffle"] },
+      { id: "g4u7-s-music", en: "When do you have music?", vi: "Khi nào bạn có môn Âm nhạc?", example: "When do you have music?", blank: "music", viFull: "Khi nào bạn có môn Âm nhạc?", viBlanked: "Khi nào bạn có môn ___?", chunks: ["When", "do you have", "music?"], stages: ["missing-word", "sentence-shuffle"] },
+      { id: "g4u7-s-art", en: "I have art on Thursdays.", vi: "Mình có môn Mĩ thuật vào thứ Năm.", example: "I have art on Thursdays.", blank: "art", viFull: "Mình có môn Mĩ thuật vào thứ Năm.", viBlanked: "Mình có môn ___ vào thứ Năm.", chunks: ["I", "have art", "on Thursdays."], stages: ["missing-word", "sentence-shuffle"] },
+    ],
+  },
 ];
 
 (function () {
