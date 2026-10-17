@@ -26,7 +26,7 @@
   }
   .eq-crumb.active { opacity:1; border-color: var(--page-color); color: var(--page-color); }
   .eq-crumb.active .eq-crumb-num { background: var(--page-color); color:#fff; }
-  .eq-back-link { display:inline-block; margin-bottom:14px; font-size:.9rem; text-decoration:underline; cursor:pointer; color: var(--page-color); background:none; border:none; padding:0; }
+  .eq-back-link { display:inline-block; margin-bottom:14px; font-size:1.05rem; font-weight:800; text-decoration:underline; text-underline-offset:3px; cursor:pointer; color: var(--page-color); background:none; border:none; padding:0; }
   .reading-passage mark { background: #cfe8ff; padding:0 2px; border-radius:3px; }
 
   /* --- Vocabulary: 3-column flip-card grid, always with audio --- */
@@ -201,6 +201,7 @@
         </div>
 
         <div class="ex-panel" id="panel-order">
+          <button type="button" class="eq-back-link" data-target="panel-reading">← Quay lại Reading để tìm ý</button>
           <div class="runner-card">
             <p class="eq-instruction">Sentence Ordering — chạm các cụm từ theo đúng thứ tự để tạo thành câu.</p>
             <div id="order-wrap"></div>

@@ -26,3 +26,8 @@ Mỗi lần sửa file `.js`, tăng số `?v=` trong thẻ `<script src="...js?v
 ## 5. Kiểm tra trước khi bàn giao
 - Chạy `node --check` cho mọi file `.js` đã sửa.
 - Làm hết bài một lượt: số câu lưu lên Dashboard phải bằng tổng số câu (vd 28/28), không được còn "đang làm".
+
+## 6. Nút "← Quay lại Reading để tìm ý"
+- Luôn TÔ ĐẬM, chữ to — CSS chuẩn:
+  `.eq-back-link { display:inline-block; margin-bottom:14px; font-size:1.05rem; font-weight:800; text-decoration:underline; text-underline-offset:3px; cursor:pointer; color: var(--page-color); background:none; border:none; padding:0; }`
+- Có ở mọi phần làm bài dựa vào bài đọc, kể cả Sentence Ordering (`panel-order`), không chỉ Vocabulary / Fill in the Blank.
