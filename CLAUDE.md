@@ -30,4 +30,4 @@ Mỗi lần sửa file `.js`, tăng số `?v=` trong thẻ `<script src="...js?v
 ## 6. Nút "← Quay lại Reading để tìm ý"
 - Luôn TÔ ĐẬM, chữ to — CSS chuẩn:
   `.eq-back-link { display:inline-block; margin-bottom:14px; font-size:1.05rem; font-weight:800; text-decoration:underline; text-underline-offset:3px; cursor:pointer; color: var(--page-color); background:none; border:none; padding:0; }`
-- Có ở mọi phần làm bài dựa vào bài đọc, kể cả Sentence Ordering (`panel-order`), không chỉ Vocabulary / Fill in the Blank.
+- Chỉ gắn nút ở phần nào có nội dung LẤY TỪ BÀI ĐỌC (Vocabulary, Fill in the Blank…). Sentence Ordering (`panel-order`) phải kiểm tra từng unit: câu lấy từ bài đọc → có nút; câu là bài riêng trong sách bài tập (không liên quan bài đọc) → KHÔNG gắn nút. Không chắc thì hỏi cô Hiền.
