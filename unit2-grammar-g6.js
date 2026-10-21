@@ -25,13 +25,14 @@ const POSS_ITEMS = [
 ];
 
 // ---- Complete the dialogue with a suitable preposition of place (5 blanks) ----
-// Read from the bedroom picture (img/g6-u2-grammar-bedroom.webp). Key from cô Hiền.
+// Read from the bedroom picture (img/g6-u2-grammar-bedroom.webp). Key from cô Hiền
+// (blank 1 changed from "behind" to "next to" to match the picture).
 const PREP_BOX = ["in", "on", "behind", "in front of", "between", "next to", "under"];
 const PREP_ITEMS = [
   { id: 1, scene: "(Lan and her brother are in the bedroom.)",
     ask: { who: "Brother", text: "Where is my schoolbag?" },
-    reply: { who: "Lan", before: "I think it's", after: "the desk." }, answer: "behind",
-    vi: "– Cặp sách của anh đâu rồi? – Em nghĩ nó ở phía sau cái bàn." },
+    reply: { who: "Lan", before: "I think it's", after: "the desk." }, answer: "next to",
+    vi: "– Cặp sách của anh đâu rồi? – Em nghĩ nó ở bên cạnh cái bàn." },
   { id: 2, scene: "(Lan and her brother are in the bedroom.)",
     ask: { who: "Brother", text: "And where's my pencil case?" },
     reply: { who: "Lan", before: "It's", after: "the desk. I saw it this morning." }, answer: "on",
