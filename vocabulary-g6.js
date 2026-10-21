@@ -81,6 +81,70 @@ var VOCAB_UNITS_G6 = [
       { id: "g6u1-ss-lunch-at-school", en: "have lunch at school", vi: "ăn trưa ở trường", example: "My classmates usually have lunch at school.", viFull: "Các bạn cùng lớp của tớ thường ăn trưa ở trường.", chunks: ["My classmates", "usually have lunch", "at school."], stages: ["sentence-shuffle"] },
     ],
   },
+  {
+    id: "g6-unit2",
+    number: 2,
+    title: "My House",
+    subtitle: "Global Success 6 · New Vocabulary",
+    // 32 scored items: Picture Matching 8 + Multiple Choice 12 + Missing Word 8 + Sentence Shuffle 4.
+    // Tap Pairs (12) is practice only. Word list + Sentence Shuffle from cô Hiền;
+    // Missing Word sentences written by Claude — please review.
+    words: [
+      // Tap Pairs (12 words, practice only)
+      { id: "g6u2-bed", en: "bed", vi: "cái giường", stages: ["tap-pairs"] },
+      { id: "g6u2-table", en: "table", vi: "cái bàn", stages: ["tap-pairs"] },
+      { id: "g6u2-chair", en: "chair", vi: "cái ghế", stages: ["tap-pairs"] },
+      { id: "g6u2-picture", en: "picture", vi: "bức tranh", stages: ["tap-pairs"] },
+      { id: "g6u2-sofa-tp", en: "sofa", vi: "ghế sô-pha", stages: ["tap-pairs"] },
+      { id: "g6u2-lamp-tp", en: "lamp", vi: "đèn bàn", stages: ["tap-pairs"] },
+      { id: "g6u2-fridge-tp", en: "fridge", vi: "tủ lạnh", stages: ["tap-pairs"] },
+      { id: "g6u2-wardrobe-tp", en: "wardrobe", vi: "tủ quần áo", stages: ["tap-pairs"] },
+      { id: "g6u2-living-room-tp", en: "living room", vi: "phòng khách", stages: ["tap-pairs"] },
+      { id: "g6u2-kitchen-tp", en: "kitchen", vi: "nhà bếp", stages: ["tap-pairs"] },
+      { id: "g6u2-aunt-tp", en: "aunt", vi: "cô, dì", stages: ["tap-pairs"] },
+      { id: "g6u2-cousin-tp", en: "cousin", vi: "anh/chị/em họ", stages: ["tap-pairs"] },
+
+      // Picture Matching (8 words) — chờ ảnh cô Hiền gửi
+      { id: "g6u2-stilt-house", en: "stilt house", vi: "nhà sàn", icon: "img/vocab-g6-u2-stilt-house.jpg", stages: ["picture-matching"] },
+      { id: "g6u2-sofa", en: "sofa", vi: "ghế sô-pha", icon: "img/vocab-g6-u2-sofa.jpg", stages: ["picture-matching"] },
+      { id: "g6u2-chest-of-drawers", en: "chest of drawers", vi: "tủ ngăn kéo", icon: "img/vocab-g6-u2-chest-of-drawers.jpg", stages: ["picture-matching"] },
+      { id: "g6u2-wardrobe", en: "wardrobe", vi: "tủ quần áo", icon: "img/vocab-g6-u2-wardrobe.jpg", stages: ["picture-matching"] },
+      { id: "g6u2-fridge", en: "fridge", vi: "tủ lạnh", icon: "img/vocab-g6-u2-fridge.jpg", stages: ["picture-matching"] },
+      { id: "g6u2-dishwasher", en: "dishwasher", vi: "máy rửa chén", icon: "img/vocab-g6-u2-dishwasher.jpg", stages: ["picture-matching"] },
+      { id: "g6u2-lamp", en: "lamp", vi: "đèn bàn", icon: "img/vocab-g6-u2-lamp.jpg", stages: ["picture-matching"] },
+      { id: "g6u2-ceiling-fan", en: "ceiling fan", vi: "quạt trần", icon: "img/vocab-g6-u2-ceiling-fan.jpg", stages: ["picture-matching"] },
+
+      // Multiple Choice (12 words) — choose the Vietnamese meaning
+      { id: "g6u2-town-house", en: "town house", vi: "nhà phố", group: "house", stages: ["multiple-choice"] },
+      { id: "g6u2-country-house", en: "country house", vi: "nhà ở nông thôn", group: "house", stages: ["multiple-choice"] },
+      { id: "g6u2-flat", en: "flat / apartment", vi: "căn hộ", group: "house", stages: ["multiple-choice"] },
+      { id: "g6u2-cupboard", en: "cupboard", vi: "tủ chén / tủ đựng đồ", group: "house", stages: ["multiple-choice"] },
+      { id: "g6u2-living-room", en: "living room", vi: "phòng khách", group: "rooms", stages: ["multiple-choice"] },
+      { id: "g6u2-bedroom", en: "bedroom", vi: "phòng ngủ", group: "rooms", stages: ["multiple-choice"] },
+      { id: "g6u2-kitchen", en: "kitchen", vi: "nhà bếp", group: "rooms", stages: ["multiple-choice"] },
+      { id: "g6u2-bathroom", en: "bathroom", vi: "phòng tắm", group: "rooms", stages: ["multiple-choice"] },
+      { id: "g6u2-aunt", en: "aunt", vi: "cô, dì", group: "family", stages: ["multiple-choice"] },
+      { id: "g6u2-uncle", en: "uncle", vi: "chú, bác, cậu", group: "family", stages: ["multiple-choice"] },
+      { id: "g6u2-cousin", en: "cousin", vi: "anh/chị/em họ", group: "family", stages: ["multiple-choice"] },
+      { id: "g6u2-grandparents", en: "grandparents", vi: "ông bà", group: "family", stages: ["multiple-choice"] },
+
+      // Missing Word (8 sentences) — each blank only fits its own sentence
+      { id: "g6u2-mw-country", en: "country house", vi: "nhà ở nông thôn", example: "My grandparents live in a country house in a small village.", blank: "country", stages: ["missing-word"], viFull: "Ông bà tớ sống trong một ngôi nhà ở nông thôn, tại một ngôi làng nhỏ.", viBlanked: "Ông bà tớ sống trong một ngôi nhà ở ___, tại một ngôi làng nhỏ." },
+      { id: "g6u2-mw-flat", en: "flat", vi: "căn hộ", example: "My aunt and uncle live in a flat on the tenth floor.", blank: "flat", stages: ["missing-word"], viFull: "Cô chú tớ sống trong một căn hộ ở tầng mười.", viBlanked: "Cô chú tớ sống trong một ___ ở tầng mười." },
+      { id: "g6u2-mw-wardrobe", en: "wardrobe", vi: "tủ quần áo", example: "I keep my clothes in the wardrobe.", blank: "wardrobe", stages: ["missing-word"], viFull: "Tớ cất quần áo trong tủ quần áo.", viBlanked: "Tớ cất quần áo trong ___." },
+      { id: "g6u2-mw-fridge", en: "fridge", vi: "tủ lạnh", example: "Mum puts the milk in the fridge.", blank: "fridge", stages: ["missing-word"], viFull: "Mẹ cất sữa vào tủ lạnh.", viBlanked: "Mẹ cất sữa vào ___." },
+      { id: "g6u2-mw-lamp", en: "lamp", vi: "đèn bàn", example: "I turn on the lamp when I read at night.", blank: "lamp", stages: ["missing-word"], viFull: "Tớ bật đèn bàn khi đọc sách vào buổi tối.", viBlanked: "Tớ bật ___ khi đọc sách vào buổi tối." },
+      { id: "g6u2-mw-kitchen", en: "kitchen", vi: "nhà bếp", example: "My mother is cooking dinner in the kitchen.", blank: "kitchen", stages: ["missing-word"], viFull: "Mẹ tớ đang nấu bữa tối trong bếp.", viBlanked: "Mẹ tớ đang nấu bữa tối trong ___." },
+      { id: "g6u2-mw-bathroom", en: "bathroom", vi: "phòng tắm", example: "I brush my teeth in the bathroom.", blank: "bathroom", stages: ["missing-word"], viFull: "Tớ đánh răng trong phòng tắm.", viBlanked: "Tớ đánh răng trong ___." },
+      { id: "g6u2-mw-sofa", en: "sofa", vi: "ghế sô-pha", example: "We sit on the sofa and watch TV.", blank: "sofa", stages: ["missing-word"], viFull: "Chúng tớ ngồi trên ghế sô-pha và xem TV.", viBlanked: "Chúng tớ ngồi trên ___ và xem TV." },
+
+      // Sentence Shuffle (4 sentences) — từ cô Hiền gửi
+      { id: "g6u2-ss-sofa", en: "There is a sofa", vi: "Có một cái ghế sô-pha", example: "There is a sofa in the living room.", viFull: "Có một cái ghế sô-pha trong phòng khách.", chunks: ["There", "is", "a", "sofa", "in", "the living room."], stages: ["sentence-shuffle"] },
+      { id: "g6u2-ss-bedrooms", en: "There are two bedrooms", vi: "Có hai phòng ngủ", example: "There are two bedrooms.", viFull: "Có hai phòng ngủ.", chunks: ["There", "are", "two", "bedrooms."], stages: ["sentence-shuffle"] },
+      { id: "g6u2-ss-fridge", en: "Is there a fridge?", vi: "Có tủ lạnh không?", example: "Is there a fridge in the kitchen?", viFull: "Trong bếp có tủ lạnh không?", chunks: ["Is", "there", "a", "fridge", "in", "the kitchen?"], stages: ["sentence-shuffle"] },
+      { id: "g6u2-ss-flowers", en: "Are there any flowers?", vi: "Có bông hoa nào không?", example: "Are there any flowers in the garden?", viFull: "Trong vườn có bông hoa nào không?", chunks: ["Are", "there", "any", "flowers", "in", "the garden?"], stages: ["sentence-shuffle"] },
+    ],
+  },
 ];
 
 (function () {

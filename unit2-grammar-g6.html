@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unit 2 Grammar · English Quest</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="unit1-exercises.css">
+<style>
+  /* Small additions only for this page — reuses the shared classes everywhere else */
+
+  /* --- Numbered tab nav (bigger font, numbered circle, matches the old Grade 5 style) --- */
+  .eq-crumb-row { display:flex; flex-wrap:wrap; gap:10px; margin-bottom:16px; }
+  .eq-crumb {
+    display:flex; align-items:center; gap:9px;
+    background:#fff; border:1px solid #ddd; border-radius:999px;
+    padding:8px 18px 8px 8px; font-size:1rem; font-weight:700;
+    cursor:pointer; opacity:.62;
+  }
+  .eq-crumb-num {
+    width:28px; height:28px; border-radius:50%; flex-shrink:0;
+    background:#ececec; color:#888; font-size:.9rem; font-weight:800;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .eq-crumb.active { opacity:1; border-color: var(--page-color); color: var(--page-color); }
+  .eq-crumb.active .eq-crumb-num { background: var(--page-color); color:#fff; }
+  .eq-back-link { display:inline-block; margin-bottom:14px; font-size:.9rem; text-decoration:underline; cursor:pointer; color: var(--page-color); background:none; border:none; padding:0; }
+  .reading-passage mark { background: #cfe8ff; padding:0 2px; border-radius:3px; }
+
+  /* --- Vocabulary: 3-column flip-card grid, always with audio --- */
+  .vocab-grid { display:grid; grid-template-columns: repeat(3, 1fr); gap:12px; }
+  @media (max-width: 640px) { .vocab-grid { grid-template-columns: repeat(2, 1fr); } }
+  .vocab-card {
+    background:#fff; border:1px solid #e2e2e2; border-radius:14px;
+    padding:16px 10px; text-align:center; cursor:pointer;
+    min-height:96px; display:flex; align-items:center; justify-content:center;
+  }
+  .vocab-card.flipped { background:#fff7e6; border-color:#f5b942; }
+  .vocab-card .vocab-front { font-weight:800; line-height:1.35; }
+  .vocab-card .vocab-hint { display:block; font-size:.7rem; color:#999; font-weight:400; margin-top:4px; }
+  .vocab-card .vocab-back { display:none; }
+  .vocab-card.flipped .vocab-front { display:none; }
+  .vocab-card.flipped .vocab-back { display:block; font-weight:700; color:#7a5b00; }
+
+  /* --- Match A with B → one-at-a-time multiple choice, mobile-friendly --- */
+  .mcq-def { font-size:1.08rem; font-weight:800; margin-bottom:2px; text-align:center; }
+  .mcq-def-vi { color:#666; font-size:.9rem; margin-bottom:16px; text-align:center; }
+  .eq-instruction { font-size:1.02rem; font-weight:800; color:#222; margin:0 0 12px; }
+  .mcq-options { display:grid; grid-template-columns: 1fr 1fr; gap:10px; }
+  @media (max-width: 480px) { .mcq-options { grid-template-columns: 1fr; } }
+  .mcq-option {
+    display:flex; align-items:center; gap:9px; text-align:left;
+    background:#fff; border:2px solid #e2e2e2; border-radius:12px;
+    padding:12px 14px; font-weight:700; cursor:pointer;
+  }
+  .mcq-option .mcq-letter {
+    width:26px; height:26px; border-radius:50%; background:#eee; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center; font-size:.82rem; font-weight:800;
+  }
+  .mcq-option.correct { border-color:#3fae4f; background:#eafbea; }
+  .mcq-option.wrong { border-color:#e05c5c; background:#fdeaea; }
+  .mcq-option[disabled] { cursor:default; }
+
+  /* --- Shared "Dịch" (translate-on-demand) button --- */
+  .eq-translate-btn {
+    display:inline-flex; align-items:center; gap:6px;
+    background:#eef2ff; border:1px solid #c7d2ff; color:#5b7cfa;
+    border-radius:999px; padding:6px 14px; font-size:.85rem; font-weight:800;
+    cursor:pointer; margin:6px 0 10px;
+  }
+
+  /* --- True / False --- */
+  .tf-item { background:#fff; border:1px solid #e2e2e2; border-radius:12px; padding:14px; margin-bottom:12px; }
+  .tf-vi { color:#666; font-size:.88rem; margin:0 0 10px; }
+  .tf-btn-row { display:flex; gap:8px; }
+  .tf-btn { border:2px solid #e2e2e2; background:#fff; border-radius:10px; padding:8px 16px; font-weight:800; cursor:pointer; }
+  .tf-btn.selected-correct { border-color:#3fae4f; background:#eafbea; }
+  .tf-btn.selected-wrong { border-color:#e05c5c; background:#fdeaea; }
+
+  /* --- Make sentences --- */
+  .sentence-answer-strip { min-height:52px; border:2px dashed #ccc; border-radius:12px; padding:10px; display:flex; flex-wrap:wrap; gap:8px; margin:12px 0; }
+  .sentence-chunks { display:flex; flex-wrap:wrap; gap:8px; }
+  .sentence-chunk { background:#fff; border:2px solid #e2e2e2; border-radius:10px; padding:8px 12px; cursor:pointer; text-align:center; }
+  .sentence-chunk .chunk-vi { display:none; font-size:.75rem; color:#888; font-weight:400; }
+  .sentence-chunks.show-vi .sentence-chunk .chunk-vi { display:block; }
+  .sentence-chunk.used { opacity:.35; pointer-events:none; }
+  .sentence-chunk.placed { background:#eef2ff; border-color:#5b7cfa; }
+
+  /* --- Put the verbs: sentence with inline typing boxes --- */
+  .verb-sentence { font-size:1.05rem; font-weight:700; line-height:2.3; color:#222; }
+  .verb-sentence .verb-num { color: var(--page-color); font-weight:900; }
+  .verb-sentence .verb-blank { width:130px; display:inline-block; margin:0 2px; }
+
+  /* --- Grammar theory card --- */
+  .grammar-theory { margin-bottom:18px; }
+  .grammar-theory summary { cursor:pointer; font-weight:800; font-size:1.05rem; color: var(--page-color); }
+  .grammar-theory h3 { margin:18px 0 6px; font-size:1.05rem; }
+  .grammar-theory p, .grammar-theory li { line-height:1.6; }
+  .grammar-theory ul { margin:6px 0; padding-left:20px; }
+  .theory-table-wrap { overflow-x:auto; }
+  .theory-table { border-collapse:collapse; width:100%; min-width:420px; font-size:.95rem; }
+  .theory-table th, .theory-table td { border:1px solid #e2e2e2; padding:8px 10px; text-align:left; vertical-align:top; }
+  .theory-table th { background:#f6f3ec; }
+  .theory-warn { background:#fdeaea; border-radius:10px; padding:8px 12px; }
+  .theory-scale { font-weight:800; background:#eef2ff; border-radius:10px; padding:8px 12px; }
+
+  /* --- Prepositions dialogue: picture stays above, one blank at a time --- */
+  .prep-picture { display:block; width:100%; max-width:420px; margin:4px auto 14px; border-radius:14px; }
+  .prep-scene { color:#666; font-style:italic; margin-bottom:6px; }
+  .prep-line { font-size:1.05rem; line-height:1.7; color:#222; }
+  .prep-who { color: var(--page-color); }
+  .prep-blank { color: var(--page-color); font-weight:800; }
+  .prep-options { margin-top:10px; }
+  .prep-options .mcq-option { justify-content:center; }
+</style>
+</head>
+<body data-page="lessons" style="--page-color: var(--c-grammar);">
+  <header class="site-header">
+    <nav class="container nav-row" aria-label="Main navigation">
+      <a class="brand" href="index.html">
+        <span class="brand-mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 5.5C4 4.7 4.7 4 5.5 4H12v16H5.5A1.5 1.5 0 0 1 4 18.5v-13Z" stroke-linejoin="round"/><path d="M20 5.5c0-.8-.7-1.5-1.5-1.5H12v16h6.5a1.5 1.5 0 0 0 1.5-1.5v-13Z" stroke-linejoin="round"/></svg></span>
+        English Quest
+      </a>
+      <button class="nav-toggle" aria-label="Open menu" aria-expanded="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke-linecap="round"/></svg>
+      </button>
+      <ul class="nav-links">
+        <li><a class="navlink" href="unit-g6.html?u=2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 5.5C4 4.7 4.7 4 5.5 4H12v16H5.5A1.5 1.5 0 0 1 4 18.5v-13Z" stroke-linejoin="round"/><path d="M20 5.5c0-.8-.7-1.5-1.5-1.5H12v16h6.5a1.5 1.5 0 0 0 1.5-1.5v-13Z" stroke-linejoin="round"/></svg><span>Unit 2</span></a></li>
+      </ul>
+    </nav>
+  </header>
+  <div class="nav-scrim"></div>
+
+  <main>
+    <section class="page-hero">
+      <div class="container">
+        <span class="eyebrow" style="border-color: var(--page-color);"><a href="unit-g6.html?u=2" style="color:inherit;">Unit 2: My House</a></span>
+        <h1 style="margin-bottom:4px;">Grammar</h1>
+        <p>Possessive case &amp; prepositions of place. Đọc lý thuyết, làm Possessive forms rồi chuyển sang Prepositions nhé.</p>
+      </div>
+    </section>
+
+    <section class="section" style="padding-top:10px;">
+      <div class="container">
+        <details class="runner-card grammar-theory" open>
+          <summary>📘 Lý thuyết — bấm để ẩn / hiện</summary>
+
+          <h3>1. Sở hữu cách (Possessive case)</h3>
+          <p><b>Dùng khi:</b> nói vật / người nào đó <b>của ai</b>.</p>
+          <ul>
+            <li>Danh từ số ít → thêm <b>'s</b>: Mai → <b>Mai's</b> mother, my sister → my <b>sister's</b> computer</li>
+            <li>Danh từ số nhiều tận cùng -s → chỉ thêm <b>'</b>: my parents → my <b>parents'</b> bedroom</li>
+            <li>Danh từ số nhiều không tận cùng -s → thêm <b>'s</b>: children → the <b>children's</b> toys</li>
+          </ul>
+          <p class="theory-warn"><b>Lỗi hay gặp:</b> <s>the mother of Mai</s> → <b>Mai's mother</b> (người sở hữu đứng trước, có 's).</p>
+
+          <h3>2. Giới từ chỉ nơi chốn (Prepositions of place)</h3>
+          <div class="theory-table-wrap">
+            <table class="theory-table">
+              <tr><th>Giới từ</th><th>Nghĩa</th><th>Ví dụ</th></tr>
+              <tr><td><b>in</b></td><td>ở trong</td><td>The cat is <b>in</b> the box.</td></tr>
+              <tr><td><b>on</b></td><td>ở trên (chạm mặt)</td><td>The book is <b>on</b> the desk.</td></tr>
+              <tr><td><b>under</b></td><td>ở dưới</td><td>The cat is <b>under</b> the chair.</td></tr>
+              <tr><td><b>behind</b></td><td>ở phía sau</td><td>The bag is <b>behind</b> the desk.</td></tr>
+              <tr><td><b>in front of</b></td><td>ở phía trước</td><td>The chair is <b>in front of</b> the desk.</td></tr>
+              <tr><td><b>next to</b></td><td>ở bên cạnh</td><td>The book is <b>next to</b> the lamp.</td></tr>
+              <tr><td><b>between</b></td><td>ở giữa (hai vật)</td><td>The ball is <b>between</b> the two boxes.</td></tr>
+            </table>
+          </div>
+        </details>
+
+        <div class="ex-tabs">
+          <button class="ex-tab active" data-target="panel-poss">Possessive forms</button>
+          <button class="ex-tab" data-target="panel-prep">Prepositions</button>
+        </div>
+
+        <div id="mascot-box" class="mascot-box"></div>
+
+        <div class="ex-panel active" id="panel-poss">
+          <div class="runner-card">
+            <div class="quiz-q" style="margin-bottom:8px;">Complete the sentences with the correct possessive forms — viết dạng sở hữu cách của từ trong ngoặc.</div>
+            <div id="poss-runner"></div>
+          </div>
+        </div>
+
+        <div class="ex-panel" id="panel-prep">
+          <div class="runner-card">
+            <div class="quiz-q" style="margin-bottom:8px;">Complete the dialogue with a suitable preposition of place — nhìn tranh, chọn giới từ đúng.</div>
+            <img class="prep-picture" src="img/g6-u2-grammar-bedroom.webp" alt="Lan's bedroom: a desk, a chair, a lamp, a cat, a schoolbag, two boxes and a ball">
+            <div id="prep-runner"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" style="padding-top:10px;">
+      <div class="container">
+        <details class="runner-card grammar-theory" open>
+          <summary>📘 Lý thuyết — bấm để ẩn / hiện</summary>
+
+          <h3>1. Sở hữu cách (Possessive case)</h3>
+          <p><b>Dùng khi:</b> nói vật / người nào đó <b>của ai</b>.</p>
+          <ul>
+            <li>Danh từ số ít → thêm <b>'s</b>: Mai → <b>Mai's</b> mother, my sister → my <b>sister's</b> computer</li>
+            <li>Danh từ số nhiều tận cùng -s → chỉ thêm <b>'</b>: my parents → my <b>parents'</b> bedroom</li>
+            <li>Danh từ số nhiều không tận cùng -s → thêm <b>'s</b>: children → the <b>children's</b> toys</li>
+          </ul>
+          <p class="theory-warn"><b>Lỗi hay gặp:</b> <s>the mother of Mai</s> → <b>Mai's mother</b> (người sở hữu đứng trước, có 's).</p>
+
+          <h3>2. Giới từ chỉ nơi chốn (Prepositions of place)</h3>
+          <div class="theory-table-wrap">
+            <table class="theory-table">
+              <tr><th>Giới từ</th><th>Nghĩa</th><th>Ví dụ</th></tr>
+              <tr><td><b>in</b></td><td>ở trong</td><td>The cat is <b>in</b> the box.</td></tr>
+              <tr><td><b>on</b></td><td>ở trên (chạm mặt)</td><td>The book is <b>on</b> the desk.</td></tr>
+              <tr><td><b>under</b></td><td>ở dưới</td><td>The cat is <b>under</b> the chair.</td></tr>
+              <tr><td><b>behind</b></td><td>ở phía sau</td><td>The bag is <b>behind</b> the desk.</td></tr>
+              <tr><td><b>in front of</b></td><td>ở phía trước</td><td>The chair is <b>in front of</b> the desk.</td></tr>
+              <tr><td><b>next to</b></td><td>ở bên cạnh</td><td>The book is <b>next to</b> the lamp.</td></tr>
+              <tr><td><b>between</b></td><td>ở giữa (hai vật)</td><td>The ball is <b>between</b> the two boxes.</td></tr>
+            </table>
+          </div>
+        </details>
+
+        <div class="ex-tabs">
+          <button class="ex-tab active" data-target="panel-poss">Possessive forms</button>
+          <button class="ex-tab" data-target="panel-prep">Prepositions</button>
+        </div>
+
+        <div id="mascot-box" class="mascot-box"></div>
+
+        <div class="ex-panel active" id="panel-verbs">
+          <div class="runner-card">
+            <div class="quiz-q" style="margin-bottom:8px;">Put the verbs in brackets in the correct form — chia động từ trong ngoặc.</div>
+            <div id="verb-runner"></div>
+          </div>
+        </div>
+
+        <div class="ex-panel" id="panel-order">
+          <div class="runner-card">
+            <div class="quiz-q" style="margin-bottom:8px;">Correct order — sắp xếp các từ / cụm từ thành câu hoàn chỉnh.</div>
+            <div id="order-runner"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <div class="footer-brand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 5.5C4 4.7 4.7 4 5.5 4H12v16H5.5A1.5 1.5 0 0 1 4 18.5v-13Z" stroke-linejoin="round"/><path d="M20 5.5c0-.8-.7-1.5-1.5-1.5H12v16h6.5a1.5 1.5 0 0 0 1.5-1.5v-13Z" stroke-linejoin="round"/></svg> English Quest</div>
+          <p style="max-width:32ch; font-size:.9rem; opacity:.85;">A friendly place for Grade 6 students to read, play, and practise English every week.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Learn</h4>
+          <ul>
+            <li><a href="unit-g6.html?u=2">Unit 2</a></li>
+            <li><a href="lessons-g6.html">Lessons</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>You</h4>
+          <ul>
+            <li><a href="lessons.html">Đổi khối</a></li>
+            <li><a href="index.html">Home</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; 2026 English Quest &mdash; a class website by teacher Hien.</span>
+      </div>
+    </div>
+  </footer>
+
+<script src="script.js?v=2"></script>
+<script src="student-gate.js"></script>
+<script type="module" src="results-service.js?v=4"></script>
+<script src="eq-progress.js?v=3"></script>
+<script src="unit2-grammar-g6.js?v=1"></script>
+<script src="section-lock.js?v=20261010"></script>
+<script src="mascot.js"></script>
+</body>
+</html>
