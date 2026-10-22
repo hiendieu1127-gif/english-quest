@@ -3,7 +3,7 @@
 // Source: teacher Hien's screenshots (conversation, phrase table, True/False,
 // verbs in brackets, Pronunciation /s/ /z/)
 // Vietnamese translations of the T/F and verb sentences: written by Claude — please review
-// Scored sections: True/False (5) + Verbs (5) + Pronunciation (6 + 6) = 22 total.
+// Scored sections: True/False (5) + Verbs (5) + Pronunciation (6) = 16 total.
 // Reading and Vocabulary are practice-only, not scored/saved.
 // ============================================================
 
@@ -81,14 +81,14 @@ const VERB_ITEMS = [
     vi: "Mẹ cô ấy có một ý tưởng hay." },
 ];
 
-// ---- Pronunciation: final s → /s/ or /z/ (2 parts, 6 + 6 words) ----
-// Part 1 = the book's 6 words. Part 2 replaces the book's open "write three words" task
-// with 6 Unit 2 words to sort (written by Claude — please review).
+// ---- Pronunciation: final s → /s/ or /z/ (the book's 6 words) ----
+// Kept as a list of parts so a second part can be added later; with 2+ parts the card
+// between them gets data-part-done (see showSectionComplete).
 // Every word has a 🔊 button (AI voice) so students can hear it before choosing.
 const PRON_PARTS = [
   {
     key: "pron1",
-    title: "Part 1 — Match the words which have the final s with /s/ or /z/.",
+    title: "Match the words which have the final s with /s/ or /z/.",
     items: [
       { word: "beds", answer: "/z/" },
       { word: "caps", answer: "/s/" },
@@ -98,23 +98,11 @@ const PRON_PARTS = [
       { word: "lights", answer: "/s/" },
     ],
   },
-  {
-    key: "pron2",
-    title: "Part 2 — Put the words into the right column: /s/ or /z/.",
-    items: [
-      { word: "lamps", answer: "/s/" },
-      { word: "rooms", answer: "/z/" },
-      { word: "books", answer: "/s/" },
-      { word: "sofas", answer: "/z/" },
-      { word: "desks", answer: "/s/" },
-      { word: "tables", answer: "/z/" },
-    ],
-  },
 ];
 
 // ============================================================
 // Results saving — same saveQueue-serialized pattern as unit1-exercises-g6.js.
-// 22 scored items total: 5 True/False + 5 verbs + 12 Pronunciation.
+// 16 scored items total: 5 True/False + 5 verbs + 6 Pronunciation.
 // Score is based on the FIRST attempt only — retry rounds are saved separately.
 // ============================================================
 const UNIT_ID = "g6-unit2";
@@ -414,7 +402,7 @@ function runVerbRound(items, round) {
   render();
 }
 
-// ---- Pronunciation (scored: 6 + 6) — tap 🔊 to hear the word, then choose /s/ or /z/ ----
+// ---- Pronunciation (scored: 6) — tap 🔊 to hear the word, then choose /s/ or /z/ ----
 // Same flow as True/False: wrong words come back in a "Vòng 2" retry round.
 function runPronRound(partIdx, items, round) {
   const host = document.getElementById("pron-list");
