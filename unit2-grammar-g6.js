@@ -330,8 +330,8 @@ function runPrepRound(items, round) {
         i++;
         if (i < total) { render(); return; }
         if (wrongItems.length) { runPrepRound(wrongItems, round + 1); return; }
-        showSectionComplete(host, "Em đã hoàn thành hết phần Grammar.", "Quay lại Unit 2 →", () => {
-          window.location.href = "unit-g6.html?u=2";
+        showSectionComplete(host, "Em đã hoàn thành hết phần Grammar.", "Tiếp tục sang phần Exercise →", () => {
+          window.location.href = "unit2-exercises-g6.html";
         });
       });
     }));
