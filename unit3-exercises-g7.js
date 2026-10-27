@@ -215,10 +215,13 @@ function renderDots(current, total) {
 }
 
 // A bare "I" chunk is read as "capital I" by some voices — speak "aye" instead.
-function speakChunk(text) {
+function speakVocab(text) {
   if (!window.EQSpeak) return;
   window.EQSpeak.speak(text.trim() === "I" ? "aye" : text);
 }
+
+// AI voice is off everywhere except the vocabulary cards after the reading.
+function speakChunk() {}
 
 function retryHeader(round) {
   return round > 1
@@ -292,13 +295,10 @@ function runPronRound(items, round) {
       ${retryHeader(round)}
       ${renderDots(i, total)}
       <div class="mcq-def">Câu ${item.id}</div>
-      <div style="text-align:center;"><button type="button" class="eq-translate-btn" id="pron-listen">🔊 Nghe 4 từ</button></div>
       <div class="mcq-options" id="pron-options">
         ${item.words.map((w, idx) => `<button type="button" class="mcq-option" data-idx="${idx}"><span class="mcq-letter">${letters[idx]}</span><span>${w[0]}<u class="pron-ed">${w[1]}</u></span></button>`).join("")}
       </div>
       <div class="fitb-feedback" id="pron-feedback"></div>`;
-
-    host.querySelector("#pron-listen").addEventListener("click", () => speakChunk(plain.join(", ")));
 
     let answered = false;
     const optionButtons = host.querySelectorAll(".mcq-option");
@@ -418,7 +418,7 @@ function renderVocab() {
   host.querySelectorAll(".vocab-card").forEach((card) => {
     card.addEventListener("click", () => {
       const idx = Number(card.dataset.idx);
-      speakChunk(VOCAB_ITEMS[idx].en);
+      speakVocab(VOCAB_ITEMS[idx].en);
       card.classList.toggle("flipped");
     });
   });
@@ -638,7 +638,6 @@ function runSentenceRound(items, round) {
       const correct = built === item.answer;
       window.EQSound && (correct ? window.EQSound.correct() : window.EQSound.wrong());
       window.EQMascot && window.EQMascot.show("mascot-box", correct ? "correct" : "wrong");
-      window.EQSpeak && window.EQSpeak.speak(item.answer);
       feedback.innerHTML =
         (correct
           ? `<span style="color:#3fae4f;font-weight:700;">✓ Chính xác!</span>`

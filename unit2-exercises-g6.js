@@ -84,7 +84,6 @@ const VERB_ITEMS = [
 // ---- Pronunciation: final s → /s/ or /z/ (the book's 6 words) ----
 // Kept as a list of parts so a second part can be added later; with 2+ parts the card
 // between them gets data-part-done (see showSectionComplete).
-// Every word has a 🔊 button (AI voice) so students can hear it before choosing.
 const PRON_PARTS = [
   {
     key: "pron1",
@@ -164,10 +163,13 @@ function normalize(s) {
 }
 
 // A bare "I" is read by some voices as "capital I" — "aye" sounds right. Display unchanged.
-function speakChunk(text) {
+function speakVocab(text) {
   if (!window.EQSpeak) return;
   window.EQSpeak.speak(text.trim() === "I" ? "aye" : text);
 }
+
+// AI voice is off everywhere except the vocabulary cards after the reading.
+function speakChunk() {}
 
 // ---- Shared "section complete" screen (Xong rồi! + optional "next section" button) ----
 // Each crumb is its own section. Pronunciation has 2 parts: the card BETWEEN them passes
@@ -233,7 +235,7 @@ function renderVocab() {
     </div>`).join("");
   host.querySelectorAll(".vocab-card").forEach((card) => {
     card.addEventListener("click", () => {
-      speakChunk(VOCAB_ITEMS[Number(card.dataset.idx)].en);
+      speakVocab(VOCAB_ITEMS[Number(card.dataset.idx)].en);
       card.classList.toggle("flipped");
     });
   });
@@ -402,7 +404,7 @@ function runVerbRound(items, round) {
   render();
 }
 
-// ---- Pronunciation (scored: 6) — tap 🔊 to hear the word, then choose /s/ or /z/ ----
+// ---- Pronunciation (scored: 6) — read the word, then choose /s/ or /z/ ----
 // Same flow as True/False: wrong words come back in a "Vòng 2" retry round.
 function runPronRound(partIdx, items, round) {
   const host = document.getElementById("pron-list");
@@ -414,7 +416,7 @@ function runPronRound(partIdx, items, round) {
 
   host.innerHTML = `<div class="quiz-q" style="margin-bottom:10px;">${part.title}</div>` + retryHeader(round) + items.map((t, idx) => `
     <div class="tf-item pron-item" data-idx="${idx}">
-      <button type="button" class="pron-word" data-idx="${idx}">🔊 ${t.word}</button>
+      <div class="pron-word">${t.word}</div>
       <div class="tf-btn-row">
         <button type="button" class="tf-btn" data-choice="/s/">/s/</button>
         <button type="button" class="tf-btn" data-choice="/z/">/z/</button>
@@ -423,10 +425,6 @@ function runPronRound(partIdx, items, round) {
     </div>`).join("");
 
   if (round > 1 || partIdx > 0) host.scrollIntoView({ behavior: "smooth", block: "start" });
-
-  host.querySelectorAll(".pron-word").forEach(btn => {
-    btn.addEventListener("click", () => speakChunk(items[Number(btn.dataset.idx)].word));
-  });
 
   host.querySelectorAll(".pron-item").forEach((itemEl) => {
     const idx = Number(itemEl.dataset.idx);
@@ -447,7 +445,6 @@ function runPronRound(partIdx, items, round) {
         const feedback = document.getElementById(`pron-feedback-${idx}`);
         feedback.textContent = correct ? `✓ Chính xác! ${t.word} → ${t.answer}` : `Đáp án đúng: ${t.word} → ${t.answer}`;
         feedback.className = correct ? "fitb-feedback ok" : "fitb-feedback no";
-        speakChunk(t.word);
 
         eqRecordAndSave(`${part.key}-${t.origIdx}`, `${t.word} (final s)`, choice, t.answer, correct);
         if (!correct) wrongItems.push(t);

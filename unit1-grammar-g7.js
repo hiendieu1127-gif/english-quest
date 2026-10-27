@@ -141,9 +141,6 @@ function eqRecordAndSave(key, question, studentAnswer, correctAnswer, correct) {
 function normalize(s) {
   return s.trim().toLowerCase().replace(/\s+/g, " ").replace(/[.?!,]/g, "");
 }
-function sanitizeForSpeech(text) {
-  return text.replace(/_+/g, "").replace(/\s+([.?!,])/g, "$1").replace(/\s+/g, " ").trim();
-}
 
 document.addEventListener("DOMContentLoaded", () => {
   eqStudent = window.EQStudent ? window.EQStudent.confirmStudent() : "";
@@ -269,11 +266,8 @@ function runGrammarMC() {
         }
         eqRecordAndSave(`mc-${item.en}`, item.en, item.opts[chosen], item.opts[item.answer], correct);
 
-        // Play the pronunciation audio, but always wait for a manual
-        // "Tiếp theo →" tap before moving on — so students have time to
-        // read the correct answer if they got it wrong (no auto-advance).
-        const spokenText = sanitizeForSpeech(item.en.replace(/___/g, item.opts[item.answer].split("; ").join(" ")));
-        window.EQSpeak && window.EQSpeak.speak(spokenText);
+        // Always wait for a manual "Tiếp theo →" tap before moving on — so
+        // students have time to read the correct answer (no auto-advance).
 
         const nextBtn = document.createElement("button");
         nextBtn.type = "button";

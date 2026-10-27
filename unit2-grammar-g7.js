@@ -133,11 +133,8 @@ function renderDots(current, total) {
   return `<div class="runner-dots">${dots}</div>`;
 }
 
-// A bare "I" chunk is read as "capital I" by some voices — speak "aye" instead.
-function speakChunk(text) {
-  if (!window.EQSpeak) return;
-  window.EQSpeak.speak(text.trim() === "I" ? "aye" : text);
-}
+// AI voice is turned off in this page.
+function speakChunk() {}
 
 function retryHeader(round) {
   return round > 1
@@ -340,7 +337,6 @@ function runSentenceRound(items, round) {
       const correct = [item.answer, ...(item.also || [])].some(a => sameSentence(built, a));
       window.EQSound && (correct ? window.EQSound.correct() : window.EQSound.wrong());
       window.EQMascot && window.EQMascot.show("mascot-box", correct ? "correct" : "wrong");
-      window.EQSpeak && window.EQSpeak.speak(item.answer);
       feedback.innerHTML =
         (correct
           ? `<span style="color:#3fae4f;font-weight:700;">✓ Chính xác!</span>`

@@ -240,11 +240,14 @@ function renderDots(current, total) {
 // chunk, trimmed) gets misread as "capital I" (spelled-out letter) instead of
 // the pronoun. "aye" is a homophone of "I" that speaks correctly. Only the
 // spoken text changes — what's shown on screen is never touched.
-function speakChunk(text) {
+function speakVocab(text) {
   if (!window.EQSpeak) return;
   const spoken = text.trim() === "I" ? "aye" : text;
   window.EQSpeak.speak(spoken);
 }
+
+// AI voice is off everywhere except the vocabulary cards after the reading.
+function speakChunk() {}
 
 // ---- Shared "section complete" screen (Xong rồi! + optional "next section" button) ----
 function showSectionComplete(host, message, hasNext, mascotType) {
@@ -307,7 +310,7 @@ function renderVocab() {
   host.querySelectorAll(".vocab-card").forEach((card) => {
     card.addEventListener("click", () => {
       const idx = Number(card.dataset.idx);
-      speakChunk(VOCAB_ITEMS[idx].en);
+      speakVocab(VOCAB_ITEMS[idx].en);
       card.classList.toggle("flipped");
     });
   });
