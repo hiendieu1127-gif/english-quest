@@ -1,7 +1,7 @@
 // ============================================================
 // Grade 7 — Unit 3 (Community Service) — Exercises data
 // Source: teacher Hien's screenshots (pronunciation -ed, listening, reading passage,
-// match the words, True/False, write sentences). Listening audio: g7-u3-listen.mp3
+// match the words, True/False, write sentences). Listening audio: g7-u3-listen.wav
 // (uploaded by teacher Hien). The Vietnamese translations are Claude's — please review.
 // Scored sections: Pronunciation (5) + Listening (5) + Match (5) + True/False (5)
 // + Make sentences (4) = 24 total. Reading and Vocabulary are practice-only.
@@ -23,7 +23,7 @@ const PRON_ITEMS = [
 ];
 
 // ---- Listening: one recording, write ONE word in each blank ----
-const LISTEN_AUDIO = "g7-u3-listen.mp3";
+const LISTEN_AUDIO = "g7-u3-listen.wav";
 const LISTEN_ITEMS = [
   { id: 1, before: "My school has a number of volunteer", after: "every summer.", answer: "activities" },
   { id: 2, before: "The activities include donating books to village children,", after: "kids in the neighbourhood, and teaching English to primary students.", answer: "tutoring" },
