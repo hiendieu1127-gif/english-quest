@@ -116,6 +116,49 @@ var VOCAB_UNITS_G7 = [
       { id: "g7u2-bring-ex", en: "bring", vi: "mang, đem", example: "Don't forget to bring a lunch box.", blank: "bring", stages: ["missing-word"], viFull: "Đừng quên mang theo hộp cơm trưa.", viBlanked: "Đừng quên ___ theo hộp cơm trưa." },
     ],
   },
+  {
+    id: "g7-unit3",
+    number: 3,
+    title: "Community Service",
+    subtitle: "Global Success 7 · New Vocabulary",
+    words: [
+      // Tap Pairs (8 words)
+      { id: "g7u3-are-you-back", en: "Are you back in Hanoi?", vi: "Bạn quay trở về Hà Nội à?", stages: ["tap-pairs"] },
+      { id: "g7u3-come-back", en: "come back", vi: "quay trở lại", stages: ["tap-pairs"] },
+      { id: "g7u3-meet-up", en: "meet up", vi: "gặp gỡ", stages: ["tap-pairs"] },
+      { id: "g7u3-wait", en: "wait", vi: "chờ đợi", stages: ["tap-pairs"] },
+      { id: "g7u3-club", en: "club", vi: "câu lạc bộ", stages: ["tap-pairs"] },
+      { id: "g7u3-litter", en: "litter", vi: "rác", stages: ["tap-pairs"] },
+      { id: "g7u3-plant", en: "plant", vi: "trồng", stages: ["tap-pairs"] },
+      { id: "g7u3-teach-taught", en: "teach – taught", vi: "dạy (V2: taught)", stages: ["tap-pairs"] },
+
+      // Picture Matching (8 words) — ảnh do cô Hiền gửi
+      { id: "g7u3-board-game", en: "a board game", vi: "trò chơi cờ bàn", icon: "img/vocab-g7-u3-board-game.jpg", stages: ["picture-matching"] },
+      { id: "g7u3-pick-up-litter", en: "pick up litter", vi: "nhặt rác", icon: "img/vocab-g7-u3-pick-up-litter.jpg", stages: ["picture-matching"] },
+      { id: "g7u3-school-garden", en: "school garden", vi: "khu vườn ở trong trường học", icon: "img/vocab-g7-u3-school-garden.jpg", stages: ["picture-matching", "multiple-choice"] },
+      { id: "g7u3-nursing-home", en: "a nursing home", vi: "viện dưỡng lão", icon: "img/vocab-g7-u3-nursing-home.jpg", stages: ["picture-matching"] },
+      { id: "g7u3-homeless-children", en: "homeless children", vi: "trẻ em vô gia cư", icon: "img/vocab-g7-u3-homeless-children.jpg", stages: ["picture-matching"] },
+      { id: "g7u3-recycle-plastic-bottles", en: "recycle plastic bottles", vi: "tái chế chai nhựa", icon: "img/vocab-g7-u3-recycle-plastic-bottles.jpg", stages: ["picture-matching"] },
+      { id: "g7u3-donate-clothes", en: "donate clothes", vi: "quyên góp quần áo", icon: "img/vocab-g7-u3-donate-clothes.jpg", stages: ["picture-matching"] },
+      { id: "g7u3-water-plants", en: "water plants", vi: "tưới cây", icon: "img/vocab-g7-u3-water-plants.jpg", stages: ["picture-matching"] },
+
+      // Multiple Choice (8 words: school garden above + 7 below) — 4 of them also used in Sentence Shuffle
+      { id: "g7u3-community-activities", en: "community activities", vi: "các hoạt động cộng đồng", stages: ["multiple-choice", "sentence-shuffle"], example: "Our club joins many community activities.", viFull: "Câu lạc bộ của chúng tôi tham gia nhiều hoạt động cộng đồng.", chunks: ["Our club", "joins", "many", "community activities."] },
+      { id: "g7u3-pick-up", en: "pick up", vi: "nhặt lên, cầm lên", stages: ["multiple-choice"] },
+      { id: "g7u3-fantastic", en: "fantastic", vi: "tuyệt vời", stages: ["multiple-choice", "sentence-shuffle"], example: "The school garden looks fantastic.", viFull: "Khu vườn trường trông thật tuyệt vời.", chunks: ["The school garden", "looks", "fantastic."] },
+      { id: "g7u3-donate", en: "donate", vi: "quyên góp", stages: ["multiple-choice", "sentence-shuffle"], example: "We donated clothes to a nursing home.", viFull: "Chúng tôi đã quyên góp quần áo cho một viện dưỡng lão.", chunks: ["We", "donated clothes", "to", "a nursing home."] },
+      { id: "g7u3-lets-v", en: "Let's + V", vi: "hãy cùng nhau...", stages: ["multiple-choice", "sentence-shuffle"], example: "Let's pick up litter in the park.", viFull: "Hãy cùng nhau nhặt rác trong công viên.", chunks: ["Let's", "pick up litter", "in the park."] },
+      { id: "g7u3-exchange-for", en: "exchange something for something", vi: "đổi cái gì để lấy cái gì", stages: ["multiple-choice"] },
+      { id: "g7u3-clean-the-playground", en: "clean the playground", vi: "dọn dẹp sân chơi", stages: ["multiple-choice"] },
+
+      // Missing Word (5 sentences)
+      { id: "g7u3-come-back-ex", en: "come back", vi: "quay trở lại", example: "When will you come back to Hanoi?", blank: "come back", stages: ["missing-word"], viFull: "Khi nào bạn quay trở lại Hà Nội?", viBlanked: "Khi nào bạn ___ Hà Nội?" },
+      { id: "g7u3-meet-up-ex", en: "meet up", vi: "gặp gỡ", example: "Let's meet up at the park this Sunday.", blank: "meet up", stages: ["missing-word"], viFull: "Chủ nhật này chúng ta hãy gặp nhau ở công viên nhé.", viBlanked: "Chủ nhật này chúng ta hãy ___ ở công viên nhé." },
+      { id: "g7u3-wait-ex", en: "wait", vi: "chờ đợi", example: "Please wait for me at the school gate.", blank: "wait", stages: ["missing-word"], viFull: "Hãy chờ tôi ở cổng trường nhé.", viBlanked: "Hãy ___ tôi ở cổng trường nhé." },
+      { id: "g7u3-plant-ex", en: "plant", vi: "trồng", example: "We planted trees in the school garden last summer.", blank: "planted", stages: ["missing-word"], viFull: "Chúng tôi đã trồng cây trong vườn trường vào mùa hè năm ngoái.", viBlanked: "Chúng tôi đã ___ cây trong vườn trường vào mùa hè năm ngoái." },
+      { id: "g7u3-taught-ex", en: "teach – taught", vi: "dạy", example: "Last year, we taught English to homeless children.", blank: "taught", stages: ["missing-word"], viFull: "Năm ngoái, chúng tôi đã dạy tiếng Anh cho trẻ em vô gia cư.", viBlanked: "Năm ngoái, chúng tôi đã ___ tiếng Anh cho trẻ em vô gia cư." },
+    ],
+  },
 ];
 
 
