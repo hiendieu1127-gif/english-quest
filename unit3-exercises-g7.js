@@ -4,7 +4,7 @@
 // match the words, True/False, write sentences). Listening audio: g7-u3-listen.wav
 // (uploaded by teacher Hien). The Vietnamese translations are Claude's — please review.
 // Scored sections: Pronunciation (5) + Listening (5) + Match (5) + True/False (5)
-// + Make sentences (4) = 24 total. Reading and Vocabulary are practice-only.
+// + Make sentences (3) = 23 total. Reading and Vocabulary are practice-only.
 // ============================================================
 
 // ---- Pronunciation: choose the word whose -ed is pronounced differently ----
@@ -151,26 +151,11 @@ const SENTENCES = [
     answer: "We learnt teamwork skills when we joined some clean-up activities last summer.",
     answerVi: "Chúng tôi đã học được kỹ năng làm việc nhóm khi tham gia một vài hoạt động dọn dẹp vào mùa hè năm ngoái.",
   },
-  {
-    id: 4,
-    cue: "If you / love / nature / can / join / our Green Neighbourhood project.",
-    chunks: [
-      { en: "If", vi: "nếu" },
-      { en: "you", vi: "bạn" },
-      { en: "love", vi: "yêu" },
-      { en: "nature,", vi: "thiên nhiên," },
-      { en: "you", vi: "bạn" },
-      { en: "can join", vi: "có thể tham gia" },
-      { en: "our Green Neighbourhood project.", vi: "dự án Khu phố Xanh của chúng tôi." },
-    ],
-    answer: "If you love nature, you can join our Green Neighbourhood project.",
-    answerVi: "Nếu bạn yêu thiên nhiên, bạn có thể tham gia dự án Khu phố Xanh của chúng tôi.",
-  },
 ];
 
 // ============================================================
 // Results saving — same saveQueue-serialized pattern as unit2-exercises-g7.js.
-// 24 scored items total: 5 Pronunciation + 5 Listening + 5 Match + 5 True/False + 4 Make sentences.
+// 23 scored items total: 5 Pronunciation + 5 Listening + 5 Match + 5 True/False + 3 Make sentences.
 // Score is based on the FIRST attempt only — retry rounds are saved separately.
 // ============================================================
 const UNIT_ID = "g7-unit3";
@@ -568,7 +553,7 @@ function runTFRound(items, round) {
   });
 }
 
-// ---- 7. Make sentences (scored: 4, one at a time) — tap chunks in order ----
+// ---- 7. Make sentences (scored: 3, one at a time) — tap chunks in order ----
 function runSentenceRound(items, round) {
   const host = document.getElementById("sentence-runner");
   if (!host) return;
