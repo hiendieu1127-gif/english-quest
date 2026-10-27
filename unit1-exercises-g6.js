@@ -145,10 +145,13 @@ function normalize(s) {
 }
 
 // A bare "I" is read by some voices as "capital I" — "aye" sounds right. Display unchanged.
-function speakChunk(text) {
+function speakVocab(text) {
   if (!window.EQSpeak) return;
   window.EQSpeak.speak(text.trim() === "I" ? "aye" : text);
 }
+
+// AI voice is off everywhere except the vocabulary cards after the reading.
+function speakChunk() {}
 
 // ---- Shared "section complete" screen (Xong rồi! + optional "next section" button) ----
 // Each crumb is its own section (not parts of one Quiz), so no data-part-done marker is needed.
@@ -210,7 +213,7 @@ function renderVocab() {
     </div>`).join("");
   host.querySelectorAll(".vocab-card").forEach((card) => {
     card.addEventListener("click", () => {
-      speakChunk(VOCAB_ITEMS[Number(card.dataset.idx)].en);
+      speakVocab(VOCAB_ITEMS[Number(card.dataset.idx)].en);
       card.classList.toggle("flipped");
     });
   });

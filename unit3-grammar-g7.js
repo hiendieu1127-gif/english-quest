@@ -107,11 +107,8 @@ function renderDots(current, total) {
   return `<div class="runner-dots">${dots}</div>`;
 }
 
-// A bare "I" chunk is read as "capital I" by some voices — speak "aye" instead.
-function speakChunk(text) {
-  if (!window.EQSpeak) return;
-  window.EQSpeak.speak(text.trim() === "I" ? "aye" : text);
-}
+// AI voice is turned off in this page.
+function speakChunk() {}
 
 function retryHeader(round) {
   return round > 1
