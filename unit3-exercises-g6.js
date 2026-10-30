@@ -193,7 +193,7 @@ function speakVocab(text) {
   window.EQSpeak.speak(text.trim() === "I" ? "aye" : text);
 }
 
-// AI voice is off everywhere except the vocabulary cards after the reading.
+// AI voice is off everywhere except the vocabulary cards and the Pronunciation word.
 function speakChunk() {}
 
 function addNextButton(afterEl, onClick) {
@@ -505,9 +505,12 @@ function runPronRound(items, round) {
       feedback.innerHTML =
         (ok ? `<span style="color:#3fae4f;font-weight:700;">✓ Chính xác!</span>`
             : `<span style="color:#e05c5c;font-weight:700;">Chưa đúng. Đáp án đúng:</span>`) +
-        ` <span class="pron-word">${word}</span>` +
-        `<div style="color:#666;margin-top:2px;">Đọc to từ này nhé.</div>`;
+        ` <button type="button" class="pron-word" id="pron-say">🔊 ${word}</button>` +
+        `<div style="color:#666;margin-top:2px;">Bấm 🔊 để nghe rồi đọc to từ này nhé.</div>`;
       feedback.className = "fitb-feedback";
+      // Pronunciation keeps its AI voice (Hiền's choice), like the vocabulary cards.
+      host.querySelector("#pron-say").addEventListener("click", () => speakVocab(word));
+      speakVocab(word);
 
       eqRecordAndSave(`pron-${item.id}`, `Pronunciation ${item.id}: label the picture (p / b)`, input.value.trim(), word, ok);
       if (!ok) wrongItems.push(item);
