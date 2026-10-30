@@ -111,10 +111,10 @@ const PRON_ITEMS = [
   { id: 5, img: "img/g6-u3-pron-bee.jpg", answers: ["bee", "a bee"] },
 ];
 
-// ---- Listening: one recording, write ONE word in each blank ----
+// ---- Listening: one recording, fill in each blank (blank 1 is the phrase "a round face", cô Hiền) ----
 const LISTEN_AUDIO = "g6-u3-listen.wav";
 const LISTEN_ITEMS = [
-  { id: 1, before: "My grandma is my best friend. She is my father's mother. This year, she is 70 years old. She has", after: "with long, white hair.", answer: "face" },
+  { id: 1, before: "My grandma is my best friend. She is my father's mother. This year, she is 70 years old. She has", after: "with long, white hair.", answer: "a round face" },
   { id: 2, before: "She teaches me to wash the dishes and", after: ".", answer: "cook" },
   { id: 3, before: "She is", after: "to other people. She helps them when she can.", answer: "kind" },
   { id: 4, before: "She is", after: ", too. She makes me laugh all the time. I love her so much.", answer: "funny" },
@@ -531,7 +531,7 @@ function runListenRound(items, round) {
   host.innerHTML = `
     ${retryHeader(round)}
     <audio class="q-audio" controls preload="auto" src="${LISTEN_AUDIO}"></audio>
-    <p class="tf-vi" style="margin:0 0 12px;">Bấm ▶ để nghe (nghe lại bao nhiêu lần cũng được), rồi điền MỘT từ vào mỗi chỗ trống.</p>
+    <p class="tf-vi" style="margin:0 0 12px;">Bấm ▶ để nghe (nghe lại bao nhiêu lần cũng được), rồi điền từ / cụm từ còn thiếu vào mỗi chỗ trống.</p>
     ${items.map(item => `
       <div class="tf-item listen-item">
         <span class="verb-num">(${item.id})</span> ${item.before}
