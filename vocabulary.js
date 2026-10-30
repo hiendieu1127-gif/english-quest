@@ -204,6 +204,49 @@ var VOCAB_UNITS_G5 = [
       { id: "u4-s-shopping", en: "I rarely go shopping on Sundays.", vi: "Mình hiếm khi đi mua sắm vào Chủ nhật.", example: "I rarely go shopping on Sundays.", blank: "rarely", viFull: "Mình hiếm khi đi mua sắm vào Chủ nhật.", viBlanked: "Mình ___ đi mua sắm vào Chủ nhật.", stages: ["missing-word", "sentence-shuffle"] },
     ],
   },
+
+  {
+    id: "unit5",
+    number: 5,
+    title: "My Future Job",
+    subtitle: "Global Success 5 · New Vocabulary",
+    words: [
+      // Tap Pairs + Picture Matching — slides 1, 2 & 4 (10 photos from Hiền).
+      // Jobs and actions are separate groups so "teacher" is never a distractor for "teach children".
+      { id: "u5-firefighter", en: "firefighter", vi: "lính cứu hỏa", group: "jobs", icon: "img/vocab-g5-u5-firefighter.jpg", stages: ["tap-pairs", "picture-matching"] },
+      { id: "u5-reporter", en: "reporter", vi: "phóng viên", group: "jobs", icon: "img/vocab-g5-u5-reporter.jpg", stages: ["tap-pairs", "picture-matching"] },
+      { id: "u5-gardener", en: "gardener", vi: "người làm vườn", group: "jobs", icon: "img/vocab-g5-u5-gardener.jpg", stages: ["tap-pairs", "picture-matching"] },
+      { id: "u5-writer", en: "writer", vi: "nhà văn", group: "jobs", icon: "img/vocab-g5-u5-writer.jpg", stages: ["tap-pairs", "picture-matching"] },
+      { id: "u5-doctor", en: "doctor", vi: "bác sĩ", group: "jobs", icon: "img/vocab-g5-u5-doctor.jpg", stages: ["tap-pairs", "picture-matching"] },
+      { id: "u5-teacher", en: "teacher", vi: "giáo viên", group: "jobs", icon: "img/vocab-g5-u5-teacher.jpg", stages: ["tap-pairs", "picture-matching"] },
+      { id: "u5-teach-children", en: "teach children", vi: "dạy trẻ em", group: "actions", icon: "img/vocab-g5-u5-teach-children.jpg", stages: ["tap-pairs", "picture-matching"] },
+      { id: "u5-report-the-news", en: "report the news", vi: "đưa tin, báo tin tức", group: "actions", icon: "img/vocab-g5-u5-report-the-news.jpg", stages: ["tap-pairs", "picture-matching"] },
+      { id: "u5-grow-flowers", en: "grow flowers", vi: "trồng hoa", group: "actions", icon: "img/vocab-g5-u5-grow-flowers.jpg", stages: ["tap-pairs", "picture-matching"] },
+      { id: "u5-write-stories", en: "write stories", vi: "viết truyện", group: "actions", icon: "img/vocab-g5-u5-write-stories.jpg", stages: ["tap-pairs", "picture-matching"] },
+      { id: "u5-help-people", en: "help people", vi: "giúp đỡ mọi người", stages: ["tap-pairs"] },
+      { id: "u5-in-the-future", en: "in the future", vi: "trong tương lai", stages: ["tap-pairs"] },
+
+      // Multiple Choice — slide 4 phrases + key words from slides 1 & 2
+      { id: "u5-mc-survey", en: "survey", vi: "cuộc khảo sát", group: "phrases", stages: ["multiple-choice"] },
+      { id: "u5-mc-work-in-a-team", en: "work in a team", vi: "làm việc nhóm", group: "phrases", stages: ["multiple-choice"] },
+      { id: "u5-mc-take-care-of", en: "take care of (someone)", vi: "chăm sóc (ai đó)", group: "phrases", stages: ["multiple-choice"] },
+      { id: "u5-mc-plant-trees", en: "plant trees and flowers", vi: "trồng cây và hoa", group: "phrases", stages: ["multiple-choice"] },
+      { id: "u5-mc-make-gardens", en: "make beautiful gardens", vi: "tạo ra những khu vườn đẹp", group: "phrases", stages: ["multiple-choice"] },
+      { id: "u5-mc-future-job", en: "future job", vi: "nghề nghiệp tương lai", group: "phrases", stages: ["multiple-choice"] },
+      { id: "u5-mc-in-the-future", en: "in the future", vi: "trong tương lai", group: "phrases", stages: ["multiple-choice"] },
+      { id: "u5-mc-why", en: "Why", vi: "tại sao", group: "words", stages: ["multiple-choice"] },
+      { id: "u5-mc-because", en: "Because", vi: "bởi vì", group: "words", stages: ["multiple-choice"] },
+      { id: "u5-mc-id-like", en: "I'd like (= I would like)", vi: "tôi muốn", group: "words", stages: ["multiple-choice"] },
+
+      // Missing Word + Sentence Shuffle — slides 1 & 2 (sentences 5–6 written by Claude from the slide words)
+      { id: "u5-s-future", en: "What would you like to be in the future?", vi: "Bạn muốn trở thành gì trong tương lai?", example: "What would you like to be in the future?", blank: "future", viFull: "Bạn muốn trở thành gì trong tương lai?", viBlanked: "Bạn muốn trở thành gì trong ___?", stages: ["missing-word", "sentence-shuffle"] },
+      { id: "u5-s-firefighter", en: "I'd like to be a firefighter.", vi: "Mình muốn trở thành lính cứu hỏa.", example: "I'd like to be a firefighter.", blank: "firefighter", viFull: "Mình muốn trở thành lính cứu hỏa. (I'd like = I would like)", viBlanked: "Mình muốn trở thành ___.", stages: ["missing-word", "sentence-shuffle"] },
+      { id: "u5-s-why-teacher", en: "Why would you like to be a teacher?", vi: "Tại sao bạn muốn trở thành giáo viên?", example: "Why would you like to be a teacher?", blank: "Why", viFull: "Tại sao bạn muốn trở thành giáo viên?", viBlanked: "___ bạn muốn trở thành giáo viên?", stages: ["missing-word", "sentence-shuffle"] },
+      { id: "u5-s-teach-children", en: "Because I'd like to teach children.", vi: "Bởi vì mình muốn dạy trẻ em.", example: "Because I'd like to teach children.", blank: "Because", viFull: "Bởi vì mình muốn dạy trẻ em.", viBlanked: "___ mình muốn dạy trẻ em.", stages: ["missing-word", "sentence-shuffle"] },
+      { id: "u5-s-writer", en: "I'd like to be a writer.", vi: "Mình muốn trở thành nhà văn.", example: "I'd like to be a writer.", blank: "writer", viFull: "Mình muốn trở thành nhà văn.", viBlanked: "Mình muốn trở thành ___.", stages: ["missing-word", "sentence-shuffle"] },
+      { id: "u5-s-write-stories", en: "Because I'd like to write stories.", vi: "Bởi vì mình muốn viết truyện.", example: "Because I'd like to write stories.", blank: "write", viFull: "Bởi vì mình muốn viết truyện.", viBlanked: "Bởi vì mình muốn ___ truyện.", stages: ["missing-word", "sentence-shuffle"] },
+    ],
+  },
 ];
 
 
