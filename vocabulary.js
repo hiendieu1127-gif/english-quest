@@ -238,9 +238,10 @@ var VOCAB_UNITS_G5 = [
       { id: "u5-mc-because", en: "Because", vi: "bởi vì", group: "words", stages: ["multiple-choice"] },
       { id: "u5-mc-id-like", en: "I'd like (= I would like)", vi: "tôi muốn", group: "words", stages: ["multiple-choice"] },
 
-      // Missing Word + Sentence Shuffle — slides 1 & 2 (sentences 5–6 written by Claude from the slide words)
+      // Missing Word + Sentence Shuffle — slides 1 & 2 (sentences 5–6 written by Claude from the slide words).
+      // "I'd like to be a firefighter." blanks "like" so it never looks the same as "I'd like to be a ___." (writer).
       { id: "u5-s-future", en: "What would you like to be in the future?", vi: "Bạn muốn trở thành gì trong tương lai?", example: "What would you like to be in the future?", blank: "future", viFull: "Bạn muốn trở thành gì trong tương lai?", viBlanked: "Bạn muốn trở thành gì trong ___?", stages: ["missing-word", "sentence-shuffle"] },
-      { id: "u5-s-firefighter", en: "I'd like to be a firefighter.", vi: "Mình muốn trở thành lính cứu hỏa.", example: "I'd like to be a firefighter.", blank: "firefighter", viFull: "Mình muốn trở thành lính cứu hỏa. (I'd like = I would like)", viBlanked: "Mình muốn trở thành ___.", stages: ["missing-word", "sentence-shuffle"] },
+      { id: "u5-s-firefighter", en: "I'd like to be a firefighter.", vi: "Mình muốn trở thành lính cứu hỏa.", example: "I'd like to be a firefighter.", blank: "like", viFull: "Mình muốn trở thành lính cứu hỏa. (I'd like = I would like)", viBlanked: "Mình ___ trở thành lính cứu hỏa.", stages: ["missing-word", "sentence-shuffle"] },
       { id: "u5-s-why-teacher", en: "Why would you like to be a teacher?", vi: "Tại sao bạn muốn trở thành giáo viên?", example: "Why would you like to be a teacher?", blank: "Why", viFull: "Tại sao bạn muốn trở thành giáo viên?", viBlanked: "___ bạn muốn trở thành giáo viên?", stages: ["missing-word", "sentence-shuffle"] },
       { id: "u5-s-teach-children", en: "Because I'd like to teach children.", vi: "Bởi vì mình muốn dạy trẻ em.", example: "Because I'd like to teach children.", blank: "Because", viFull: "Bởi vì mình muốn dạy trẻ em.", viBlanked: "___ mình muốn dạy trẻ em.", stages: ["missing-word", "sentence-shuffle"] },
       { id: "u5-s-writer", en: "I'd like to be a writer.", vi: "Mình muốn trở thành nhà văn.", example: "I'd like to be a writer.", blank: "writer", viFull: "Mình muốn trở thành nhà văn.", viBlanked: "Mình muốn trở thành ___.", stages: ["missing-word", "sentence-shuffle"] },
