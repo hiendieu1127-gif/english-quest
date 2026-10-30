@@ -145,6 +145,72 @@ var VOCAB_UNITS_G6 = [
       { id: "g6u2-ss-flowers", en: "Are there any flowers?", vi: "Có bông hoa nào không?", example: "Are there any flowers in the garden?", viFull: "Trong vườn có bông hoa nào không?", chunks: ["Are", "there", "any", "flowers", "in", "the garden?"], stages: ["sentence-shuffle"] },
     ],
   },
+  {
+    id: "g6-unit3",
+    number: 3,
+    title: "My Friends",
+    subtitle: "Global Success 6 · New Vocabulary",
+    // 32 scored items: Picture Matching 8 + Multiple Choice 12 + Missing Word 8 + Sentence Shuffle 4.
+    // Tap Pairs (12) is practice only. Word list, pictures from cô Hiền;
+    // Missing Word + Sentence Shuffle sentences written by Claude, approved by cô Hiền.
+    words: [
+      // Tap Pairs (12 words, practice only)
+      { id: "g6u3-appearance-tp", en: "appearance", vi: "ngoại hình", stages: ["tap-pairs"] },
+      { id: "g6u3-personality-tp", en: "personality", vi: "tính cách", stages: ["tap-pairs"] },
+      { id: "g6u3-arm-tp", en: "arm", vi: "cánh tay", stages: ["tap-pairs"] },
+      { id: "g6u3-leg-tp", en: "leg", vi: "chân", stages: ["tap-pairs"] },
+      { id: "g6u3-ear-tp", en: "ear", vi: "tai", stages: ["tap-pairs"] },
+      { id: "g6u3-eye-tp", en: "eye", vi: "mắt", stages: ["tap-pairs"] },
+      { id: "g6u3-nose-tp", en: "nose", vi: "mũi", stages: ["tap-pairs"] },
+      { id: "g6u3-finger-tp", en: "finger", vi: "ngón tay", stages: ["tap-pairs"] },
+      { id: "g6u3-cheek-tp", en: "cheek", vi: "má", stages: ["tap-pairs"] },
+      { id: "g6u3-shoulder-tp", en: "shoulder", vi: "vai", stages: ["tap-pairs"] },
+      { id: "g6u3-small-nose-tp", en: "small nose", vi: "mũi nhỏ", stages: ["tap-pairs"] },
+      { id: "g6u3-round-face-tp", en: "round face", vi: "mặt tròn", stages: ["tap-pairs"] },
+
+      // Picture Matching (8 words) — ảnh do cô Hiền gửi.
+      // avoid: pictures that also show that feature (curly hair is long too, the big-eyes / cheek
+      // pictures have short hair) never appear as wrong options for each other.
+      { id: "g6u3-cheek", en: "cheek", vi: "má", icon: "img/vocab-g6-u3-cheek.jpg", avoid: ["g6u3-short-hair"], stages: ["picture-matching"] },
+      { id: "g6u3-shoulder", en: "shoulder", vi: "vai", icon: "img/vocab-g6-u3-shoulder.jpg", stages: ["picture-matching"] },
+      { id: "g6u3-slim", en: "slim", vi: "mảnh khảnh", icon: "img/vocab-g6-u3-slim.jpg", stages: ["picture-matching"] },
+      { id: "g6u3-long-hair", en: "long hair", vi: "tóc dài", icon: "img/vocab-g6-u3-long-hair.jpg", avoid: ["g6u3-curly-hair"], stages: ["picture-matching"] },
+      { id: "g6u3-short-hair", en: "short hair", vi: "tóc ngắn", icon: "img/vocab-g6-u3-short-hair.jpg", avoid: ["g6u3-big-eyes", "g6u3-cheek"], stages: ["picture-matching"] },
+      { id: "g6u3-curly-hair", en: "curly hair", vi: "tóc xoăn", icon: "img/vocab-g6-u3-curly-hair.jpg", avoid: ["g6u3-long-hair"], stages: ["picture-matching"] },
+      { id: "g6u3-round-face", en: "round face", vi: "mặt tròn", icon: "img/vocab-g6-u3-round-face.jpg", avoid: ["g6u3-big-eyes"], stages: ["picture-matching"] },
+      { id: "g6u3-big-eyes", en: "big eyes", vi: "mắt to", icon: "img/vocab-g6-u3-big-eyes.jpg", stages: ["picture-matching"] },
+
+      // Multiple Choice (12 words) — personality, choose the Vietnamese meaning
+      { id: "g6u3-active", en: "active", vi: "năng động, hăng hái", group: "personality", stages: ["multiple-choice"] },
+      { id: "g6u3-careful", en: "careful", vi: "cẩn thận", group: "personality", stages: ["multiple-choice"] },
+      { id: "g6u3-caring", en: "caring", vi: "chu đáo, biết quan tâm", group: "personality", stages: ["multiple-choice"] },
+      { id: "g6u3-clever", en: "clever", vi: "lanh lợi, thông minh", group: "personality", stages: ["multiple-choice"] },
+      { id: "g6u3-confident", en: "confident", vi: "tự tin", group: "personality", stages: ["multiple-choice"] },
+      { id: "g6u3-creative", en: "creative", vi: "sáng tạo", group: "personality", stages: ["multiple-choice"] },
+      { id: "g6u3-friendly", en: "friendly", vi: "thân thiện", group: "personality", stages: ["multiple-choice"] },
+      { id: "g6u3-funny", en: "funny", vi: "vui tính, hài hước", group: "personality", stages: ["multiple-choice"] },
+      { id: "g6u3-hard-working", en: "hard-working", vi: "chăm chỉ", group: "personality", stages: ["multiple-choice"] },
+      { id: "g6u3-kind", en: "kind", vi: "tốt bụng", group: "personality", stages: ["multiple-choice"] },
+      { id: "g6u3-loving", en: "loving", vi: "giàu tình yêu thương", group: "personality", stages: ["multiple-choice"] },
+      { id: "g6u3-shy", en: "shy", vi: "nhút nhát, xấu hổ", group: "personality", stages: ["multiple-choice"] },
+
+      // Missing Word (8 sentences) — each blank only fits its own sentence
+      { id: "g6u3-mw-hard-working", en: "hard-working", vi: "chăm chỉ", example: "Lan is very hard-working. She studies every evening.", blank: "hard-working", stages: ["missing-word"], viFull: "Lan rất chăm chỉ. Bạn ấy học bài mỗi tối.", viBlanked: "Lan rất ___. Bạn ấy học bài mỗi tối." },
+      { id: "g6u3-mw-funny", en: "funny", vi: "vui tính, hài hước", example: "Nam is so funny. He always makes us laugh.", blank: "funny", stages: ["missing-word"], viFull: "Nam rất vui tính. Bạn ấy luôn làm chúng tớ cười.", viBlanked: "Nam rất ___. Bạn ấy luôn làm chúng tớ cười." },
+      { id: "g6u3-mw-shy", en: "shy", vi: "nhút nhát", example: "Mai is shy. She doesn't like talking to new people.", blank: "shy", stages: ["missing-word"], viFull: "Mai nhút nhát. Bạn ấy không thích nói chuyện với người lạ.", viBlanked: "Mai ___. Bạn ấy không thích nói chuyện với người lạ." },
+      { id: "g6u3-mw-creative", en: "creative", vi: "sáng tạo", example: "Minh is creative. He always has new ideas for our art projects.", blank: "creative", stages: ["missing-word"], viFull: "Minh rất sáng tạo. Bạn ấy luôn có ý tưởng mới cho các dự án mĩ thuật của chúng tớ.", viBlanked: "Minh rất ___. Bạn ấy luôn có ý tưởng mới cho các dự án mĩ thuật của chúng tớ." },
+      { id: "g6u3-mw-careful", en: "careful", vi: "cẩn thận", example: "Hoa is careful. She always checks her answers twice.", blank: "careful", stages: ["missing-word"], viFull: "Hoa rất cẩn thận. Bạn ấy luôn kiểm tra bài làm hai lần.", viBlanked: "Hoa rất ___. Bạn ấy luôn kiểm tra bài làm hai lần." },
+      { id: "g6u3-mw-confident", en: "confident", vi: "tự tin", example: "Tom is confident. He isn't afraid to speak in front of the class.", blank: "confident", stages: ["missing-word"], viFull: "Tom rất tự tin. Bạn ấy không ngại nói trước cả lớp.", viBlanked: "Tom rất ___. Bạn ấy không ngại nói trước cả lớp." },
+      { id: "g6u3-mw-active", en: "active", vi: "năng động", example: "My brother is very active. He plays sports every day.", blank: "active", stages: ["missing-word"], viFull: "Anh trai tớ rất năng động. Anh ấy chơi thể thao mỗi ngày.", viBlanked: "Anh trai tớ rất ___. Anh ấy chơi thể thao mỗi ngày." },
+      { id: "g6u3-mw-clever", en: "clever", vi: "thông minh", example: "Mi is clever. She can solve difficult maths problems quickly.", blank: "clever", stages: ["missing-word"], viFull: "Mi rất thông minh. Bạn ấy có thể giải nhanh những bài toán khó.", viBlanked: "Mi rất ___. Bạn ấy có thể giải nhanh những bài toán khó." },
+
+      // Sentence Shuffle (4 sentences) — Claude viết, cô Hiền đã duyệt
+      { id: "g6u3-ss-best-friend", en: "My best friend is kind", vi: "Bạn thân của tớ tốt bụng", example: "My best friend is kind and funny.", viFull: "Bạn thân của tớ tốt bụng và vui tính.", chunks: ["My best friend", "is", "kind", "and", "funny."], stages: ["sentence-shuffle"] },
+      { id: "g6u3-ss-curly-hair", en: "She has long curly hair", vi: "Bạn ấy có tóc dài xoăn", example: "She has long curly hair and big eyes.", viFull: "Bạn ấy có mái tóc dài xoăn và đôi mắt to.", chunks: ["She", "has", "long", "curly hair", "and", "big eyes."], stages: ["sentence-shuffle"] },
+      { id: "g6u3-ss-football", en: "Nam is playing football", vi: "Nam đang chơi bóng đá", example: "Nam is playing football with his friends now.", viFull: "Bây giờ Nam đang chơi bóng đá với các bạn.", chunks: ["Nam", "is", "playing", "football", "with", "his friends", "now."], stages: ["sentence-shuffle"] },
+      { id: "g6u3-ss-reading", en: "Are you reading a book?", vi: "Bạn có đang đọc sách không?", example: "Are you reading a book at the moment?", viFull: "Lúc này bạn có đang đọc sách không?", chunks: ["Are", "you", "reading", "a book", "at the moment?"], stages: ["sentence-shuffle"] },
+    ],
+  },
 ];
 
 (function () {
@@ -447,9 +513,11 @@ function onStageComplete(stageKey) {
 
 // Distractors for an item: words from the SAME `group` first (e.g. numbers
 // with numbers, this with that), then any other word in the stage pool.
+// Words listed in `avoid` (either way round) are never wrong options for each other.
 function pickDistractors(pool, idx, n) {
   const g = pool[idx].group || "default";
-  const others = pool.map((_, i) => i).filter(i => i !== idx);
+  const clash = i => (pool[idx].avoid || []).includes(pool[i].id) || (pool[i].avoid || []).includes(pool[idx].id);
+  const others = pool.map((_, i) => i).filter(i => i !== idx && !clash(i));
   const same = shuffle(others.filter(i => (pool[i].group || "default") === g));
   const rest = shuffle(others.filter(i => (pool[i].group || "default") !== g));
   return same.concat(rest).slice(0, n);
