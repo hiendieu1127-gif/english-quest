@@ -286,11 +286,14 @@ function roundHeader(round) {
 
 // A bare "I" (the whole chunk) is misread by some voices as the spelled-out letter
 // ("capital I"). "aye" is a homophone that speaks correctly. Only the spoken text changes.
-function say(text) {
+function speakVocab(text) {
   if (!window.EQSpeak || !text) return;
   const spoken = text.trim() === "I" ? "aye" : text;
   window.EQSpeak.speak(spoken);
 }
+
+// AI voice is off everywhere except the vocabulary cards after the reading.
+function say() {}
 
 function sfx(correct) {
   window.EQSound && (correct ? window.EQSound.correct() : window.EQSound.wrong());
@@ -388,7 +391,6 @@ function renderChoiceItem(host, item, ctx) {
   const stemHtml = item.stem.includes("___")
     ? escapeHtml(item.stem).replace("___", `<span class="q-blank" id="q-blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>`)
     : escapeHtml(item.stem) + `<span id="q-blank" hidden></span>`; // no blank (Listen and number)
-  const hasListen = !!(item.listenFull || item.speakBefore);
   const viHtml = item.noTranslate ? "" : `
     <button type="button" class="eq-translate-btn" id="q-translate">🔤 Dịch</button>
     <div class="q-vi" id="q-vi" style="display:none;">
@@ -404,7 +406,7 @@ function renderChoiceItem(host, item, ctx) {
     <div>
       ${item.audio
         ? `<audio class="q-audio" id="q-audio" controls preload="auto" src="${escapeHtml(item.audio)}"></audio><div class="q-vi" style="margin:0 0 6px;">${escapeHtml(item.audioNote || "Nghe rồi chọn đáp án.")}</div>`
-        : hasListen ? `<button type="button" class="q-listen-btn" id="q-listen">🔊 Nghe</button>` : ""}
+        : ""}
       ${viHtml}
     </div>
     <div class="q-options">
@@ -483,7 +485,6 @@ function renderTFItem(host, item, ctx) {
     ${ctx.top}
     <p class="q-stem">${ctx.i + 1}. ${escapeHtml(item.en)}</p>
     <div>
-      <button type="button" class="q-listen-btn" id="tf-listen">🔊 Nghe</button>
       <button type="button" class="eq-translate-btn" id="tf-translate">🔤 Dịch</button>
     </div>
     <div class="q-vi" id="tf-vi" style="display:none;">${escapeHtml(item.vi)}</div>
@@ -497,7 +498,6 @@ function renderTFItem(host, item, ctx) {
   const transBtn = host.querySelector("#tf-translate");
   let answered = false;
 
-  host.querySelector("#tf-listen").addEventListener("click", () => say(item.en));
   transBtn.addEventListener("click", () => {
     const viEl = host.querySelector("#tf-vi");
     const showing = viEl.style.display !== "none";
@@ -793,7 +793,7 @@ function renderVocab() {
     </div>`).join("");
   host.querySelectorAll(".vocab-card").forEach((card) => {
     card.addEventListener("click", () => {
-      say(VOCAB_ITEMS[Number(card.dataset.idx)].en);
+      speakVocab(VOCAB_ITEMS[Number(card.dataset.idx)].en);
       card.classList.toggle("flipped");
     });
   });

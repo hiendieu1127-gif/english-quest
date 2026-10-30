@@ -101,11 +101,8 @@ function normalize(s) {
   return String(s).trim().toLowerCase().replace(/[’‘]/g, "'").replace(/\s+/g, " ").replace(/[.?!,]/g, "");
 }
 
-// A bare "I" is read by some voices as "capital I" — "aye" sounds right. Display unchanged.
-function speakChunk(text) {
-  if (!window.EQSpeak) return;
-  window.EQSpeak.speak(text.trim() === "I" ? "aye" : text);
-}
+// AI voice is off on the grammar page — only the vocabulary cards on the Exercises page speak.
+function speakChunk() {}
 
 // "<br>" between the two speakers → a space in plain text (Dashboard, speech).
 function plain(html) {

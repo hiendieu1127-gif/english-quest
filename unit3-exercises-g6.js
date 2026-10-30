@@ -188,10 +188,13 @@ function normalize(s) {
 }
 
 // A bare "I" is read by some voices as "capital I" — "aye" sounds right. Display unchanged.
-function speakChunk(text) {
+function speakVocab(text) {
   if (!window.EQSpeak) return;
   window.EQSpeak.speak(text.trim() === "I" ? "aye" : text);
 }
+
+// AI voice is off everywhere except the vocabulary cards after the reading.
+function speakChunk() {}
 
 function addNextButton(afterEl, onClick) {
   const nextBtn = document.createElement("button");
@@ -264,7 +267,7 @@ function renderVocab() {
     </div>`).join("");
   host.querySelectorAll(".vocab-card").forEach((card) => {
     card.addEventListener("click", () => {
-      speakChunk(VOCAB_ITEMS[Number(card.dataset.idx)].en);
+      speakVocab(VOCAB_ITEMS[Number(card.dataset.idx)].en);
       card.classList.toggle("flipped");
     });
   });
@@ -502,11 +505,9 @@ function runPronRound(items, round) {
       feedback.innerHTML =
         (ok ? `<span style="color:#3fae4f;font-weight:700;">✓ Chính xác!</span>`
             : `<span style="color:#e05c5c;font-weight:700;">Chưa đúng. Đáp án đúng:</span>`) +
-        ` <button type="button" class="pron-word" id="pron-say">🔊 ${word}</button>` +
-        `<div style="color:#666;margin-top:2px;">Bấm 🔊 để nghe rồi đọc to từ này nhé.</div>`;
+        ` <span class="pron-word">${word}</span>` +
+        `<div style="color:#666;margin-top:2px;">Đọc to từ này nhé.</div>`;
       feedback.className = "fitb-feedback";
-      host.querySelector("#pron-say").addEventListener("click", () => speakChunk(word));
-      speakChunk(word);
 
       eqRecordAndSave(`pron-${item.id}`, `Pronunciation ${item.id}: label the picture (p / b)`, input.value.trim(), word, ok);
       if (!ok) wrongItems.push(item);
