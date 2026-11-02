@@ -1,7 +1,7 @@
 // ============================================================
 // Grade 5 — Đề kiểm tra giữa học kỳ 1 (Unit 1–5):  midterm-g5.html?de=1 / ?de=2 / ?de=3
 //
-// Đề 1 + Đề 2: chép đúng đề và đáp án cô Hiền gửi (Đề 2 = "Đề số 5" trong ảnh).
+// Đề 1 + Đề 2: chép đúng đề và đáp án cô Hiền gửi (Đề 2 = "Đề số 5" trong ảnh). Đề 1 có phần nghe (file audio).
 // Đề 3: đề cô Hiền gửi sau (ảnh "Đề kiểm tra giữa học kỳ I", không ghi số đề).
 //
 // Mỗi phần (I, II, III…) là một tab đánh số; section-lock.js mở khoá lần lượt.
@@ -12,58 +12,98 @@
 // ============================================================
 
 const EXAMS = {
+// Đề 1 (thay đề cũ ngày 2/11): đề cô Hiền gửi (Part I Listening · II · III Reading · IV Writing), đánh số câu liên tục 1–39 như trên giấy.
+  // Listening: mỗi câu một file g5-mid1-listen-<số câu>.mp3 (hoặc .wav) ở thư mục gốc, nghe tối đa 2 lần.
+  // Chưa có file → đọc LISTENING SCRIPT bằng giọng đọc trình duyệt (EQSpeak).
+  // Bỏ Writing Task 2 (viết 4–5 câu về nghề tương lai) vì không chấm tự động được.
+  // Câu 36: đề in "in / I / a flat / live / the city" (thiếu một "in") → ghép thành "in the city".
   1: {
+    continuousNum: true,
     parts: [
       {
-        key: "choose", roman: "I", name: "Choose the correct answer", type: "mcq",
+        key: "listen", roman: "I.1", name: "Listen and circle A, B or C", type: "mcq",
+        instruction: "Bấm 🔊 để nghe (mỗi câu nghe được 2 lần), rồi chọn A, B hoặc C.",
+        items: [
+          { q: "What is Tom's favourite sport?", audio: "g5-mid1-listen-1", listen: ["What's your favourite sport, Tom?", "I like basketball. It's my favourite sport."], options: ["Football", "Basketball", "Table tennis"], answer: 1, explain: "Tom: I like basketball. It's my favourite sport." },
+          { q: "Where does Mai live?", audio: "g5-mid1-listen-2", listen: ["Where do you live, Mai?", "I live in a flat in the city."], options: ["In a house", "In a flat", "In a tower"], answer: 1, explain: "Mai: I live in a flat in the city." },
+          { q: "What nationality is Ken?", audio: "g5-mid1-listen-3", listen: ["What nationality is Ken?", "He's Malaysian. He's from Malaysia."], options: ["Australian", "Japanese", "Malaysian"], answer: 2, explain: "He's Malaysian. He's from Malaysia." },
+          { q: "What does Linda like doing in her free time?", audio: "g5-mid1-listen-4", listen: ["What do you like doing in your free time, Linda?", "I like reading books."], options: ["Reading books", "Playing the violin", "Watering the flowers"], answer: 0, explain: "Linda: I like reading books." },
+          { q: "What would Nam like to be in the future?", audio: "g5-mid1-listen-5", listen: ["What would you like to be in the future, Nam?", "I'd like to be a gardener because I like flowers."], options: ["A teacher", "A reporter", "A gardener"], answer: 2, explain: "Nam: I'd like to be a gardener because I like flowers." },
+        ],
+      },
+      {
+        key: "listenfill", roman: "I.2", name: "Listen and complete the sentences", type: "type",
+        instruction: "Bấm 🔊 để nghe (mỗi câu nghe được 2 lần), rồi gõ từ còn thiếu.",
+        items: [
+          { q: "Lucy's address is 45 ___ Street.", audio: "g5-mid1-listen-6", listen: ["What's your address, Lucy?", "It's 45 Green Street."], accept: ["Green"], explain: "Lucy: It's 45 Green Street." },
+          { q: "At the weekend, Peter usually ___ his bike.", audio: "g5-mid1-listen-7", listen: ["What do you do at the weekend, Peter?", "I usually ride my bike in the park."], accept: ["rides", "ride"], explain: "Đáp án: ride (nghe: I usually ride my bike). Viết đúng ngữ pháp với Peter là rides — cả hai đều được tính đúng." },
+          { q: "Mai is ___ and helpful.", audio: "g5-mid1-listen-8", listen: ["What's Mai like?", "She's clever and helpful."], accept: ["clever"], explain: "She's clever and helpful." },
+          { q: "Jack would like to be a ___ in the future.", audio: "g5-mid1-listen-9", listen: ["What would you like to be in the future, Jack?", "I'd like to be a reporter because I like talking to people."], accept: ["reporter"], explain: "Jack: I'd like to be a reporter." },
+          { q: "Anna lives in the ___.", audio: "g5-mid1-listen-10", listen: ["Where does Anna live?", "She lives in the countryside."], accept: ["countryside"], explain: "She lives in the countryside." },
+        ],
+      },
+      {
+        key: "stress", roman: "II.1", name: "Choose the word with a different stress pattern", type: "odd",
+        prompt: "Từ nào có trọng âm khác?",
+        instruction: "Chọn từ có trọng âm khác với các từ còn lại.",
+        items: [
+          { options: ["dolphin", "tennis", "sandwich", "behind"], answer: 3, explain: "DOLphin, TENnis, SANDwich nhấn âm 1; beHIND nhấn âm 2." },
+          { options: ["thirty", "fourteen", "fifteen", "sixteen"], answer: 0, explain: "THIRty nhấn âm 1; fourTEEN, fifTEEN, sixTEEN nhấn âm 2." },
+          { options: ["active", "friendly", "helpful", "Japanese"], answer: 3, explain: "ACtive, FRIENDly, HELPful nhấn âm 1; JapaNESE nhấn âm 3." },
+          { options: ["always", "sometimes", "never", "tonight"], answer: 3, explain: "ALways, SOMEtimes, NEver nhấn âm 1; toNIGHT nhấn âm 2." },
+          { options: ["teacher", "dentist", "reporter", "farmer"], answer: 2, explain: "TEAcher, DENtist, FARmer nhấn âm 1; rePORter nhấn âm 2." },
+        ],
+      },
+      {
+        key: "choose", roman: "II.2", name: "Choose the correct answer", type: "mcq",
         instruction: "Chọn đáp án đúng A, B, C hoặc D.",
         items: [
-          { q: "Can you tell me about yourself?", a: "– I'm ___ Class 5A.", options: ["on", "in", "at", "from"], answer: 1, explain: "Dùng in Class 5A khi nói mình học lớp nào." },
-          { q: "What's your favourite food?", a: "– ___ noodles.", options: ["I'm", "They're", "It's", "He's"], answer: 2, explain: "What's your favourite food? – It's noodles." },
-          { q: "Do you live in this flat?", a: "– Yes, ___.", options: ["I am", "I do", "I live", "I'm"], answer: 1, explain: "Câu hỏi bắt đầu bằng Do you...? → trả lời Yes, I do. / No, I don't." },
-          { q: "What's your address?", a: "– It's ___.", options: ["Australian", "in a flat", "25 Green Street", "friendly"], answer: 2, explain: "What's your address? hỏi về địa chỉ." },
-          { q: "What nationality is Linda?", a: "– She's ___.", options: ["friendly", "Australian", "helpful", "active"], answer: 1, explain: "What nationality...? hỏi về quốc tịch." },
-          { q: "What's your foreign friend like?", a: "– He's clever ___ helpful.", options: ["but", "or", "and", "because"], answer: 2, explain: "clever và helpful là hai đặc điểm được nối bằng and." },
-          { q: "What do you like doing in your free time?", a: "– I like ___ books.", options: ["read", "reading", "reads", "to reading"], answer: 1, explain: "Mẫu câu Unit 4: like + V-ing → like reading books." },
-          { q: "What do you do at the weekend?", a: "– I ___ go for a walk with my family.", options: ["am", "do", "usually", "is"], answer: 2, explain: "usually là trạng từ chỉ tần suất, phù hợp với hoạt động cuối tuần." },
-          { q: "What would you like to be in the future?", a: "– I'd like to be ___ reporter.", options: ["a", "an", "the", "some"], answer: 0, explain: "reporter bắt đầu bằng âm phụ âm → a reporter." },
-          { q: "Why would you like to be a gardener?", a: "– Because I'd like to ___ flowers.", options: ["grows", "growing", "grow", "grew"], answer: 2, explain: "Sau would like to dùng động từ nguyên mẫu → would like to grow." },
+          { q: "Can you tell me about yourself?", a: "– I'm ___ Class 5C.", options: ["on", "in", "at", "from"], answer: 1, explain: "Dùng in Class 5C khi nói mình học lớp nào." },
+          { q: "What's your favourite animal?", a: "– ___ a dolphin.", options: ["I'm", "They're", "She's", "It's"], answer: 3, explain: "What's your favourite animal? – It's a dolphin." },
+          { q: "Do you live in that tower?", a: "– No, I ___.", options: ["am not", "doesn't", "don't", "do"], answer: 2, explain: "Câu hỏi Do you...? → trả lời No, I don't." },
+          { q: "What nationality is Mai?", a: "– She's ___.", options: ["Malaysian", "Malaysia", "friendly", "clever"], answer: 0, explain: "What nationality...? hỏi về quốc tịch. Malaysian là quốc tịch, Malaysia là tên nước." },
+          { q: "What's your brother like?", a: "– He's very ___.", options: ["Japanese", "American", "Australia", "helpful"], answer: 3, explain: "What's ... like? hỏi về tính cách → helpful." },
+          { q: "What do you like doing in your free time?", a: "– I like ___ stories.", options: ["read", "reading", "reads", "to read"], answer: 1, explain: "Mẫu câu Unit 4: like + V-ing → like reading stories." },
+          { q: "___ do you do at the weekend?", a: "– I often ride my bike.", options: ["Why", "Where", "What", "Who"], answer: 2, explain: "Hỏi làm gì → What do you do at the weekend?" },
+          { q: "Why would you like to be a gardener?", a: "– Because I'd like to ___ flowers.", options: ["grow", "grows", "growing", "grew"], answer: 0, explain: "Sau would like to dùng động từ nguyên mẫu → would like to grow." },
+          { q: "I'd like to be ___ dentist in the future.", options: ["an", "a", "the", "some"], answer: 1, explain: "dentist bắt đầu bằng âm phụ âm → a dentist." },
+          { q: "What's your address?", a: "– It's ___.", options: ["at the city", "in a flat", "Australian", "38 Oxford Street"], answer: 3, explain: "What's your address? hỏi về địa chỉ → 38 Oxford Street." },
         ],
       },
       {
-        key: "odd", roman: "II", name: "Choose the odd one out", type: "odd",
-        instruction: "Chọn từ khác loại với các từ còn lại.",
+        key: "read", roman: "III.1", name: "Read the passage and choose the correct answer", type: "passage",
+        instruction: "Đọc đoạn văn rồi chọn đáp án đúng A, B, C hoặc D.",
+        title: "Minh and Alex",
+        passage: "Hi, I'm Minh. I live in a flat in the city. My address is 26 Le Loi Street. I have a foreign friend named Alex. He is Australian. He is active and helpful. In his free time, he likes surfing the Internet. At the weekend, he often rides his bike in the park.",
         items: [
-          { options: ["city", "countryside", "flat", "sandwich"], answer: 3, explain: "city, countryside, flat liên quan đến nơi ở; sandwich là món ăn." },
-          { options: ["Japanese", "Australian", "Malaysian", "helpful"], answer: 3, explain: "Japanese, Australian, Malaysian là từ chỉ quốc tịch; helpful chỉ tính cách." },
-          { options: ["always", "usually", "often", "teacher"], answer: 3, explain: "always, usually, often là trạng từ chỉ tần suất; teacher là nghề nghiệp." },
-          { options: ["firefighter", "gardener", "reporter", "Sunday"], answer: 3, explain: "firefighter, gardener, reporter là nghề nghiệp; Sunday là ngày trong tuần." },
-          { options: ["read books", "play the violin", "surf the Internet", "dentist"], answer: 3, explain: "read books, play the violin, surf the Internet là hoạt động; dentist là nghề nghiệp." },
+          { q: "Where does Minh live?", options: ["In a house", "In a flat", "In a tower", "In the countryside"], answer: 1, explain: "I live in a flat in the city." },
+          { q: "What is Minh's address?", options: ["62 Le Loi Street", "26 Oxford Street", "26 Le Loi Street", "62 Oxford Street"], answer: 2, explain: "My address is 26 Le Loi Street." },
+          { q: "What nationality is Alex?", options: ["Malaysian", "Japanese", "Australian", "American"], answer: 2, explain: "He is Australian." },
+          { q: "What is Alex like?", options: ["Active and helpful", "Friendly and clever", "Active and friendly", "Helpful and clever"], answer: 0, explain: "He is active and helpful." },
+          { q: "What does Alex like doing in his free time?", options: ["Riding his bike", "Surfing the Internet", "Reading books", "Playing the violin"], answer: 1, explain: "In his free time, he likes surfing the Internet. (Riding his bike là việc cậu ấy làm vào cuối tuần.)" },
         ],
       },
       {
-        key: "order", roman: "III", name: "Reorder the words", type: "order",
+        key: "tf", roman: "III.2", name: "Read the passage and write True (T) or False (F)", type: "passage",
+        instruction: "Đọc đoạn văn rồi chọn True (đúng) hoặc False (sai).",
+        title: "Lan and Nam",
+        passage: "My name is Lan. I'm in Class 5B. I live in a house near my school. My brother Nam is ten years old. He likes playing table tennis in his free time. On Sundays, we often visit our grandparents. Nam would like to be a teacher in the future because he'd like to teach children.",
+        items: [
+          { q: "Lan is in Class 5B.", options: ["True", "False"], answer: 0, explain: "I'm in Class 5B." },
+          { q: "Lan lives in a flat.", options: ["True", "False"], answer: 1, explain: "I live in a house near my school — Lan sống trong một ngôi nhà, không phải căn hộ." },
+          { q: "Nam likes playing table tennis in his free time.", options: ["True", "False"], answer: 0, explain: "He likes playing table tennis in his free time." },
+          { q: "Lan and Nam often visit their grandparents on Saturdays.", options: ["True", "False"], answer: 1, explain: "On Sundays, we often visit our grandparents — Chủ nhật, không phải thứ Bảy." },
+          { q: "Nam would like to be a teacher because he'd like to teach children.", options: ["True", "False"], answer: 0, explain: "Nam would like to be a teacher in the future because he'd like to teach children." },
+        ],
+      },
+      {
+        key: "order", roman: "IV", name: "Rearrange the words to make complete sentences", type: "order",
         instruction: "Chạm các từ theo đúng thứ tự để tạo thành câu hoàn chỉnh.",
         items: [
-          { given: ["favourite", "What's", "sport", "your"], answer: ["What's", "your", "favourite", "sport"], end: "?" },
-          { given: ["address", "What's", "your"], answer: ["What's", "your", "address"], end: "?" },
-          { given: ["nationality", "What", "is", "your", "friend"], answer: ["What", "nationality", "is", "your", "friend"], end: "?" },
-          { given: ["free time", "What", "do", "you", "like", "doing", "in your"], answer: ["What", "do", "you", "like", "doing", "in your", "free time"], end: "?" },
-          { given: ["future", "What", "would", "you", "like", "to be", "in the"], answer: ["What", "would", "you", "like", "to be", "in the", "future"], end: "?" },
-        ],
-      },
-      {
-        key: "fill", roman: "IV", name: "Complete the passage", type: "passage",
-        instruction: "Đọc đoạn văn, chọn từ trong khung để điền vào chỗ trống.",
-        box: ["friendly", "address", "reading", "teacher"],
-        title: "My friend",
-        // {0} is the example (already filled), {1}… are the blanks
-        passage: "Hello. My name is Minh. I'm in Class 5B. I live in a flat in the city. My {0} is 18 Green Street. I have a foreign friend named Lucy. She is Australian. She is very {1} and helpful. In her free time, she likes {2} books. In the future, she would like to be a {3} because she would like to teach children.",
-        example: "address",
-        items: [
-          { blank: 1, options: ["friendly", "reading", "teacher"], answer: 0, explain: "very + tính từ: very friendly and helpful." },
-          { blank: 2, options: ["friendly", "reading", "teacher"], answer: 1, explain: "like + V-ing → likes reading books." },
-          { blank: 3, options: ["friendly", "reading", "teacher"], answer: 2, explain: "be a + nghề nghiệp; teach children → teacher." },
+          { given: ["in", "I", "a flat", "live", "in the city"], answer: ["I", "live", "in", "a flat", "in the city"], end: "." },
+          { given: ["nationality", "is", "What", "your", "friend"], answer: ["What", "nationality", "is", "your", "friend"], end: "?" },
+          { given: ["doing", "do", "What", "you", "like", "in your free time"], answer: ["What", "do", "you", "like", "doing", "in your free time"], end: "?" },
+          { given: ["would", "Why", "like", "you", "to be", "a reporter"], answer: ["Why", "would", "you", "like", "to be", "a reporter"], end: "?" },
         ],
       },
     ],
@@ -168,6 +208,7 @@ const EXAMS = {
       },
     ],
   },
+
 };
 
 const EXAM_NUM = EXAMS[parseInt(new URLSearchParams(location.search).get("de"), 10)] ? parseInt(new URLSearchParams(location.search).get("de"), 10) : 1;
@@ -297,17 +338,61 @@ function runPart(host, part, onComplete) {
 // ============================================================
 // Choose the correct answer (A–D / A–B): question line (q) + optional answer line (a), one has ___
 // ============================================================
+// Listening: play the uploaded file (item.audio); if it is missing, the browser voice reads the script. At most 2 times per question
+const LISTEN_MAX = 2;
+const listenUsed = {}; // item id -> times played
+function listenHtml(item) {
+  return item.listen ? `<button type="button" class="q-listen-btn" id="q-listen">🔊 Nghe</button>` : "";
+}
+function bindListen(host, item) {
+  const btn = host.querySelector("#q-listen");
+  if (!btn) return;
+  const label = () => {
+    const left = LISTEN_MAX - (listenUsed[item.id] || 0);
+    btn.textContent = left > 0 ? `🔊 Nghe (còn ${left} lượt)` : "🔇 Đã nghe đủ 2 lần";
+    btn.disabled = left <= 0;
+  };
+  label();
+  btn.addEventListener("click", () => {
+    if ((listenUsed[item.id] || 0) >= LISTEN_MAX) return;
+    listenUsed[item.id] = (listenUsed[item.id] || 0) + 1;
+    btn.disabled = true;
+    btn.textContent = "🔊 Đang đọc…";
+    const speakScript = () => {
+      const lines = item.listen.slice();
+      (function next() {
+        if (!lines.length) { label(); return; }
+        window.EQSpeak.speak(lines.shift(), () => setTimeout(next, 500));
+      })();
+    };
+    if (!item.audio) return speakScript();
+    // try <name>.mp3, then <name>.wav, then fall back to the browser voice
+    const exts = [".mp3", ".wav"];
+    (function tryFile() {
+      if (!exts.length) return speakScript();
+      const a = new Audio(item.audio + exts.shift());
+      let failed = false;
+      const fail = () => { if (!failed) { failed = true; tryFile(); } };
+      a.addEventListener("ended", label);
+      a.addEventListener("error", fail);
+      a.play().catch(fail);
+    })();
+  });
+}
+
 function renderMcqItem(host, item, ctx) {
   const blank = `<span class="q-blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>`;
   const line = s => escapeHtml(s).replace("___", blank);
   host.innerHTML = `
     ${ctx.top}
+    ${listenHtml(item)}
     <p class="q-stem">${item.num}. ${line(item.q)}</p>
     ${item.a ? `<p class="q-stem mt-answer-line">${line(item.a)}</p>` : ""}
     ${optionsHtml(item.options)}`;
   const right = item.options[item.answer];
   const full = s => (s.includes("___") ? s.replace("___", right) : s);
   const question = (full(item.q) + (item.a ? " " + full(item.a) : "")).trim();
+  bindListen(host, item);
   bindPick(host, chosen => ctx.ready(() => ({
     question,
     studentAnswer: `${LETTERS[chosen]}. ${item.options[chosen]}`,
@@ -317,15 +402,42 @@ function renderMcqItem(host, item, ctx) {
 }
 
 // ============================================================
+// Listen and complete — type the missing word (case, curly quotes and spaces ignored)
+// ============================================================
+function renderTypeItem(host, item, ctx) {
+  const norm = t => String(t).toLowerCase().replace(/[‘’]/g, "'").replace(/[?.!,]+$/, "").replace(/\s+/g, " ").trim();
+  const blank = `<span class="q-blank" id="q-blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>`;
+  host.innerHTML = `
+    ${ctx.top}
+    ${listenHtml(item)}
+    <p class="q-stem">${item.num}. ${escapeHtml(item.q).replace("___", blank)}</p>
+    <input type="text" class="mt-fix-input" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Gõ từ còn thiếu…">`;
+  bindListen(host, item);
+  const input = host.querySelector(".mt-fix-input");
+  const blankEl = host.querySelector("#q-blank");
+  input.addEventListener("input", () => {
+    const typed = input.value.trim();
+    blankEl.textContent = typed || "\u00a0\u00a0\u00a0\u00a0\u00a0";
+    if (!typed) return ctx.ready(null);
+    ctx.ready(() => ({
+      question: item.q.replace("___", item.accept[0]),
+      studentAnswer: typed,
+      correctAnswer: item.accept[0],
+      correct: item.accept.some(a => norm(a) === norm(typed)),
+    }));
+  });
+}
+
+// ============================================================
 // Odd one out
 // ============================================================
 function renderOddItem(host, item, ctx) {
   host.innerHTML = `
     ${ctx.top}
-    <p class="q-stem">${item.num}. Từ nào khác loại?</p>
+    <p class="q-stem">${item.num}. ${escapeHtml(item.part.prompt || "Từ nào khác loại?")}</p>
     ${optionsHtml(item.options)}`;
   bindPick(host, chosen => ctx.ready(() => ({
-    question: "Odd one out: " + item.options.join(" / "),
+    question: (item.part.prompt ? "Stress: " : "Odd one out: ") + item.options.join(" / "),
     studentAnswer: `${LETTERS[chosen]}. ${item.options[chosen]}`,
     correctAnswer: `${LETTERS[item.answer]}. ${item.options[item.answer]}`,
     correct: chosen === item.answer,
@@ -475,7 +587,7 @@ function renderOrderItem(host, item, ctx) {
   });
 }
 
-const RENDERERS = { mcq: renderMcqItem, odd: renderOddItem, match: renderMatchItem, passage: renderPassageItem, fix: renderFixItem, order: renderOrderItem };
+const RENDERERS = { type: renderTypeItem, mcq: renderMcqItem, odd: renderOddItem, match: renderMatchItem, passage: renderPassageItem, fix: renderFixItem, order: renderOrderItem };
 
 // ============================================================
 // Result: số câu đúng / sai, điểm /10, từng câu em chọn gì – đáp án đúng – giải thích
@@ -535,10 +647,11 @@ function showLocked(host) {
 // Parts → tabs + panels (built right away, before section-lock.js runs)
 // ============================================================
 // Each question gets a key unique in the page: "<part key>-<n>" (choose-1, odd-1, order-1, fix-1…)
+let runningNum = 0;
 EXAM.parts.forEach(part => {
   part.items.forEach((it, idx) => {
     it.id = `${part.key}-${idx + 1}`;
-    it.num = idx + 1;
+    it.num = EXAM.continuousNum ? ++runningNum : idx + 1;
     it.part = part;
     if (part.type === "match") it.options = part.answersList;
   });
