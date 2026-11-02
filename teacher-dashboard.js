@@ -23,8 +23,14 @@ function gradeNumFromUnitId(unitId) {
   return m ? Number(m[1]) : 5;
 }
 function unitNumFromId(unitId) {
+  const mid = /^midterm(\d+)/.exec(unitId || "");
+  if (mid) return 100 + Number(mid[1]); // Đề kiểm tra giữa HK1 — after all units
   const m = /unit(\d+)/.exec(unitId || "");
   return m ? Number(m[1]) : 99;
+}
+function unitHeadLabel(unitId, number) {
+  const mid = /^midterm(\d+)/.exec(unitId || "");
+  return mid ? `Giữa HK1 · Đề ${mid[1]}` : `Unit ${number}`;
 }
 function band(p) { return p >= 80 ? "hi" : p >= 50 ? "mid" : "lo"; }
 
@@ -146,7 +152,7 @@ whenResultsReady(async () => {
     let r1 = `<th class="td-name-h" rowspan="2">Học sinh</th>`, r2 = "";
     cols.forEach(c => {
       const cls = `${c.alt ? "alt" : ""} ${c.first ? "ustart" : ""}`;
-      if (c.first) r1 += `<th colspan="${c.span}" class="${cls}" title="${escapeHtml(c.unit.title)}">Unit ${c.unit.number}</th>`;
+      if (c.first) r1 += `<th colspan="${c.span}" class="${cls}" title="${escapeHtml(c.unit.title)}">${unitHeadLabel(c.unitId, c.unit.number)}</th>`;
       r2 += `<th class="${cls}">${SECTION_LABELS[c.section] || c.section}</th>`;
     });
     r1 += `<th rowspan="2" class="ustart">Trung bình</th>`;
