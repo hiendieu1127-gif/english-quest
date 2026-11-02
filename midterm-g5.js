@@ -7,7 +7,7 @@
 // Mỗi phần (I, II, III…) là một tab đánh số; section-lock.js mở khoá lần lượt.
 // Mỗi phần chỉ có MỘT thẻ "Xong rồi!" (không có phần nhỏ) nên không cần data-part-done.
 // Lưu lên Dashboard: unitId "midterm1|2|3", section "exercises" (theo tên trang).
-// Bài KIỂM TRA: không đọc to, không báo đúng/sai từng câu, không làm lại. Nộp xong phần cuối → hiện số câu
+// Bài KIỂM TRA: không đọc to, không báo đúng/sai từng câu (tiếng "ting" kêu cho mọi lựa chọn), không làm lại. Nộp xong phần cuối → hiện số câu
 // đúng/sai + điểm (tổng 10 điểm chia đều cho số câu của đề).
 // ============================================================
 
@@ -248,8 +248,13 @@ function optionsHtml(options, oneCol) {
   </div>`;
 }
 // Tap an option = chọn (đổi được cho tới khi bấm "Câu tiếp theo"); no right/wrong shown during the test
+// Tiếng "đúng rồi" quen thuộc — kêu cho MỌI lựa chọn (đúng lẫn sai), nên không lộ đáp án
+function pickSound() {
+  window.EQSound && window.EQSound.correct();
+}
 function bindPick(host, onPick) {
   host.querySelectorAll(".mcq-option").forEach(b => b.addEventListener("click", () => {
+    pickSound();
     host.querySelectorAll(".mcq-option").forEach(x => x.classList.toggle("mt-picked", x === b));
     onPick(Number(b.dataset.idx));
   }));
@@ -409,6 +414,7 @@ function renderFixItem(host, item, ctx) {
     }));
   }
   host.querySelectorAll(".mt-fix-word").forEach(b => b.addEventListener("click", () => {
+    pickSound();
     pickedWord = Number(b.dataset.i);
     host.querySelectorAll(".mt-fix-word").forEach(x => x.classList.toggle("picked", x === b));
     update();
@@ -457,6 +463,7 @@ function renderOrderItem(host, item, ctx) {
   pool.querySelectorAll(".sentence-chunk").forEach(el => el.addEventListener("click", () => {
     if (el.classList.contains("used")) return;
     const origIdx = Number(el.dataset.orig);
+    pickSound();
     placed.push({ origIdx, en: item.given[origIdx] });
     el.classList.add("used");
     renderStrip();
