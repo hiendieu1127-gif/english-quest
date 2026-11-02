@@ -73,13 +73,13 @@ const EXAMS = {
     parts: [
       {
         key: "fix", roman: "I", name: "Underline and correct the mistakes", type: "fix",
-        instruction: "Chạm vào từ SAI trong câu để gạch chân, rồi chọn cách sửa đúng.",
+        instruction: "Chạm vào từ SAI trong câu để gạch chân, rồi gõ từ sửa đúng.",
         items: [
-          { sentence: "Does you live in this flat?", wrong: 0, options: ["Do", "Is", "Are"], answer: 0, correct: "Do you live in this flat?", explain: "Với chủ ngữ you, câu hỏi hiện tại đơn dùng Do, không dùng Does." },
-          { sentence: "What nationality are she?", wrong: 2, options: ["is", "am", "do"], answer: 0, correct: "What nationality is she?", explain: "Chủ ngữ she đi với is." },
-          { sentence: "I like read books in my free time.", wrong: 2, options: ["reading", "reads", "is read"], answer: 0, correct: "I like reading books in my free time.", explain: "Theo mẫu câu Unit 4: like + V-ing." },
-          { sentence: "She usually play the violin at the weekend.", wrong: 2, options: ["plays", "playing", "to play"], answer: 0, correct: "She usually plays the violin at the weekend.", explain: "Chủ ngữ she ở hiện tại đơn → động từ play thêm -s." },
-          { sentence: "I'd like be a reporter in the future.", wrong: 2, options: ["to be", "being", "is"], answer: 0, correct: "I'd like to be a reporter in the future.", explain: "Cấu trúc: would like + to + V." },
+          { sentence: "Does you live in this flat?", wrong: 0, fixTo: "Do", correct: "Do you live in this flat?", explain: "Với chủ ngữ you, câu hỏi hiện tại đơn dùng Do, không dùng Does." },
+          { sentence: "What nationality are she?", wrong: 2, fixTo: "is", correct: "What nationality is she?", explain: "Chủ ngữ she đi với is." },
+          { sentence: "I like read books in my free time.", wrong: 2, fixTo: "reading", correct: "I like reading books in my free time.", explain: "Theo mẫu câu Unit 4: like + V-ing." },
+          { sentence: "She usually play the violin at the weekend.", wrong: 2, fixTo: "plays", correct: "She usually plays the violin at the weekend.", explain: "Chủ ngữ she ở hiện tại đơn → động từ play thêm -s." },
+          { sentence: "I'd like be a reporter in the future.", wrong: 2, fixTo: "to be", correct: "I'd like to be a reporter in the future.", explain: "Cấu trúc: would like + to + V." },
         ],
       },
       {
@@ -386,30 +386,35 @@ function renderPassageItem(host, item, ctx) {
 function renderFixItem(host, item, ctx) {
   const words = item.sentence.split(/\s+/);
   const bare = w => w.replace(/[?.!,]$/, "");
+  // so sánh không phân biệt hoa/thường, dấu nháy cong/thẳng, khoảng trắng thừa, dấu câu cuối
+  const norm = t => String(t).toLowerCase().replace(/[‘’]/g, "'").replace(/[?.!,]+$/, "").replace(/\s+/g, " ").trim();
   host.innerHTML = `
     ${ctx.top}
     <p class="q-stem">${item.num}.</p>
     <div class="mt-fix-sentence">
       ${words.map((w, i) => `<button type="button" class="mt-fix-word" data-i="${i}">${escapeHtml(w)}</button>`).join(" ")}
     </div>
-    <p class="q-vi" style="margin-top:10px;">① Chạm vào từ sai &nbsp; ② Chọn từ sửa đúng:</p>
-    ${optionsHtml(item.options)}`;
-  let pickedWord = -1, pickedOpt = -1;
+    <p class="q-vi" style="margin-top:10px;">① Chạm vào từ sai &nbsp; ② Gõ từ sửa đúng vào ô dưới:</p>
+    <input type="text" class="mt-fix-input" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Gõ từ đúng…">`;
+  const input = host.querySelector(".mt-fix-input");
+  let pickedWord = -1;
   function update() {
-    if (pickedWord < 0 || pickedOpt < 0) return ctx.ready(null);
+    const typed = input.value.trim();
+    if (pickedWord < 0 || !typed) return ctx.ready(null);
     ctx.ready(() => ({
       question: item.sentence,
-      studentAnswer: `${bare(words[pickedWord])} → ${item.options[pickedOpt]}`,
-      correctAnswer: `${bare(words[item.wrong])} → ${item.options[item.answer]}`,
-      correct: pickedWord === item.wrong && pickedOpt === item.answer,
+      studentAnswer: `${bare(words[pickedWord])} → ${typed}`,
+      correctAnswer: `${bare(words[item.wrong])} → ${item.fixTo}`,
+      correct: pickedWord === item.wrong && (norm(typed) === norm(item.fixTo) || norm(typed) === norm(item.correct)),
     }));
   }
   host.querySelectorAll(".mt-fix-word").forEach(b => b.addEventListener("click", () => {
     pickedWord = Number(b.dataset.i);
     host.querySelectorAll(".mt-fix-word").forEach(x => x.classList.toggle("picked", x === b));
     update();
+    input.focus();
   }));
-  bindPick(host, idx => { pickedOpt = idx; update(); });
+  input.addEventListener("input", update);
 }
 
 // ============================================================
