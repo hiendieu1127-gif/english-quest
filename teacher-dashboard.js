@@ -23,13 +23,13 @@ function gradeNumFromUnitId(unitId) {
   return m ? Number(m[1]) : 5;
 }
 function unitNumFromId(unitId) {
-  const mid = /^midterm(\d+)/.exec(unitId || "");
+  const mid = /(?:^|-)midterm(\d+)/.exec(unitId || "");
   if (mid) return 100 + Number(mid[1]); // Đề kiểm tra giữa HK1 — after all units
   const m = /unit(\d+)/.exec(unitId || "");
   return m ? Number(m[1]) : 99;
 }
 function unitHeadLabel(unitId, number) {
-  const mid = /^midterm(\d+)/.exec(unitId || "");
+  const mid = /(?:^|-)midterm(\d+)/.exec(unitId || "");
   return mid ? `Giữa HK1 · Đề ${mid[1]}` : `Unit ${number}`;
 }
 function band(p) { return p >= 80 ? "hi" : p >= 50 ? "mid" : "lo"; }
