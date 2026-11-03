@@ -1,5 +1,5 @@
 // ============================================================
-// Grade 4 — Đề kiểm tra giữa học kỳ 1:  midterm-g4.html?de=1 (Đề 2 thêm vào EXAMS khi cô Hiền gửi)
+// Grade 4 — Đề kiểm tra giữa học kỳ 1:  midterm-g4.html?de=1 / ?de=2
 //
 // Đề 1: chép đúng đề + đáp án cô Hiền gửi (I Odd one out · II Circle (tranh) · III Fill in · IV Yes/No · V Reorder) = 23 câu.
 // Ảnh phần II cắt từ đề: img/g4-mid1-pic-1..5.jpg
@@ -9,6 +9,7 @@
 // Lưu lên Dashboard: unitId "g4-midterm1|2" (tiền tố g4- để Dashboard xếp vào Khối 4), section "exercises".
 // Bài KIỂM TRA: không có giọng đọc, không báo đúng/sai từng câu (tiếng "ting" kêu cho mọi lựa chọn), không làm lại.
 // Nộp xong phần cuối → hiện số câu đúng/sai + điểm (tổng 10 điểm chia đều cho số câu của đề).
+// Đề 2: 30 câu, có Listening (file ghi âm; không dùng giọng đọc máy).
 // Trong options của phần "odd": [chữ] = phần gạch chân.
 // ============================================================
 
@@ -72,6 +73,76 @@ const EXAMS = {
           { given: ["I", "can", "cook", "but", "I", "can't", "fly", "a", "kite"], end: ".", answer: ["I", "can", "cook", "but", "I", "can't", "fly", "a", "kite"], full: "I can cook, but I can't fly a kite." },
           { given: ["What", "can", "dogs", "do"], end: "?", answer: ["What", "can", "dogs", "do"] },
           { given: ["The", "monkey", "can", "climb", "the", "tree", "and", "eat", "bananas"], end: ".", answer: ["The", "monkey", "can", "climb", "the", "tree", "and", "eat", "bananas"] },
+        ],
+      },
+    ],
+  },
+  // Đề 2: đề + đáp án cô Hiền gửi (A Listening · B Vocabulary and language · C Reading), đánh số câu liên tục 1–30 như trên giấy.
+  // Listening: mỗi câu một file g4-mid2-listen-<số câu>.wav (hoặc .mp3) ở thư mục gốc, nghe tối đa 2 lần.
+  // KHÔNG có giọng đọc thay thế — chưa có file thì nút báo "Chưa có file nghe".
+  2: {
+    continuousNum: true,
+    parts: [
+      {
+        key: "listen", roman: "A.I", name: "Listen and choose the correct answer", type: "mcq",
+        instruction: "Bấm 🔊 để nghe (mỗi câu nghe được 2 lần), rồi chọn A, B hoặc C.",
+        items: [
+          { q: "Where is Lucy from?", audio: "g4-mid2-listen-1", options: ["Japan", "Australia", "Singapore"], answer: 1 },
+          { q: "What time does Tom get up?", audio: "g4-mid2-listen-2", options: ["6:00", "6:30", "7:00"], answer: 1 },
+          { q: "What day is it today?", audio: "g4-mid2-listen-3", options: ["Monday", "Wednesday", "Friday"], answer: 1 },
+          { q: "When is Mai's birthday?", audio: "g4-mid2-listen-4", options: ["March", "May", "July"], answer: 2 },
+          { q: "What can Ben do?", audio: "g4-mid2-listen-5", options: ["Ride a bike", "Play the piano", "Swim"], answer: 0 },
+        ],
+      },
+      {
+        key: "listenfill", roman: "A.II", name: "Listen and complete. Write ONE word in each blank", type: "type",
+        instruction: "Bấm 🔊 để nghe (mỗi câu nghe được 2 lần), rồi gõ MỘT từ còn thiếu.",
+        items: [
+          { q: "My friend is from ___.", audio: "g4-mid2-listen-6", accept: ["Japan"] },
+          { q: "I go to school at ___ o'clock.", audio: "g4-mid2-listen-7", accept: ["seven", "7"] },
+          { q: "On Sundays, I ___ to music.", audio: "g4-mid2-listen-8", accept: ["listen"] },
+          { q: "My birthday is in ___.", audio: "g4-mid2-listen-9", accept: ["April"] },
+          { q: "I can ___, but I can't roller skate.", audio: "g4-mid2-listen-10", accept: ["draw"] },
+        ],
+      },
+      {
+        key: "look", roman: "B.I", name: "Look and choose the correct answer", type: "mcq",
+        instruction: "Nhìn tranh và chọn đáp án đúng A, B hoặc C.",
+        items: [
+          { pic: "img/g4-mid2-pic-11.jpg", q: "She's from ___.", options: ["Japan", "Australia", "Britain"], answer: 0, explain: "Bạn gái mặc kimono, có cờ Nhật Bản → Japan." },
+          { pic: "img/g4-mid2-pic-12.jpg", q: "It's ___.", options: ["six o'clock", "seven o'clock", "eight o'clock"], answer: 1, explain: "Kim dài chỉ số 12, kim ngắn chỉ số 7 → seven o'clock." },
+          { pic: "img/g4-mid2-pic-13.jpg", q: "My ___ is in May.", options: ["school", "birthday", "friend"], answer: 1, explain: "Có bánh sinh nhật và quà → My birthday is in May." },
+          { pic: "img/g4-mid2-pic-14.jpg", q: "I can ___.", options: ["ride a bike", "ride a horse", "play the piano"], answer: 0, explain: "Bạn gái đang đi xe đạp → ride a bike." },
+          { pic: "img/g4-mid2-pic-15.jpg", q: "She can ___.", options: ["swim", "draw", "play the piano"], answer: 2, explain: "Bạn gái đang chơi đàn piano → play the piano." },
+        ],
+      },
+      {
+        key: "choose", roman: "B.II", name: "Choose the correct answer", type: "mcq",
+        instruction: "Chọn đáp án đúng A, B hoặc C.",
+        items: [
+          { q: "Where are you from?", a: "– I'm ___ Viet Nam.", options: ["on", "from", "at"], answer: 1, explain: "Cấu trúc be from + quốc gia." },
+          { q: "Who's that?", a: "– ___ my new friend.", options: ["It's", "I'm", "He can"], answer: 0, explain: "Who's that? – It's my new friend." },
+          { q: "Where's Linda from?", a: "– ___ from Britain.", options: ["He's", "She's", "I'm"], answer: 1, explain: "Linda là nữ nên dùng She's." },
+          { q: "What time is it?", a: "– It's eight ___.", options: ["Monday", "o'clock", "May"], answer: 1, explain: "Dùng o'clock để nói giờ đúng." },
+          { q: "What time do you get up?", a: "– I get up ___ six thirty.", options: ["at", "on", "in"], answer: 0, explain: "at + giờ." },
+          { q: "What day is it today?", a: "– It's ___.", options: ["April", "Tuesday", "seven o'clock"], answer: 1, explain: "Câu hỏi What day...? cần ngày trong tuần." },
+          { q: "What do you do ___ Saturdays?", options: ["at", "in", "on"], answer: 2, explain: "on + ngày/thứ." },
+          { q: "When's your birthday?", a: "– It's ___ March.", options: ["in", "at", "on"], answer: 0, explain: "in + tháng." },
+          { q: "What do you want to drink?", a: "– I want some ___.", options: ["chips", "water", "grapes"], answer: 1, explain: "Drink cần một loại đồ uống → water." },
+          { q: "Can you swim?", a: "– Yes, I ___.", options: ["am", "do", "can"], answer: 2, explain: "Can you...? – Yes, I can." },
+        ],
+      },
+      {
+        key: "read", roman: "C.I", name: "Read and choose the correct answer", type: "passage",
+        instruction: "Đọc đoạn văn rồi chọn đáp án đúng A, B hoặc C.",
+        title: "Linda",
+        passage: "Hello! My name is Linda. I'm nine years old. I'm from Britain, but I live in Viet Nam now. I get up at six thirty every morning. I go to school at seven fifteen.\nToday is Saturday. I don't go to school. I help my mother with the housework in the morning and listen to music in the afternoon. My birthday is in May. I can draw and ride a bike, but I can't swim.",
+        items: [
+          { q: "Where is Linda from?", options: ["Viet Nam", "Britain", "Australia"], answer: 1, explain: "I'm from Britain, but I live in Viet Nam now." },
+          { q: "What time does Linda get up?", options: ["6:00", "6:30", "7:15"], answer: 1, explain: "I get up at six thirty every morning. (7:15 là giờ đi học.)" },
+          { q: "What does Linda do on Saturday morning?", options: ["She goes to school.", "She listens to music.", "She does housework."], answer: 2, explain: "I help my mother with the housework in the morning. (Nghe nhạc là buổi chiều.)" },
+          { q: "When is Linda's birthday?", options: ["In March", "In May", "In July"], answer: 1, explain: "My birthday is in May." },
+          { q: "What can Linda do?", options: ["Draw and ride a bike", "Swim and draw", "Play the piano and swim"], answer: 0, explain: "I can draw and ride a bike, but I can't swim." },
         ],
       },
     ],
