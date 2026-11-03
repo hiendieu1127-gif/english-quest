@@ -15,10 +15,15 @@ const EXAMS = {
 // Đề 1 (thay đề cũ ngày 2/11): đề cô Hiền gửi (Part I Listening · II · III Reading · IV Writing), đánh số câu liên tục 1–39 như trên giấy.
   // Listening: mỗi câu một file g5-mid1-listen-<số câu>.mp3 (hoặc .wav) ở thư mục gốc, nghe tối đa 2 lần.
   // Chưa có file → đọc LISTENING SCRIPT bằng giọng đọc trình duyệt (EQSpeak).
-  // Bỏ Writing Task 2 (viết 4–5 câu về nghề tương lai) vì không chấm tự động được.
+  // Writing Task 2 (viết 4–5 câu về nghề tương lai): KHÔNG tính điểm, không lưu Dashboard — hiện dưới kết quả để em tự viết.
   // Câu 36: đề in "in / I / a flat / live / the city" (thiếu một "in") → ghép thành "in the city".
   1: {
     continuousNum: true,
+    writing: {
+      title: "Write 4–5 sentences about your future job.",
+      questions: ["What would you like to be in the future?", "Why would you like to be that?", "What would you like to do in that job?"],
+      sample: "I'd like to be a teacher in the future. I'd like to teach children. I like helping people. I think teaching is interesting. I'd like to work at a primary school.",
+    },
     parts: [
       {
         key: "listen", roman: "I.1", name: "Listen and circle A, B or C", type: "mcq",
@@ -36,7 +41,7 @@ const EXAMS = {
         instruction: "Bấm 🔊 để nghe (mỗi câu nghe được 2 lần), rồi gõ từ còn thiếu.",
         items: [
           { q: "Lucy's address is 45 ___ Street.", audio: "g5-mid1-listen-6", listen: ["What's your address, Lucy?", "It's 45 Green Street."], accept: ["Green"], explain: "Lucy: It's 45 Green Street." },
-          { q: "At the weekend, Peter usually ___ his bike.", audio: "g5-mid1-listen-7", listen: ["What do you do at the weekend, Peter?", "I usually ride my bike in the park."], accept: ["rides", "ride"], explain: "Đáp án: ride (nghe: I usually ride my bike). Viết đúng ngữ pháp với Peter là rides — cả hai đều được tính đúng." },
+          { q: "At the weekend, Peter usually ___ his bike.", audio: "g5-mid1-listen-7", listen: ["What do you do at the weekend, Peter?", "I usually ride my bike in the park."], accept: ["ride"], explain: "Nghe: I usually ride my bike in the park → điền ride." },
           { q: "Mai is ___ and helpful.", audio: "g5-mid1-listen-8", listen: ["What's Mai like?", "She's clever and helpful."], accept: ["clever"], explain: "She's clever and helpful." },
           { q: "Jack would like to be a ___ in the future.", audio: "g5-mid1-listen-9", listen: ["What would you like to be in the future, Jack?", "I'd like to be a reporter because I like talking to people."], accept: ["reporter"], explain: "Jack: I'd like to be a reporter." },
           { q: "Anna lives in the ___.", audio: "g5-mid1-listen-10", listen: ["Where does Anna live?", "She lives in the countryside."], accept: ["countryside"], explain: "She lives in the countryside." },
@@ -366,8 +371,8 @@ function bindListen(host, item) {
       })();
     };
     if (!item.audio) return speakScript();
-    // try <name>.mp3, then <name>.wav, then fall back to the browser voice
-    const exts = [".mp3", ".wav"];
+    // try <name>.wav, then <name>.mp3, then fall back to the browser voice
+    const exts = [".wav", ".mp3"];
     (function tryFile() {
       if (!exts.length) return speakScript();
       const a = new Audio(item.audio + exts.shift());
@@ -616,7 +621,37 @@ function resultHtml() {
       <div class="mt-count"><span class="ok">✓ Đúng: ${right} câu</span><span class="no">✗ Sai: ${wrong} câu</span>${missing ? `<span>Chưa làm: ${missing}</span>` : ""}</div>
       <p style="color:#666;font-size:.9rem;margin:6px 0 0;">Tổng ${total} câu · mỗi câu ${pointLabel()} điểm</p>
     </div>
+    ${writingHtml()}
     <div class="mt-res-list">${rows}</div>`;
+}
+
+// Writing Task 2 — không tính điểm: em tự viết, có thể xem bài tham khảo. Bản nháp chỉ giữ trên máy em.
+const WRITING_DRAFT_KEY = "eq-midterm" + EXAM_NUM + "-writing";
+function writingHtml() {
+  const w = EXAM.writing;
+  if (!w) return "";
+  let draft = "";
+  try { draft = localStorage.getItem(WRITING_DRAFT_KEY) || ""; } catch (e) {}
+  return `
+    <div class="runner-card mt-writing" style="margin:0 0 16px;">
+      <p class="eq-instruction">Writing · Task 2. ${escapeHtml(w.title)} <span style="font-weight:600;color:#555;">(Không tính điểm — em tự viết nhé.)</span></p>
+      <p style="margin:0 0 4px;font-weight:700;">Use the questions below to help you:</p>
+      <ul style="margin:0 0 10px 18px;">${w.questions.map(q => `<li>${escapeHtml(q)}</li>`).join("")}</ul>
+      <textarea class="mt-fix-input mt-writing-input" rows="6" style="max-width:100%;resize:vertical;" placeholder="Viết 4–5 câu tiếng Anh…">${escapeHtml(draft)}</textarea>
+      <button type="button" class="q-listen-btn mt-writing-sample-btn" style="margin-top:10px;">Xem bài viết tham khảo</button>
+      <p class="mt-writing-sample book-dialogue" style="display:none;">${escapeHtml(w.sample)}</p>
+    </div>`;
+}
+function bindWriting(host) {
+  const ta = host.querySelector(".mt-writing-input");
+  ta && ta.addEventListener("input", () => { try { localStorage.setItem(WRITING_DRAFT_KEY, ta.value); } catch (e) {} });
+  const btn = host.querySelector(".mt-writing-sample-btn");
+  btn && btn.addEventListener("click", () => {
+    const box = host.querySelector(".mt-writing-sample");
+    const open = box.style.display === "none";
+    box.style.display = open ? "block" : "none";
+    btn.textContent = open ? "Ẩn bài viết tham khảo" : "Xem bài viết tham khảo";
+  });
 }
 
 function showPartDone(host, part, isLast) {
@@ -629,6 +664,7 @@ function showPartDone(host, part, isLast) {
       ${isLast ? "" : `<button type="button" class="btn btn-primary section-next-btn" style="margin-top:14px;">Sang phần sau →</button>`}
     </div>
     ${isLast ? resultHtml() : ""}`;
+  if (isLast) bindWriting(host);
   const btn = host.querySelector(".section-next-btn");
   btn && btn.addEventListener("click", () => {
     const idx = EXAM.parts.indexOf(part);
@@ -641,6 +677,7 @@ function showLocked(host) {
   const allDone = EXAM.parts.every(p => p.items.every(it => eqAnswers[it.id]));
   host.innerHTML = `<p class="mt-locked">🔒 Em đã nộp phần này rồi. Bài kiểm tra chỉ làm một lần.</p>` +
     (allDone ? resultHtml() : "");
+  if (allDone) bindWriting(host);
 }
 
 // ============================================================
