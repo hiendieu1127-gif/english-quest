@@ -114,10 +114,23 @@ const EXAMS = {
     ],
   },
 
+  // Đề 2 — phần I Listening (thêm ngày 3/11): file g5-mid2-listen-1.wav … g5-mid2-listen-5.wav, nghe tối đa 2 lần/câu.
+  // Không có script nên chưa có file thì không đọc thay được. Các phần cũ giữ nguyên key (fix, order, match, mcq).
   2: {
     parts: [
       {
-        key: "fix", roman: "I", name: "Underline and correct the mistakes", type: "fix",
+        key: "listen", roman: "I", name: "Listen and choose the correct answer", type: "mcq",
+        instruction: "Bấm 🔊 để nghe (mỗi câu nghe được 2 lần), rồi chọn A, B, C hoặc D.",
+        items: [
+          { q: "Where does Jack live?", audio: "g5-mid2-listen-1", options: ["No. 10 South Street, Oxford City.", "No. 12 South Tower.", "A small house in London.", "A house in Scotland."], answer: 0 },
+          { q: "What type of home does Tony live in?", audio: "g5-mid2-listen-2", options: ["A flat.", "A house.", "A tower.", "A building."], answer: 1 },
+          { q: "Where is May's house?", audio: "g5-mid2-listen-3", options: ["In London.", "In Oxford City.", "In Scotland.", "In the countryside."], answer: 0 },
+          { q: "What is Garry's flat number?", audio: "g5-mid2-listen-4", options: ["No. 10 South Street.", "No. 12 South Tower.", "No. 23 Queen Street.", "No. 45 Green Street."], answer: 1 },
+          { q: "Which statement is correct about May's house?", audio: "g5-mid2-listen-5", options: ["It is a big house in Scotland.", "It is a flat in Oxford City.", "It is a small house in a quiet street in London.", "It is a tower near the sports centre."], answer: 2 },
+        ],
+      },
+      {
+        key: "fix", roman: "II", name: "Underline and correct the mistakes", type: "fix",
         instruction: "Chạm vào từ SAI trong câu để gạch chân, rồi gõ từ sửa đúng.",
         items: [
           { sentence: "Does you live in this flat?", wrong: 0, fixTo: "Do", correct: "Do you live in this flat?", explain: "Với chủ ngữ you, câu hỏi hiện tại đơn dùng Do, không dùng Does." },
@@ -128,7 +141,7 @@ const EXAMS = {
         ],
       },
       {
-        key: "order", roman: "II", name: "Put the words in order", type: "order",
+        key: "order", roman: "III", name: "Put the words in order", type: "order",
         instruction: "Chạm các từ theo đúng thứ tự để tạo thành câu hoàn chỉnh.",
         items: [
           { given: ["Where", "do", "you", "live"], answer: ["Where", "do", "you", "live"], end: "?" },
@@ -139,7 +152,7 @@ const EXAMS = {
         ],
       },
       {
-        key: "match", roman: "III", name: "Read and match", type: "match",
+        key: "match", roman: "IV", name: "Read and match", type: "match",
         instruction: "Đọc câu hỏi rồi chọn câu trả lời phù hợp (A–E).",
         answersList: ["She's friendly and helpful.", "I like reading books.", "It's 26 Green Street.", "My favourite food is noodles.", "I'd like to be a gardener."],
         items: [
@@ -151,7 +164,7 @@ const EXAMS = {
         ],
       },
       {
-        key: "mcq", roman: "IV", name: "Read and choose the correct answer", type: "mcq",
+        key: "mcq", roman: "V", name: "Read and choose the correct answer", type: "mcq",
         instruction: "Đọc và chọn đáp án đúng A hoặc B.",
         items: [
           { q: "What nationality ___ your foreign friend?", a: "→ She's Australian.", options: ["is", "does"], answer: 0, explain: "What nationality is your foreign friend?" },
@@ -347,7 +360,7 @@ function runPart(host, part, onComplete) {
 const LISTEN_MAX = 2;
 const listenUsed = {}; // item id -> times played
 function listenHtml(item) {
-  return item.listen ? `<button type="button" class="q-listen-btn" id="q-listen">🔊 Nghe</button>` : "";
+  return item.listen || item.audio ? `<button type="button" class="q-listen-btn" id="q-listen">🔊 Nghe</button>` : "";
 }
 function bindListen(host, item) {
   const btn = host.querySelector("#q-listen");
@@ -364,6 +377,12 @@ function bindListen(host, item) {
     btn.disabled = true;
     btn.textContent = "🔊 Đang đọc…";
     const speakScript = () => {
+      if (!item.listen) { // no file and no script: don't use up a play
+        listenUsed[item.id]--;
+        btn.disabled = false;
+        btn.textContent = "⚠️ Chưa có file nghe — báo cô nhé";
+        return;
+      }
       const lines = item.listen.slice();
       (function next() {
         if (!lines.length) { label(); return; }
