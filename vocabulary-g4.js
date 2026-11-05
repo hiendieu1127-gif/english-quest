@@ -272,6 +272,35 @@ var VOCAB_UNITS_G4 = [
       { id: "g4u7-s-art", en: "I have art on Thursdays.", vi: "Mình có môn Mĩ thuật vào thứ Năm.", example: "I have art on Thursdays.", blank: "Thursdays", viFull: "Mình có môn Mĩ thuật vào thứ Năm.", viBlanked: "Mình có môn Mĩ thuật vào ___.", chunks: ["I", "have art", "on Thursdays."], stages: ["missing-word", "sentence-shuffle"] },
     ],
   },
+  {
+    id: "g4-unit8",
+    number: 8,
+    title: "My Favourite Subjects",
+    subtitle: "Global Success 4 · New Vocabulary",
+
+    words: [
+      // Subjects + jobs with photos — Tap Pairs + Picture Matching + Multiple Choice
+      { id: "g4u8-art", en: "art", vi: "môn Mĩ thuật", group: "subjects", icon: "img/vocab-g4-u7-art.jpg", stages: ["tap-pairs", "picture-matching", "multiple-choice"] },
+      { id: "g4u8-music", en: "music", vi: "môn Âm nhạc", group: "subjects", icon: "img/vocab-g4-u7-music.jpg", stages: ["tap-pairs", "picture-matching", "multiple-choice"] },
+      { id: "g4u8-pe", en: "PE", vi: "môn Giáo dục thể chất", group: "subjects", icon: "img/vocab-g4-u8-pe.jpg", stages: ["tap-pairs", "picture-matching", "multiple-choice"] },
+      { id: "g4u8-it", en: "IT", vi: "môn Tin học", group: "subjects", icon: "img/vocab-g4-u8-it.jpg", stages: ["tap-pairs", "picture-matching", "multiple-choice"] },
+      { id: "g4u8-english-teacher", en: "an English teacher", vi: "giáo viên tiếng Anh", group: "jobs", icon: "img/vocab-g4-u8-english-teacher.jpg", stages: ["tap-pairs", "picture-matching", "multiple-choice"] },
+      { id: "g4u8-singer", en: "a singer", vi: "ca sĩ", group: "jobs", icon: "img/vocab-g4-u8-singer.jpg", stages: ["tap-pairs", "picture-matching", "multiple-choice"] },
+      { id: "g4u8-painter", en: "a painter", vi: "họa sĩ", group: "jobs", icon: "img/vocab-g4-u8-painter.jpg", stages: ["tap-pairs", "picture-matching", "multiple-choice"] },
+      { id: "g4u8-maths-teacher", en: "a maths teacher", vi: "giáo viên Toán", group: "jobs", icon: "img/vocab-g4-u8-maths-teacher.jpg", stages: ["tap-pairs", "picture-matching", "multiple-choice"] },
+      { id: "g4u8-q-favourite", en: "What's your favourite subject?", vi: "Môn học yêu thích của bạn là gì?", stages: ["tap-pairs"] },
+      { id: "g4u8-q-why", en: "Why do you like English?", vi: "Tại sao bạn thích môn Tiếng Anh?", stages: ["tap-pairs"] },
+
+      // Sentences — Missing Word + Sentence Shuffle (every blank is different, and no two blanks fit the same sentence)
+      { id: "g4u8-s-favourite", en: "What's your favourite subject?", vi: "Môn học yêu thích của bạn là gì?", example: "What's your favourite subject?", blank: "favourite", viFull: "Môn học yêu thích của bạn là gì?", viBlanked: "Môn học ___ của bạn là gì?", chunks: ["What's", "your favourite", "subject?"], stages: ["missing-word", "sentence-shuffle"] },
+      { id: "g4u8-s-its", en: "It's IT.", vi: "Đó là môn Tin học.", example: "It's IT.", blank: "It's", viFull: "Đó là môn Tin học.", viBlanked: "___ môn Tin học.", chunks: ["It's", "IT."], stages: ["missing-word", "sentence-shuffle"] },
+      { id: "g4u8-s-why", en: "Why do you like English?", vi: "Tại sao bạn thích môn Tiếng Anh?", example: "Why do you like English?", blank: "Why", viFull: "Tại sao bạn thích môn Tiếng Anh?", viBlanked: "___ bạn thích môn Tiếng Anh?", chunks: ["Why", "do you like", "English?"], stages: ["missing-word", "sentence-shuffle"] },
+      { id: "g4u8-s-because", en: "Because I want to be an English teacher.", vi: "Vì mình muốn trở thành giáo viên tiếng Anh.", example: "Because I want to be an English teacher.", blank: "Because", viFull: "Vì mình muốn trở thành giáo viên tiếng Anh.", viBlanked: "___ mình muốn trở thành giáo viên tiếng Anh.", chunks: ["Because", "I want", "to be", "an English teacher."], stages: ["missing-word", "sentence-shuffle"] },
+      { id: "g4u8-s-singer", en: "I like music because I want to be a singer.", vi: "Mình thích môn Âm nhạc vì mình muốn trở thành ca sĩ.", example: "I like music because I want to be a singer.", blank: "singer", viFull: "Mình thích môn Âm nhạc vì mình muốn trở thành ca sĩ.", viBlanked: "Mình thích môn Âm nhạc vì mình muốn trở thành ___.", chunks: ["I like music", "because", "I want to be", "a singer."], stages: ["missing-word", "sentence-shuffle"] },
+      { id: "g4u8-s-painter", en: "I like art because I want to be a painter.", vi: "Mình thích môn Mĩ thuật vì mình muốn trở thành họa sĩ.", example: "I like art because I want to be a painter.", blank: "painter", viFull: "Mình thích môn Mĩ thuật vì mình muốn trở thành họa sĩ.", viBlanked: "Mình thích môn Mĩ thuật vì mình muốn trở thành ___.", chunks: ["I like art", "because", "I want to be", "a painter."], stages: ["missing-word", "sentence-shuffle"] },
+      { id: "g4u8-s-be", en: "I want to be a maths teacher.", vi: "Mình muốn trở thành giáo viên Toán.", example: "I want to be a maths teacher.", blank: "be", viFull: "Mình muốn trở thành giáo viên Toán.", viBlanked: "Mình muốn ___ giáo viên Toán.", chunks: ["I want", "to be", "a maths teacher."], stages: ["missing-word", "sentence-shuffle"] },
+    ],
+  },
 ];
 
 (function () {
