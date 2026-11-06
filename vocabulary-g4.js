@@ -301,6 +301,40 @@ var VOCAB_UNITS_G4 = [
       { id: "g4u8-s-be", en: "I want to be a maths teacher.", vi: "Mình muốn trở thành giáo viên Toán.", example: "I want to be a maths teacher.", blank: "be", viFull: "Mình muốn trở thành giáo viên Toán.", viBlanked: "Mình muốn ___ giáo viên Toán.", chunks: ["I want", "to be", "a maths teacher."], stages: ["missing-word", "sentence-shuffle"] },
     ],
   },
+  {
+    id: "g4-unit9",
+    number: 9,
+    title: "Our Sports Day",
+    subtitle: "Global Success 4 · New Vocabulary",
+
+    words: [
+      // Words with photos — Tap Pairs + Picture Matching + Multiple Choice.
+      // Two groups so a wrong-picture choice is never confusing: the "sports" photo shows rackets
+      // and balls, so it only appears next to sports day / games / a picture — never next to
+      // cycling / badminton / football / basketball (distractors come from the same group).
+      { id: "g4u9-sports-day", en: "sports day", vi: "ngày hội thể thao", group: "events", icon: "img/vocab-g4-u9-sports-day.jpg", stages: ["tap-pairs", "picture-matching", "multiple-choice"] },
+      { id: "g4u9-sports", en: "sports", vi: "các môn thể thao", group: "events", icon: "img/vocab-g4-u9-sports.jpg", stages: ["tap-pairs", "picture-matching", "multiple-choice"] },
+      { id: "g4u9-games", en: "games", vi: "các trò chơi", group: "events", icon: "img/vocab-g4-u9-games.jpg", stages: ["tap-pairs", "picture-matching", "multiple-choice"] },
+      { id: "g4u9-picture", en: "a picture", vi: "bức tranh, bức ảnh", group: "events", icon: "img/vocab-g4-u9-picture.jpg", stages: ["tap-pairs", "picture-matching", "multiple-choice"] },
+      { id: "g4u9-cycling", en: "cycling", vi: "đạp xe", group: "sports", icon: "img/vocab-g7-u2-cycling.jpg", stages: ["tap-pairs", "picture-matching", "multiple-choice"] },
+      { id: "g4u9-badminton", en: "badminton", vi: "môn cầu lông", group: "sports", icon: "img/vocab-g4-u9-badminton.jpg", stages: ["tap-pairs", "picture-matching", "multiple-choice"] },
+      { id: "g4u9-football", en: "football", vi: "môn bóng đá", group: "sports", icon: "img/vocab-g4-u5-play-football.jpg", stages: ["tap-pairs", "picture-matching", "multiple-choice"] },
+      { id: "g4u9-basketball", en: "basketball", vi: "môn bóng rổ", group: "sports", icon: "img/vocab-basketball.jpg", stages: ["tap-pairs", "picture-matching", "multiple-choice"] },
+      { id: "g4u9-q-may", en: "Is your sports day in May?", vi: "Ngày hội thể thao của bạn vào tháng Năm phải không?", stages: ["tap-pairs"] },
+      { id: "g4u9-q-when", en: "When's your sports day?", vi: "Ngày hội thể thao của bạn vào khi nào?", stages: ["tap-pairs"] },
+      { id: "g4u9-q-that", en: "What's that?", vi: "Đó là gì vậy?", stages: ["tap-pairs"] },
+
+      // Sentences — Missing Word + Sentence Shuffle (every blank is different, and no two blanks fit the same sentence)
+      { id: "g4u9-s-is", en: "Is your sports day in May?", vi: "Ngày hội thể thao của bạn vào tháng Năm phải không?", example: "Is your sports day in May?", blank: "Is", viFull: "Ngày hội thể thao của bạn vào tháng Năm phải không?", viBlanked: "Ngày hội thể thao của bạn vào tháng Năm ___?", chunks: ["Is", "your sports day", "in May?"], stages: ["missing-word", "sentence-shuffle"] },
+      { id: "g4u9-s-yes", en: "Yes, it is.", vi: "Đúng vậy.", example: "Yes, it is.", blank: "Yes", viFull: "Đúng vậy.", viBlanked: "___ vậy.", chunks: ["Yes,", "it is."], stages: ["missing-word", "sentence-shuffle"] },
+      { id: "g4u9-s-isnt", en: "No, it isn't. It's in April.", vi: "Không phải. Nó vào tháng Tư.", example: "No, it isn't. It's in April.", blank: "isn't", viFull: "Không phải. Nó vào tháng Tư.", viBlanked: "Không ___. Nó vào tháng Tư.", chunks: ["No,", "it isn't.", "It's", "in April."], stages: ["missing-word", "sentence-shuffle"] },
+      { id: "g4u9-s-when", en: "When's your sports day?", vi: "Ngày hội thể thao của bạn vào khi nào?", example: "When's your sports day?", blank: "When's", viFull: "Ngày hội thể thao của bạn vào khi nào?", viBlanked: "Ngày hội thể thao của bạn vào ___?", chunks: ["When's", "your", "sports day?"], stages: ["missing-word", "sentence-shuffle"] },
+      { id: "g4u9-s-october", en: "It's in October.", vi: "Vào tháng Mười.", example: "It's in October.", blank: "October", viFull: "Vào tháng Mười.", viBlanked: "Vào tháng ___.", chunks: ["It's", "in", "October."], stages: ["missing-word", "sentence-shuffle"] },
+      { id: "g4u9-s-picture", en: "It's a picture of our sports day.", vi: "Đó là bức ảnh ngày hội thể thao của chúng mình.", example: "It's a picture of our sports day.", blank: "picture", viFull: "Đó là bức ảnh ngày hội thể thao của chúng mình.", viBlanked: "Đó là ___ ngày hội thể thao của chúng mình.", chunks: ["It's", "a picture", "of", "our sports day."], stages: ["missing-word", "sentence-shuffle"] },
+      { id: "g4u9-s-like", en: "I like cycling.", vi: "Mình thích đạp xe.", example: "I like cycling.", blank: "like", viFull: "Mình thích đạp xe.", viBlanked: "Mình ___ đạp xe.", chunks: ["I", "like", "cycling."], stages: ["missing-word", "sentence-shuffle"] },
+      { id: "g4u9-s-boys", en: "The boys play badminton.", vi: "Các bạn nam chơi cầu lông.", example: "The boys play badminton.", blank: "boys", viFull: "Các bạn nam chơi cầu lông.", viBlanked: "Các ___ chơi cầu lông.", chunks: ["The boys", "play", "badminton."], stages: ["missing-word", "sentence-shuffle"] },
+    ],
+  },
 ];
 
 (function () {
