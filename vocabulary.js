@@ -7,7 +7,8 @@
 // Picture Matching also needs an `icon` (+ optional `note` shown after
 // answering); Missing Word needs `example` + `blank` (+ optional
 // `viFull` / `viBlanked` for the 🌐 Dịch button); Sentence Shuffle needs
-// `example` (+ optional `chunks`, `viFull`).
+// `example` (+ optional `chunks`, `viFull`, `viHalf` = half-sentence hint
+// shown by 🌐 Dịch before answering).
 // Optional `group` (e.g. "numbers", "this-that"): wrong answers are taken
 // from the same group first.
 // Optional unit flag `hasExercises: false` hides the "sang phần Exercise"
@@ -246,6 +247,53 @@ var VOCAB_UNITS_G5 = [
       { id: "u5-s-teach-children", en: "Because I'd like to teach children.", vi: "Bởi vì mình muốn dạy trẻ em.", example: "Because I'd like to teach children.", blank: "Because", viFull: "Bởi vì mình muốn dạy trẻ em.", viBlanked: "___ mình muốn dạy trẻ em.", stages: ["missing-word", "sentence-shuffle"] },
       { id: "u5-s-writer", en: "I'd like to be a writer.", vi: "Mình muốn trở thành nhà văn.", example: "I'd like to be a writer.", blank: "writer", viFull: "Mình muốn trở thành nhà văn.", viBlanked: "Mình muốn trở thành ___.", stages: ["missing-word", "sentence-shuffle"] },
       { id: "u5-s-write-stories", en: "Because I'd like to write stories.", vi: "Bởi vì mình muốn viết truyện.", example: "Because I'd like to write stories.", blank: "write", viFull: "Bởi vì mình muốn viết truyện.", viBlanked: "Bởi vì mình muốn ___ truyện.", stages: ["missing-word", "sentence-shuffle"] },
+    ],
+  },
+
+  {
+    id: "unit6",
+    number: 6,
+    title: "Our School Rooms",
+    subtitle: "Global Success 5 · New Vocabulary",
+    words: [
+      // Tap Pairs (14) — slides 1 & 2. Picture Matching (10) — 9 photos from Hiền + "go past" drawn by Claude.
+      // Rooms and directions are separate groups so a room is never a distractor for a direction.
+      { id: "u6-music-room", en: "music room", vi: "phòng âm nhạc", group: "rooms", icon: "img/vocab-g5-u6-music-room.jpg", stages: ["tap-pairs", "picture-matching"] },
+      { id: "u6-computer-room", en: "computer room", vi: "phòng máy tính", group: "rooms", icon: "img/vocab-g5-u6-computer-room.jpg", stages: ["tap-pairs", "picture-matching"] },
+      { id: "u6-library", en: "library", vi: "thư viện", group: "rooms", icon: "img/vocab-g5-u6-library.jpg", stages: ["tap-pairs", "picture-matching"] },
+      { id: "u6-art-room", en: "art room", vi: "phòng mỹ thuật", group: "rooms", icon: "img/vocab-g5-u6-art-room.jpg", stages: ["tap-pairs", "picture-matching"] },
+      { id: "u6-go-upstairs", en: "go upstairs", vi: "đi lên lầu", group: "directions", icon: "img/vocab-g5-u6-go-upstairs.jpg", stages: ["tap-pairs", "picture-matching"] },
+      { id: "u6-go-downstairs", en: "go downstairs", vi: "đi xuống lầu", group: "directions", icon: "img/vocab-g5-u6-go-downstairs.jpg", stages: ["tap-pairs", "picture-matching"] },
+      { id: "u6-go-along-the-corridor", en: "go along the corridor", vi: "đi dọc hành lang", group: "directions", icon: "img/vocab-g5-u6-go-along-the-corridor.jpg", stages: ["tap-pairs", "picture-matching"] },
+      { id: "u6-go-past", en: "go past", vi: "đi qua", group: "directions", icon: "img/vocab-g5-u6-go-past.jpg", stages: ["tap-pairs", "picture-matching"] },
+      { id: "u6-turn-left", en: "turn left", vi: "rẽ trái", group: "directions", icon: "img/vocab-g5-u6-turn-left.jpg", stages: ["tap-pairs", "picture-matching"] },
+      { id: "u6-turn-right", en: "turn right", vi: "rẽ phải", group: "directions", icon: "img/vocab-g5-u6-turn-right.jpg", stages: ["tap-pairs", "picture-matching"] },
+      { id: "u6-ground-floor", en: "ground floor", vi: "tầng trệt", stages: ["tap-pairs"] },
+      { id: "u6-first-floor", en: "first floor", vi: "tầng 1", stages: ["tap-pairs"] },
+      { id: "u6-second-floor", en: "second floor", vi: "tầng 2", stages: ["tap-pairs"] },
+      { id: "u6-third-floor", en: "third floor", vi: "tầng 3", stages: ["tap-pairs"] },
+
+      // Multiple Choice (10) — floors with floors, directions with directions
+      { id: "u6-mc-ground-floor", en: "ground floor", vi: "tầng trệt", group: "floors", stages: ["multiple-choice"] },
+      { id: "u6-mc-first-floor", en: "first floor", vi: "tầng 1", group: "floors", stages: ["multiple-choice"] },
+      { id: "u6-mc-second-floor", en: "second floor", vi: "tầng 2", group: "floors", stages: ["multiple-choice"] },
+      { id: "u6-mc-third-floor", en: "third floor", vi: "tầng 3", group: "floors", stages: ["multiple-choice"] },
+      { id: "u6-mc-go-upstairs", en: "go upstairs", vi: "đi lên lầu", group: "directions", stages: ["multiple-choice"] },
+      { id: "u6-mc-go-downstairs", en: "go downstairs", vi: "đi xuống lầu", group: "directions", stages: ["multiple-choice"] },
+      { id: "u6-mc-go-along-the-corridor", en: "go along the corridor", vi: "đi dọc hành lang", group: "directions", stages: ["multiple-choice"] },
+      { id: "u6-mc-go-past", en: "go past", vi: "đi qua", group: "directions", stages: ["multiple-choice"] },
+      { id: "u6-mc-turn-left", en: "turn left", vi: "rẽ trái", group: "directions", stages: ["multiple-choice"] },
+      { id: "u6-mc-turn-right", en: "turn right", vi: "rẽ phải", group: "directions", stages: ["multiple-choice"] },
+
+      // Missing Word + Sentence Shuffle (6) — sentences 1–4 from the slides, 5–6 written by Claude (approved by Hiền).
+      // Sentence 5 blanks "left" (not "downstairs") so "upstairs"/"downstairs" never both fit the same blank.
+      // viHalf = Sentence Shuffle "Dịch" before answering (about half the sentence); viFull after answering.
+      { id: "u6-s-where", en: "Where's the music room?", vi: "Phòng âm nhạc ở đâu?", example: "Where's the music room?", blank: "Where's", viFull: "Phòng âm nhạc ở đâu?", viBlanked: "Phòng âm nhạc ___?", viHalf: "… phòng âm nhạc?", stages: ["missing-word", "sentence-shuffle"] },
+      { id: "u6-s-third", en: "It's on the third floor.", vi: "Nó ở tầng 3.", example: "It's on the third floor.", blank: "third", viFull: "Nó ở tầng 3.", viBlanked: "Nó ở tầng ___.", viHalf: "Nó … tầng …", stages: ["missing-word", "sentence-shuffle"] },
+      { id: "u6-s-way", en: "Could you tell me the way to the computer room, please?", vi: "Bạn có thể chỉ cho mình đường đến phòng máy tính được không?", example: "Could you tell me the way to the computer room, please?", blank: "way", viFull: "Bạn có thể chỉ cho mình đường đến phòng máy tính được không?", viBlanked: "Bạn có thể chỉ cho mình ___ đến phòng máy tính được không?", viHalf: "Bạn có thể … đường … phòng máy tính …?", stages: ["missing-word", "sentence-shuffle"] },
+      { id: "u6-s-upstairs", en: "Go upstairs. It's on the first floor.", vi: "Đi lên lầu. Nó ở tầng 1.", example: "Go upstairs. It's on the first floor.", blank: "upstairs", viFull: "Đi lên lầu. Nó ở tầng 1.", viBlanked: "Đi ___. Nó ở tầng 1.", viHalf: "Đi lên lầu. … tầng 1.", stages: ["missing-word", "sentence-shuffle"] },
+      { id: "u6-s-downstairs", en: "Go downstairs and turn left.", vi: "Đi xuống lầu và rẽ trái.", example: "Go downstairs and turn left.", blank: "left", viFull: "Đi xuống lầu và rẽ trái.", viBlanked: "Đi xuống lầu và rẽ ___.", viHalf: "Đi xuống lầu … rẽ …", stages: ["missing-word", "sentence-shuffle"] },
+      { id: "u6-s-past", en: "Go past the art room and turn right.", vi: "Đi qua phòng mỹ thuật và rẽ phải.", example: "Go past the art room and turn right.", blank: "past", viFull: "Đi qua phòng mỹ thuật và rẽ phải.", viBlanked: "Đi ___ phòng mỹ thuật và rẽ phải.", viHalf: "… phòng mỹ thuật và … phải.", stages: ["missing-word", "sentence-shuffle"] },
     ],
   },
 ];
@@ -722,7 +770,10 @@ function runSequential(host, stageKey, items, onDone) {
         const box = document.getElementById("translate-text");
         box.style.display = "block";
         if (stageKey === "sentence-shuffle") {
-          box.textContent = item.word.viFull;
+          // Optional `viHalf`: before answering show only about half the sentence, so the
+          // translation doesn't give the word order away; the full sentence comes after answering.
+          const answered = document.getElementById("shuffle-pool")?.dataset.locked === "1";
+          box.textContent = (!answered && item.word.viHalf) ? item.word.viHalf : item.word.viFull;
         } else {
           const answered = !!host.querySelector('.runner-opt[data-locked="1"]');
           box.textContent = answered ? item.word.viFull : item.word.viBlanked;
