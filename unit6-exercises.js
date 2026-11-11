@@ -10,7 +10,7 @@
 //   Listen and circle turns on by itself once all 4 recordings are on the site
 //   (g5-u6-circle-1..4.wav in the repo root) — see checkAudio().
 //
-// NO AI voice on this page (Hien: the AI voice is for Vocabulary only).
+// AI voice: only the 8 Vocabulary cards (tap = hear the word). No voice anywhere else (Hien).
 // "Dịch" translates the QUESTION only, never the answer choices. The correct answer and the
 // translation of the whole sentence appear only after the student has answered.
 // Sentence Ordering: only about half of the chunks have a Vietnamese meaning.
@@ -278,8 +278,11 @@ function roundHeader(round) {
     : "";
 }
 
-// No AI voice on this page (Hien: the AI voice is for Vocabulary only) — say() does nothing.
+// AI voice on this page: ONLY the Vocabulary cards (Hien). Everything else stays silent — say() does nothing.
 function say(text) {}
+function sayVocab(text) {
+  if (window.EQSpeak && text) window.EQSpeak.speak(text);
+}
 
 function sfx(correct) {
   window.EQSound && (correct ? window.EQSound.correct() : window.EQSound.wrong());
@@ -788,12 +791,12 @@ function renderVocab() {
   if (!host) return;
   host.innerHTML = VOCAB_ITEMS.map((v, idx) => `
     <div class="vocab-card" data-idx="${idx}">
-      <div class="vocab-front">${escapeHtml(v.en)}<span class="vocab-hint">chạm để xem nghĩa</span></div>
+      <div class="vocab-front">🔊 ${escapeHtml(v.en)}<span class="vocab-hint">chạm để nghe &amp; xem nghĩa</span></div>
       <div class="vocab-back">${escapeHtml(v.vi)}</div>
     </div>`).join("");
   host.querySelectorAll(".vocab-card").forEach((card) => {
     card.addEventListener("click", () => {
-      say(VOCAB_ITEMS[Number(card.dataset.idx)].en);
+      sayVocab(VOCAB_ITEMS[Number(card.dataset.idx)].en);
       card.classList.toggle("flipped");
     });
   });
