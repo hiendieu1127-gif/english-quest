@@ -17,7 +17,7 @@ const EQ_UNITS = [
   { id: 7, title: "Our Timetables", status: "in-progress", vocabulary: "vocabulary-g4.html?unit=g4-unit7", grammar: null, exercises: "unit7-exercises-g4.html" },
   { id: 8, title: "My Favourite Subjects", status: "in-progress", vocabulary: "vocabulary-g4.html?unit=g4-unit8", grammar: null, exercises: "unit8-exercises-g4.html" },
   { id: 9, title: "Our Sports Day", status: "in-progress", vocabulary: "vocabulary-g4.html?unit=g4-unit9", grammar: null, exercises: "unit9-exercises-g4.html" },
-  { id: 10, title: "Our Summer Holidays", status: "not-started", vocabulary: null, grammar: null, exercises: null },
+  { id: 10, title: "Our Summer Holidays", status: "in-progress", vocabulary: "vocabulary-g4.html?unit=g4-unit10", grammar: null, exercises: "unit10-exercises-g4.html" },
 ];
 
 const EQ_STATUS_LABEL = {
