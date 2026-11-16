@@ -335,6 +335,45 @@ var VOCAB_UNITS_G4 = [
       { id: "g4u9-s-boys", en: "The boys play badminton.", vi: "Các bạn nam chơi cầu lông.", example: "The boys play badminton.", blank: "boys", viFull: "Các bạn nam chơi cầu lông.", viBlanked: "Các ___ chơi cầu lông.", chunks: ["The boys", "play", "badminton."], stages: ["missing-word", "sentence-shuffle"] },
     ],
   },
+  {
+    id: "g4-unit10",
+    number: 10,
+    title: "Our Summer Holidays",
+    subtitle: "Global Success 4 · New Vocabulary",
+
+    words: [
+      // Words with photos (teacher Hien) — Tap Pairs + Picture Matching + Multiple Choice.
+      // Three groups so a wrong-picture choice is never confusing: the Tokyo photo shows Mount Fuji,
+      // so it never sits next to "in the mountains" (distractors come from the same group).
+      // Meanings exactly as on teacher Hien's slides.
+      { id: "g4u10-zoo", en: "at the zoo", vi: "ở sở thú", group: "places", icon: "img/vocab-g4-u10-at-the-zoo.jpg", stages: ["tap-pairs", "picture-matching", "multiple-choice"] },
+      { id: "g4u10-beach", en: "on the beach", vi: "ở bãi biển", group: "places", icon: "img/vocab-g4-u10-on-the-beach.jpg", stages: ["tap-pairs", "picture-matching", "multiple-choice"] },
+      { id: "g4u10-campsite", en: "at the campsite", vi: "ở khu cắm trại", group: "places", icon: "img/vocab-g4-u10-at-the-campsite.jpg", stages: ["tap-pairs", "picture-matching", "multiple-choice"] },
+      { id: "g4u10-countryside", en: "in the countryside", vi: "ở vùng nông thôn", group: "places", icon: "img/vocab-g4-u10-in-the-countryside.jpg", stages: ["tap-pairs", "picture-matching", "multiple-choice"] },
+      { id: "g4u10-mountains", en: "in the mountains", vi: "ở vùng núi", group: "places", icon: "img/vocab-g4-u10-in-the-mountains.jpg", stages: ["tap-pairs", "picture-matching", "multiple-choice"] },
+      { id: "g4u10-london", en: "London", vi: "(Anh)", group: "cities", icon: "img/vocab-g4-u10-london.jpg", stages: ["tap-pairs", "picture-matching", "multiple-choice"] },
+      { id: "g4u10-sydney", en: "Sydney", vi: "(Úc)", group: "cities", icon: "img/vocab-g4-u10-sydney.jpg", stages: ["tap-pairs", "picture-matching", "multiple-choice"] },
+      { id: "g4u10-tokyo", en: "Tokyo", vi: "Tô-ky-ô (Nhật Bản)", group: "cities", icon: "img/vocab-g4-u10-tokyo.jpg", stages: ["tap-pairs", "picture-matching", "multiple-choice"] },
+      { id: "g4u10-bangkok", en: "Bangkok", vi: "Băng Cốc (Thái Lan)", group: "cities", icon: "img/vocab-g4-u10-bangkok.jpg", stages: ["tap-pairs", "picture-matching", "multiple-choice"] },
+      { id: "g4u10-busy", en: "busy", vi: "đông đúc, nhộn nhịp", group: "adjectives", icon: "img/vocab-g4-u10-busy.jpg", stages: ["tap-pairs", "picture-matching", "multiple-choice"] },
+      { id: "g4u10-beautiful", en: "beautiful", vi: "đẹp", group: "adjectives", icon: "img/vocab-g4-u10-beautiful.jpg", stages: ["tap-pairs", "picture-matching", "multiple-choice"] },
+      { id: "g4u10-helpful", en: "helpful", vi: "hay giúp đỡ", group: "adjectives", icon: "img/vocab-g5-u3-helpful.jpg", stages: ["tap-pairs", "picture-matching", "multiple-choice"] },
+      { id: "g4u10-friendly", en: "friendly", vi: "thân thiện", group: "adjectives", icon: "img/vocab-g5-u3-friendly.jpg", stages: ["tap-pairs", "picture-matching", "multiple-choice"] },
+      { id: "g4u10-q-beach", en: "Were you on the beach last weekend?", vi: "Cuối tuần trước bạn có ở bãi biển không?", stages: ["tap-pairs"] },
+      { id: "g4u10-q-where", en: "Where were you last summer?", vi: "Mùa hè năm ngoái bạn đã ở đâu?", stages: ["tap-pairs"] },
+
+      // Sentences (teacher Hien's slides) — Missing Word + Sentence Shuffle.
+      // Every blank is different, and no two blanks fit the same sentence ("was" / "were" can't swap).
+      { id: "g4u10-s-weekend", en: "Were you on the beach last weekend?", vi: "Cuối tuần trước bạn có ở bãi biển không?", example: "Were you on the beach last weekend?", blank: "weekend", viFull: "Cuối tuần trước bạn có ở bãi biển không?", viBlanked: "Cuối ___ trước bạn có ở bãi biển không?", chunks: ["Were you", "on the beach", "last weekend?"], stages: ["missing-word", "sentence-shuffle"] },
+      { id: "g4u10-s-yes", en: "Yes, I was.", vi: "Có, mình có ở đó.", example: "Yes, I was.", blank: "Yes", viFull: "Có, mình có ở đó.", viBlanked: "___, mình có ở đó.", chunks: ["Yes,", "I was."], stages: ["missing-word", "sentence-shuffle"] },
+      { id: "g4u10-s-mountains", en: "No, I wasn't. I was in the mountains.", vi: "Không. Mình ở vùng núi.", example: "No, I wasn't. I was in the mountains.", blank: "mountains", viFull: "Không. Mình ở vùng núi.", viBlanked: "Không. Mình ở vùng ___.", chunks: ["No,", "I wasn't.", "I was", "in the mountains."], stages: ["missing-word", "sentence-shuffle"] },
+      { id: "g4u10-s-where", en: "Where were you last summer?", vi: "Mùa hè năm ngoái bạn đã ở đâu?", example: "Where were you last summer?", blank: "Where", viFull: "Mùa hè năm ngoái bạn đã ở đâu?", viBlanked: "Mùa hè năm ngoái bạn đã ở ___?", chunks: ["Where", "were you", "last summer?"], stages: ["missing-word", "sentence-shuffle"] },
+      { id: "g4u10-s-tokyo", en: "I was in Tokyo.", vi: "Mình đã ở Tô-ky-ô.", example: "I was in Tokyo.", blank: "Tokyo", viFull: "Mình đã ở Tô-ky-ô.", viBlanked: "Mình đã ở ___.", chunks: ["I was", "in", "Tokyo."], stages: ["missing-word", "sentence-shuffle"] },
+      { id: "g4u10-s-holiday", en: "Last summer, I was on holiday in London.", vi: "Mùa hè năm ngoái, mình đi nghỉ ở Luân Đôn.", example: "Last summer, I was on holiday in London.", blank: "holiday", viFull: "Mùa hè năm ngoái, mình đi nghỉ ở Luân Đôn.", viBlanked: "Mùa hè năm ngoái, mình đi ___ ở Luân Đôn.", chunks: ["Last summer,", "I was", "on holiday", "in London."], stages: ["missing-word", "sentence-shuffle"] },
+      { id: "g4u10-s-was", en: "The city was busy.", vi: "Thành phố rất nhộn nhịp.", example: "The city was busy.", blank: "was", viFull: "Thành phố rất nhộn nhịp.", viBlanked: "Thành phố ___ rất nhộn nhịp.", chunks: ["The city", "was", "busy."], stages: ["missing-word", "sentence-shuffle"] },
+      { id: "g4u10-s-were", en: "The people were friendly.", vi: "Mọi người rất thân thiện.", example: "The people were friendly.", blank: "were", viFull: "Mọi người rất thân thiện.", viBlanked: "Mọi người ___ rất thân thiện.", chunks: ["The people", "were", "friendly."], stages: ["missing-word", "sentence-shuffle"] },
+    ],
+  },
 ];
 
 (function () {
