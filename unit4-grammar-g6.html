@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unit 4 Grammar · English Quest</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="unit1-exercises.css">
+<style>
+  /* Small additions only for this page — reuses the shared classes everywhere else */
+
+  /* --- Numbered tab nav (bigger font, numbered circle, matches the old Grade 5 style) --- */
+  .eq-crumb-row { display:flex; flex-wrap:wrap; gap:10px; margin-bottom:16px; }
+  .eq-crumb {
+    display:flex; align-items:center; gap:9px;
+    background:#fff; border:1px solid #ddd; border-radius:999px;
+    padding:8px 18px 8px 8px; font-size:1rem; font-weight:700;
+    cursor:pointer; opacity:.62;
+  }
+  .eq-crumb-num {
+    width:28px; height:28px; border-radius:50%; flex-shrink:0;
+    background:#ececec; color:#888; font-size:.9rem; font-weight:800;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .eq-crumb.active { opacity:1; border-color: var(--page-color); color: var(--page-color); }
+  .eq-crumb.active .eq-crumb-num { background: var(--page-color); color:#fff; }
+  .eq-back-link { display:inline-block; margin-bottom:14px; font-size:1.05rem; font-weight:800; text-decoration:underline; text-underline-offset:3px; cursor:pointer; color: var(--page-color); background:none; border:none; padding:0; }
+  .reading-passage mark { background: #cfe8ff; padding:0 2px; border-radius:3px; }
+
+  /* --- Vocabulary: 3-column flip-card grid, always with audio --- */
+  .vocab-grid { display:grid; grid-template-columns: repeat(3, 1fr); gap:12px; }
+  @media (max-width: 640px) { .vocab-grid { grid-template-columns: repeat(2, 1fr); } }
+  .vocab-card {
+    background:#fff; border:1px solid #e2e2e2; border-radius:14px;
+    padding:16px 10px; text-align:center; cursor:pointer;
+    min-height:96px; display:flex; align-items:center; justify-content:center;
+  }
+  .vocab-card.flipped { background:#fff7e6; border-color:#f5b942; }
+  .vocab-card .vocab-front { font-weight:800; line-height:1.35; }
+  .vocab-card .vocab-hint { display:block; font-size:.7rem; color:#999; font-weight:400; margin-top:4px; }
+  .vocab-card .vocab-back { display:none; }
+  .vocab-card.flipped .vocab-front { display:none; }
+  .vocab-card.flipped .vocab-back { display:block; font-weight:700; color:#7a5b00; }
+
+  /* --- Match A with B → one-at-a-time multiple choice, mobile-friendly --- */
+  .mcq-def { font-size:1.08rem; font-weight:800; margin-bottom:2px; text-align:center; }
+  .mcq-def-vi { color:#666; font-size:.9rem; margin-bottom:16px; text-align:center; }
+  .eq-instruction { font-size:1.02rem; font-weight:800; color:#222; margin:0 0 12px; }
+  .mcq-options { display:grid; grid-template-columns: 1fr 1fr; gap:10px; }
+  @media (max-width: 480px) { .mcq-options { grid-template-columns: 1fr; } }
+  .mcq-option {
+    display:flex; align-items:center; gap:9px; text-align:left;
+    background:#fff; border:2px solid #e2e2e2; border-radius:12px;
+    padding:12px 14px; font-weight:700; cursor:pointer;
+  }
+  .mcq-option .mcq-letter {
+    width:26px; height:26px; border-radius:50%; background:#eee; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center; font-size:.82rem; font-weight:800;
+  }
+  .mcq-option.correct { border-color:#3fae4f; background:#eafbea; }
+  .mcq-option.wrong { border-color:#e05c5c; background:#fdeaea; }
+  .mcq-option[disabled] { cursor:default; }
+
+  /* --- Shared "Dịch" (translate-on-demand) button --- */
+  .eq-translate-btn {
+    display:inline-flex; align-items:center; gap:6px;
+    background:#eef2ff; border:1px solid #c7d2ff; color:#5b7cfa;
+    border-radius:999px; padding:6px 14px; font-size:.85rem; font-weight:800;
+    cursor:pointer; margin:6px 0 10px;
+  }
+
+  /* --- True / False --- */
+  .tf-item { background:#fff; border:1px solid #e2e2e2; border-radius:12px; padding:14px; margin-bottom:12px; }
+  .tf-vi { color:#666; font-size:.88rem; margin:0 0 10px; }
+  .tf-btn-row { display:flex; gap:8px; }
+  .tf-btn { border:2px solid #e2e2e2; background:#fff; border-radius:10px; padding:8px 16px; font-weight:800; cursor:pointer; }
+  .tf-btn.selected-correct { border-color:#3fae4f; background:#eafbea; }
+  .tf-btn.selected-wrong { border-color:#e05c5c; background:#fdeaea; }
+
+  /* --- Make sentences --- */
+  .sentence-answer-strip { min-height:52px; border:2px dashed #ccc; border-radius:12px; padding:10px; display:flex; flex-wrap:wrap; gap:8px; margin:12px 0; }
+  .sentence-chunks { display:flex; flex-wrap:wrap; gap:8px; }
+  .sentence-chunk { background:#fff; border:2px solid #e2e2e2; border-radius:10px; padding:8px 12px; cursor:pointer; text-align:center; }
+  .sentence-chunk .chunk-vi { display:none; font-size:.75rem; color:#888; font-weight:400; }
+  .sentence-chunks.show-vi .sentence-chunk .chunk-vi { display:block; }
+  .sentence-chunk.used { opacity:.35; pointer-events:none; }
+  .sentence-chunk.placed { background:#eef2ff; border-color:#5b7cfa; }
+
+  /* --- Put the verbs: sentence with inline typing boxes --- */
+  .verb-sentence { font-size:1.05rem; font-weight:700; line-height:2.3; color:#222; }
+  .verb-sentence .verb-num { color: var(--page-color); font-weight:900; }
+  .verb-sentence .verb-blank { width:130px; display:inline-block; margin:0 2px; }
+
+  /* --- Grammar theory card --- */
+  .grammar-theory { margin-bottom:18px; }
+  .grammar-theory summary { cursor:pointer; font-weight:800; font-size:1.05rem; color: var(--page-color); }
+  .grammar-theory h3 { margin:18px 0 6px; font-size:1.05rem; }
+  .grammar-theory p, .grammar-theory li { line-height:1.6; }
+  .grammar-theory ul { margin:6px 0; padding-left:20px; }
+  .theory-table-wrap { overflow-x:auto; }
+  .theory-table { border-collapse:collapse; width:100%; min-width:420px; font-size:.95rem; }
+  .theory-table th, .theory-table td { border:1px solid #e2e2e2; padding:8px 10px; text-align:left; vertical-align:top; }
+  .theory-table th { background:#f6f3ec; }
+  .theory-warn { background:#fdeaea; border-radius:10px; padding:8px 12px; }
+  .theory-scale { font-weight:800; background:#eef2ff; border-radius:10px; padding:8px 12px; }
+  /* --- Unit 4: comparative theory boxes (same colours as cô Hiền's slides) --- */
+  .cmp-box { border-radius:12px; padding:12px 16px; margin:10px 0; }
+  .cmp-box.blue { background:#e3f0fa; }
+  .cmp-box.yellow { background:#fff3c4; }
+  .cmp-box.pink { background:#fde3dc; }
+  .cmp-box h4 { margin:0 0 6px; font-size:1rem; }
+  .cmp-formula { color:#1f5fd1; font-weight:800; font-size:1.08rem; }
+  .cmp-formula small { font-weight:700; font-size:.88rem; margin-left:10px; }
+  .cmp-words { color:#1f5fd1; line-height:1.9; }
+  .cmp-words span { margin-right:18px; white-space:nowrap; }
+  .cmp-ex { font-style:italic; margin:4px 0 0; }
+  .grammar-theory ol { margin:6px 0; padding-left:22px; }
+  .word-box { display:flex; flex-wrap:wrap; gap:8px 20px; background:#fde3dc; border-radius:12px; padding:10px 16px; margin:0 0 14px; font-weight:700; }
+  .phrase-options { display:grid; grid-template-columns:1fr; gap:8px; margin-top:12px; }
+  .blank-line { color:#999; letter-spacing:1px; }
+  .write-input { width:100%; margin-top:10px; }
+  .ex-example { background:#f6f3ec; border-radius:10px; padding:8px 12px; margin:0 0 12px; font-size:.95rem; }
+  /* answered options stay readable (not greyed out) */
+  .mcq-option:disabled { opacity:1; color:#222; }
+</style>
+</head>
+<body data-page="lessons" style="--page-color: var(--c-grammar);">
+  <header class="site-header">
+    <nav class="container nav-row" aria-label="Main navigation">
+      <a class="brand" href="index.html">
+        <span class="brand-mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 5.5C4 4.7 4.7 4 5.5 4H12v16H5.5A1.5 1.5 0 0 1 4 18.5v-13Z" stroke-linejoin="round"/><path d="M20 5.5c0-.8-.7-1.5-1.5-1.5H12v16h6.5a1.5 1.5 0 0 0 1.5-1.5v-13Z" stroke-linejoin="round"/></svg></span>
+        English Quest
+      </a>
+      <button class="nav-toggle" aria-label="Open menu" aria-expanded="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke-linecap="round"/></svg>
+      </button>
+      <ul class="nav-links">
+        <li><a class="navlink" href="unit-g6.html?u=4"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 5.5C4 4.7 4.7 4 5.5 4H12v16H5.5A1.5 1.5 0 0 1 4 18.5v-13Z" stroke-linejoin="round"/><path d="M20 5.5c0-.8-.7-1.5-1.5-1.5H12v16h6.5a1.5 1.5 0 0 0 1.5-1.5v-13Z" stroke-linejoin="round"/></svg><span>Unit 4</span></a></li>
+      </ul>
+    </nav>
+  </header>
+  <div class="nav-scrim"></div>
+
+  <main>
+    <section class="page-hero">
+      <div class="container">
+        <span class="eyebrow" style="border-color: var(--page-color);"><a href="unit-g6.html?u=4" style="color:inherit;">Unit 4: My Neighbourhood</a></span>
+        <h1 style="margin-bottom:4px;">Grammar</h1>
+        <p>So sánh hơn (Comparative adjectives). Đọc lý thuyết rồi làm lần lượt Bài 3, Bài 4, Bài 5 nhé.</p>
+      </div>
+    </section>
+
+    <section class="section" style="padding-top:10px;">
+      <div class="container">
+        <details class="runner-card grammar-theory" open>
+          <summary>📘 Lý thuyết — bấm để ẩn / hiện</summary>
+          <h3>So sánh hơn (Comparative adjectives)</h3>
+          <p><b>Cách dùng:</b> dùng để so sánh hai người hoặc hai vật.</p>
+          <div class="cmp-box blue">
+            <h4>Tính từ ngắn (1 âm tiết, hoặc 2 âm tiết tận cùng là -y, -er, -le, -ow, -et):</h4>
+            <div class="cmp-formula">S1 + be + adj-er + than + S2 <small>be là động từ tobe ( is, am, are )</small></div>
+            <p class="cmp-ex" style="font-style:normal;">EX: Tom is tall<b><u>er</u></b> than Mary. &nbsp; (tall → taller)</p>
+            <p class="cmp-ex" style="font-style:normal;">EX: Tâm is ....smaller......... ( small) than Long.</p>
+          </div>
+          <div class="cmp-box pink">
+            <h4>Tính từ dài (2 âm tiết trở lên, trừ các trường hợp trên):</h4>
+            <div class="cmp-formula">S1 + be + more + adj dài + than + S2 <small>be là động từ tobe ( is, am, are )</small></div>
+            <p class="cmp-ex" style="font-style:normal;">EX: <u>A house in a city</u> <b>is</b> <u>more</u> expensive than <u>a house in the countryside</u>.</p>
+            <p class="cmp-ex">Ex: Ha Noi is ..more modern ( modern ) than my hometown.</p>
+          </div>
+
+          <h3>Examples — Thêm ví dụ về so sánh hơn</h3>
+          <div class="cmp-box blue">
+            <h4>Tính từ ngắn (1 âm tiết) → adj + -er</h4>
+            <div class="cmp-words"><span>tall → taller</span><span>small → smaller</span><span>cheap → cheaper</span><span>old → older</span><span>fast → faster</span></div>
+            <p class="cmp-ex">Ex: My house is smaller than your house.</p>
+          </div>
+          <div class="cmp-box yellow">
+            <h4>Tính từ 2 âm tiết tận cùng là -y, -er, -le, -ow, -et → tính từ ngắn</h4>
+            <div class="cmp-words"><span>-y: happy → happier, busy → busier, noisy → noisier</span><span>-er: clever → cleverer</span></div>
+            <div class="cmp-words"><span>-le: simple → simpler, gentle → gentler</span><span>-ow: narrow → narrower</span><span>-et: quiet → quieter</span></div>
+            <p class="cmp-ex">Ex: This street is narrower and quieter than that street.</p>
+          </div>
+          <div class="cmp-box pink">
+            <h4>Tính từ dài (2 âm tiết trở lên, trừ các trường hợp trên) → more + adj</h4>
+            <div class="cmp-words"><span>beautiful → more beautiful</span><span>expensive → more expensive</span><span>modern → more modern</span></div>
+            <p class="cmp-ex">Ex: Ha Noi is more modern than my hometown.</p>
+          </div>
+
+          <h3>Lưu ý</h3>
+          <ol>
+            <li>Tính từ kết thúc bằng -e → thêm -r: &nbsp; nice → nicer, &nbsp;large → larger</li>
+            <li>Phụ âm – nguyên âm ( u, e, o, a, i ) – phụ âm → gấp đôi phụ âm cuối: &nbsp; big → bigger, &nbsp;hot → hotter</li>
+            <li>Tính từ 2 âm tiết kết thúc bằng -y → bỏ y thêm -ier: &nbsp; noisy → noisier, &nbsp;busy → busier</li>
+            <li>Bất quy tắc: &nbsp; good → better, &nbsp; bad → worse, &nbsp; far → farther / further</li>
+          </ol>
+        </details>
+
+        <div class="ex-tabs">
+          <button class="ex-tab active" data-target="panel-ex3">Bài 3</button>
+          <button class="ex-tab" data-target="panel-ex4">Bài 4</button>
+          <button class="ex-tab" data-target="panel-ex5">Bài 5</button>
+        </div>
+
+        <div id="mascot-box" class="mascot-box"></div>
+
+        <div class="ex-panel active" id="panel-ex3">
+          <div class="runner-card">
+            <div class="quiz-q" style="margin-bottom:8px;">3. Complete the sentences with the correct comparative form of the adjectives in the box — hoàn thành câu với dạng so sánh hơn của các tính từ trong khung.</div>
+            <div class="word-box" id="ex3-box"></div>
+            <div id="ex3-runner"></div>
+          </div>
+        </div>
+
+        <div class="ex-panel" id="panel-ex4">
+          <div class="runner-card">
+            <div class="quiz-q" style="margin-bottom:8px;">4. Complete the sentences with the phrases in the box to make comparisons — chọn cụm từ trong khung để hoàn thành câu so sánh.</div>
+            <div id="ex4-runner"></div>
+          </div>
+        </div>
+
+        <div class="ex-panel" id="panel-ex5">
+          <div class="runner-card">
+            <div class="quiz-q" style="margin-bottom:8px;">5. Write sentences, using the comparative form of the adjectives — viết câu, dùng dạng so sánh hơn của tính từ.</div>
+            <div class="ex-example"><b>Example:</b> Son / tall / Hung. → <i>Son is taller than Hung.</i></div>
+            <div id="ex5-runner"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <div class="footer-brand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 5.5C4 4.7 4.7 4 5.5 4H12v16H5.5A1.5 1.5 0 0 1 4 18.5v-13Z" stroke-linejoin="round"/><path d="M20 5.5c0-.8-.7-1.5-1.5-1.5H12v16h6.5a1.5 1.5 0 0 0 1.5-1.5v-13Z" stroke-linejoin="round"/></svg> English Quest</div>
+          <p style="max-width:32ch; font-size:.9rem; opacity:.85;">A friendly place for Grade 6 students to read, play, and practise English every week.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Learn</h4>
+          <ul>
+            <li><a href="unit-g6.html?u=4">Unit 4</a></li>
+            <li><a href="lessons-g6.html">Lessons</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>You</h4>
+          <ul>
+            <li><a href="lessons.html">Đổi khối</a></li>
+            <li><a href="index.html">Home</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; 2026 English Quest &mdash; a class website by teacher Hien.</span>
+      </div>
+    </div>
+  </footer>
+
+<script src="script.js?v=2"></script>
+<script src="student-gate.js"></script>
+<script type="module" src="results-service.js?v=4"></script>
+<script src="eq-progress.js?v=3"></script>
+<script src="unit4-grammar-g6.js?v=1"></script>
+<script src="section-lock.js?v=20261010"></script>
+<script src="mascot.js"></script>
+</body>
+</html>

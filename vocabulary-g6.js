@@ -211,6 +211,72 @@ var VOCAB_UNITS_G6 = [
       { id: "g6u3-ss-reading", en: "Are you reading a book?", vi: "Bạn có đang đọc sách không?", example: "Are you reading a book at the moment?", viFull: "Lúc này bạn có đang đọc sách không?", chunks: ["Are", "you", "reading", "a book", "at the moment?"], stages: ["sentence-shuffle"] },
     ],
   },
+  {
+    id: "g6-unit4",
+    number: 4,
+    title: "My Neighbourhood",
+    subtitle: "Global Success 6 · New Vocabulary",
+    // 32 scored items: Picture Matching 9 + Multiple Choice 10 + Missing Word 8 + Sentence Shuffle 5.
+    // Tap Pairs (12) is practice only. Word list + pictures from cô Hiền;
+    // Missing Word + Sentence Shuffle sentences written by Claude, approved by cô Hiền.
+    // Sentence Shuffle: "Dịch" shows viHint (about half the chunks) before answering,
+    // the full viFull only after the student has built the sentence.
+    words: [
+      // Tap Pairs (12 words, practice only)
+      { id: "g6u4-square-tp", en: "square", vi: "quảng trường", stages: ["tap-pairs"] },
+      { id: "g6u4-art-gallery-tp", en: "art gallery", vi: "phòng trưng bày nghệ thuật", stages: ["tap-pairs"] },
+      { id: "g6u4-cathedral-tp", en: "cathedral", vi: "nhà thờ lớn", stages: ["tap-pairs"] },
+      { id: "g6u4-temple-tp", en: "temple", vi: "đền, miếu", stages: ["tap-pairs"] },
+      { id: "g6u4-railway-station-tp", en: "railway station", vi: "nhà ga xe lửa", stages: ["tap-pairs"] },
+      { id: "g6u4-turn-left-tp", en: "turn left", vi: "rẽ trái", stages: ["tap-pairs"] },
+      { id: "g6u4-turn-right-tp", en: "turn right", vi: "rẽ phải", stages: ["tap-pairs"] },
+      { id: "g6u4-go-straight-tp", en: "go straight", vi: "đi thẳng", stages: ["tap-pairs"] },
+      { id: "g6u4-cross-the-road-tp", en: "cross the road", vi: "băng qua đường", stages: ["tap-pairs"] },
+      { id: "g6u4-excuse-me-tp", en: "Excuse me!", vi: "Xin lỗi (khi muốn hỏi ai đó)", stages: ["tap-pairs"] },
+      { id: "g6u4-the-way-to-tp", en: "the way to", vi: "đường đến", stages: ["tap-pairs"] },
+      { id: "g6u4-old-town-tp", en: "the old town", vi: "phố cổ", stages: ["tap-pairs"] },
+
+      // Picture Matching (9 words) — ảnh do cô Hiền gửi
+      { id: "g6u4-square", en: "square", vi: "quảng trường", icon: "img/vocab-g6-u4-square.jpg", stages: ["picture-matching"] },
+      { id: "g6u4-art-gallery", en: "art gallery", vi: "phòng trưng bày nghệ thuật", icon: "img/vocab-g6-u4-art-gallery.jpg", stages: ["picture-matching"] },
+      { id: "g6u4-cathedral", en: "cathedral", vi: "nhà thờ lớn", icon: "img/vocab-g6-u4-cathedral.jpg", stages: ["picture-matching"] },
+      { id: "g6u4-temple", en: "temple", vi: "đền, miếu", icon: "img/vocab-g6-u4-temple.jpg", stages: ["picture-matching"] },
+      { id: "g6u4-railway-station", en: "railway station", vi: "nhà ga xe lửa", icon: "img/vocab-g6-u4-railway-station.jpg", stages: ["picture-matching"] },
+      { id: "g6u4-turn-left", en: "turn left", vi: "rẽ trái", icon: "img/vocab-g6-u4-turn-left.jpg", stages: ["picture-matching"] },
+      { id: "g6u4-turn-right", en: "turn right", vi: "rẽ phải", icon: "img/vocab-g6-u4-turn-right.jpg", stages: ["picture-matching"] },
+      { id: "g6u4-go-straight", en: "go straight", vi: "đi thẳng", icon: "img/vocab-g6-u4-go-straight.jpg", stages: ["picture-matching"] },
+      { id: "g6u4-cross-the-road", en: "cross the road", vi: "băng qua đường", icon: "img/vocab-g6-u4-cross-the-road.jpg", stages: ["picture-matching"] },
+
+      // Multiple Choice (10) — choose the Vietnamese meaning
+      { id: "g6u4-old-town", en: "the old town", vi: "phố cổ", stages: ["multiple-choice"] },
+      { id: "g6u4-excited", en: "excited", vi: "hào hứng, phấn khích", stages: ["multiple-choice"] },
+      { id: "g6u4-lost", en: "lost", vi: "bị lạc", stages: ["multiple-choice"] },
+      { id: "g6u4-near", en: "near", vi: "gần", stages: ["multiple-choice"] },
+      { id: "g6u4-modern", en: "modern", vi: "hiện đại", stages: ["multiple-choice"] },
+      { id: "g6u4-boring", en: "boring", vi: "nhàm chán", stages: ["multiple-choice"] },
+      { id: "g6u4-peaceful", en: "peaceful", vi: "yên bình", stages: ["multiple-choice"] },
+      { id: "g6u4-beautiful", en: "beautiful", vi: "đẹp", stages: ["multiple-choice"] },
+      { id: "g6u4-whats-up", en: "What's up?", vi: "Có chuyện gì vậy?", stages: ["multiple-choice"] },
+      { id: "g6u4-second-turning", en: "take the second turning on the left", vi: "rẽ vào ngã rẽ thứ hai bên trái", stages: ["multiple-choice"] },
+
+      // Missing Word (8 sentences) — each blank only fits its own sentence
+      { id: "g6u4-mw-lost", en: "lost", vi: "bị lạc", example: "Excuse me! We're lost. Can you help us?", blank: "lost", stages: ["missing-word"], viFull: "Xin lỗi! Chúng tôi bị lạc. Bạn giúp chúng tôi được không?", viBlanked: "Xin lỗi! Chúng tôi bị ___. Bạn giúp chúng tôi được không?" },
+      { id: "g6u4-mw-excited", en: "excited", vi: "hào hứng", example: "I'm very excited about our trip to Hoi An tomorrow!", blank: "excited", stages: ["missing-word"], viFull: "Tớ rất hào hứng về chuyến đi Hội An ngày mai!", viBlanked: "Tớ rất ___ về chuyến đi Hội An ngày mai!" },
+      { id: "g6u4-mw-modern", en: "modern", vi: "hiện đại", example: "Ha Noi is a modern city with tall buildings and new shopping centres.", blank: "modern", stages: ["missing-word"], viFull: "Hà Nội là một thành phố hiện đại với nhà cao tầng và trung tâm mua sắm mới.", viBlanked: "Hà Nội là một thành phố ___ với nhà cao tầng và trung tâm mua sắm mới." },
+      { id: "g6u4-mw-boring", en: "boring", vi: "nhàm chán", example: "This film is so boring. I want to go to sleep.", blank: "boring", stages: ["missing-word"], viFull: "Bộ phim này thật nhàm chán. Tớ muốn đi ngủ.", viBlanked: "Bộ phim này thật ___. Tớ muốn đi ngủ." },
+      { id: "g6u4-mw-peaceful", en: "peaceful", vi: "yên bình", example: "My village is quiet and peaceful. There is no noise from cars.", blank: "peaceful", stages: ["missing-word"], viFull: "Làng tớ yên tĩnh và yên bình. Không có tiếng ồn xe cộ.", viBlanked: "Làng tớ yên tĩnh và ___. Không có tiếng ồn xe cộ." },
+      { id: "g6u4-mw-cross", en: "cross", vi: "băng qua", example: "Look left and right before you cross the road.", blank: "cross", stages: ["missing-word"], viFull: "Hãy nhìn trái, nhìn phải trước khi băng qua đường.", viBlanked: "Hãy nhìn trái, nhìn phải trước khi ___ đường." },
+      { id: "g6u4-mw-straight", en: "straight", vi: "thẳng", example: "Go straight and the museum is on your left.", blank: "straight", stages: ["missing-word"], viFull: "Đi thẳng rồi bảo tàng ở bên tay trái bạn.", viBlanked: "Đi ___ rồi bảo tàng ở bên tay trái bạn." },
+      { id: "g6u4-mw-nearer", en: "nearer", vi: "gần hơn", example: "The bus stop is nearer than the railway station.", blank: "nearer", stages: ["missing-word"], viFull: "Trạm xe buýt gần hơn nhà ga xe lửa.", viBlanked: "Trạm xe buýt ___ hơn nhà ga xe lửa." },
+
+      // Sentence Shuffle (5 sentences) — Claude viết, cô Hiền đã duyệt
+      { id: "g6u4-ss-go-first", en: "Where shall we go first?", vi: "Chúng ta nên đi đâu trước?", example: "Where shall we go first?", viFull: "Chúng ta nên đi đâu trước?", viHint: "Gợi ý: Where = ở đâu · first = trước tiên", chunks: ["Where", "shall", "we", "go", "first?"], stages: ["sentence-shuffle"] },
+      { id: "g6u4-ss-art-gallery", en: "Shall we go to the art gallery?", vi: "Chúng ta đi đến phòng trưng bày nghệ thuật nhé?", example: "Shall we go to the art gallery?", viFull: "Chúng ta đi đến phòng trưng bày nghệ thuật nhé?", viHint: "Gợi ý: go to = đi đến · the art gallery = phòng trưng bày nghệ thuật", chunks: ["Shall", "we", "go to", "the art gallery?"], stages: ["sentence-shuffle"] },
+      { id: "g6u4-ss-cross", en: "Let's cross the road.", vi: "Hãy cùng băng qua đường.", example: "Let's cross the road.", viFull: "Hãy cùng băng qua đường.", viHint: "Gợi ý: cross = băng qua", chunks: ["Let's", "cross", "the road."], stages: ["sentence-shuffle"] },
+      { id: "g6u4-ss-cathedral", en: "Can you tell me the way to the cathedral?", vi: "Bạn chỉ đường đến nhà thờ lớn được không?", example: "Excuse me, can you tell me the way to the cathedral?", viFull: "Xin lỗi, bạn có thể chỉ cho tôi đường đến nhà thờ lớn không?", viHint: "Gợi ý: Excuse me = Xin lỗi · the way to = đường đến · the cathedral = nhà thờ lớn", chunks: ["Excuse me,", "can", "you", "tell me", "the way to", "the cathedral?"], stages: ["sentence-shuffle"] },
+      { id: "g6u4-ss-second-turning", en: "Go straight and take the second turning", vi: "Đi thẳng rồi rẽ vào ngã rẽ thứ hai", example: "Go straight and take the second turning on the left.", viFull: "Đi thẳng rồi rẽ vào ngã rẽ thứ hai bên trái.", viHint: "Gợi ý: Go straight = đi thẳng · on the left = bên trái", chunks: ["Go straight", "and", "take", "the second turning", "on the left."], stages: ["sentence-shuffle"] },
+    ],
+  },
 ];
 
 (function () {
@@ -692,7 +758,10 @@ function runSequential(host, stageKey, items, onDone) {
         const box = document.getElementById("translate-text");
         box.style.display = "block";
         if (stageKey === "sentence-shuffle") {
-          box.textContent = item.word.viFull;
+          // viHint (Unit 4+): only about half the chunks before answering; full sentence afterwards.
+          const pool = document.getElementById("shuffle-pool");
+          const answered = pool && pool.dataset.locked === "1";
+          box.textContent = item.word.viHint && !answered ? item.word.viHint : item.word.viFull;
         } else {
           const answered = !!host.querySelector('.runner-opt[data-locked="1"]');
           box.textContent = answered ? item.word.viFull : item.word.viBlanked;
