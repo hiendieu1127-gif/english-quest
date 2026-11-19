@@ -277,6 +277,79 @@ var VOCAB_UNITS_G6 = [
       { id: "g6u4-ss-second-turning", en: "Go straight and take the second turning", vi: "Đi thẳng rồi rẽ vào ngã rẽ thứ hai", example: "Go straight and take the second turning on the left.", viFull: "Đi thẳng rồi rẽ vào ngã rẽ thứ hai bên trái.", viHint: "Gợi ý: Go straight = đi thẳng · on the left = bên trái", chunks: ["Go straight", "and", "take", "the second turning", "on the left."], stages: ["sentence-shuffle"] },
     ],
   },
+  {
+    id: "g6-unit5",
+    number: 5,
+    title: "Natural Wonders of Viet Nam",
+    subtitle: "Global Success 6 · New Vocabulary",
+    // 37 scored items: Picture Matching 14 + Multiple Choice 10 + Missing Word 8 + Sentence Shuffle 5.
+    // Tap Pairs (12) is practice only. Word list + 14 pictures from cô Hiền;
+    // Missing Word + Sentence Shuffle sentences written by Claude.
+    // "scenery" and "landscape" both mean "phong cảnh": scenery is in Tap Pairs only,
+    // landscape in Missing Word only, so they never appear as options of the same question.
+    // Sentence Shuffle: "Dịch" shows viHint (about half the chunks) before answering,
+    // the full viFull only after the student has built the sentence.
+    words: [
+      // Tap Pairs (12 words, practice only)
+      { id: "g6u5-geography-club-tp", en: "Geography Club", vi: "câu lạc bộ Địa lý", stages: ["tap-pairs"] },
+      { id: "g6u5-natural-wonders-tp", en: "natural wonders", vi: "kỳ quan thiên nhiên", stages: ["tap-pairs"] },
+      { id: "g6u5-scenery-tp", en: "scenery", vi: "phong cảnh", stages: ["tap-pairs"] },
+      { id: "g6u5-amazing-tp", en: "amazing", vi: "tuyệt vời, đáng kinh ngạc", stages: ["tap-pairs"] },
+      { id: "g6u5-tourist-attraction-tp", en: "tourist attraction", vi: "điểm thu hút khách du lịch", stages: ["tap-pairs"] },
+      { id: "g6u5-seafood-tp", en: "seafood", vi: "hải sản", stages: ["tap-pairs"] },
+      { id: "g6u5-activity-tp", en: "activity", vi: "hoạt động", stages: ["tap-pairs"] },
+      { id: "g6u5-sand-tp", en: "sand", vi: "cát", stages: ["tap-pairs"] },
+      { id: "g6u5-foreign-visitor-tp", en: "foreign visitor", vi: "du khách nước ngoài", stages: ["tap-pairs"] },
+      { id: "g6u5-tour-guide-tp", en: "tour guide", vi: "hướng dẫn viên du lịch", stages: ["tap-pairs"] },
+      { id: "g6u5-fishing-village-tp", en: "fishing village", vi: "làng chài", stages: ["tap-pairs"] },
+      { id: "g6u5-national-park-tp", en: "national park", vi: "vườn quốc gia", stages: ["tap-pairs"] },
+
+      // Picture Matching (14 words) — ảnh do cô Hiền gửi
+      { id: "g6u5-mountain", en: "mountain", vi: "ngọn núi", icon: "img/vocab-g6-u5-mountain.jpg", stages: ["picture-matching"] },
+      { id: "g6u5-river", en: "river", vi: "dòng sông", icon: "img/vocab-g6-u5-river.jpg", stages: ["picture-matching"] },
+      { id: "g6u5-waterfall", en: "waterfall", vi: "thác nước", icon: "img/vocab-g6-u5-waterfall.jpg", stages: ["picture-matching"] },
+      { id: "g6u5-forest", en: "forest", vi: "khu rừng", icon: "img/vocab-g6-u5-forest.jpg", stages: ["picture-matching"] },
+      { id: "g6u5-cave", en: "cave", vi: "hang động", icon: "img/vocab-g6-u5-cave.jpg", stages: ["picture-matching"] },
+      { id: "g6u5-desert", en: "desert", vi: "sa mạc", icon: "img/vocab-g6-u5-desert.jpg", stages: ["picture-matching"] },
+      { id: "g6u5-beach", en: "beach", vi: "bãi biển", icon: "img/vocab-g6-u5-beach.jpg", stages: ["picture-matching"] },
+      { id: "g6u5-island", en: "island", vi: "hòn đảo", icon: "img/vocab-g6-u5-island.jpg", stages: ["picture-matching"] },
+      { id: "g6u5-plaster", en: "plaster", vi: "băng cá nhân", icon: "img/vocab-g6-u5-plaster.jpg", stages: ["picture-matching"] },
+      { id: "g6u5-suncream", en: "suncream", vi: "kem chống nắng", icon: "img/vocab-g6-u5-suncream.jpg", stages: ["picture-matching"] },
+      { id: "g6u5-sleeping-bag", en: "sleeping bag", vi: "túi ngủ", icon: "img/vocab-g6-u5-sleeping-bag.jpg", stages: ["picture-matching"] },
+      { id: "g6u5-scissors", en: "scissors", vi: "cái kéo", icon: "img/vocab-g6-u5-scissors.jpg", stages: ["picture-matching"] },
+      { id: "g6u5-backpack", en: "backpack", vi: "ba lô", icon: "img/vocab-g6-u5-backpack.jpg", stages: ["picture-matching"] },
+      { id: "g6u5-compass", en: "compass", vi: "la bàn", icon: "img/vocab-g6-u5-compass.jpg", stages: ["picture-matching"] },
+
+      // Multiple Choice (10) — choose the Vietnamese meaning
+      { id: "g6u5-natural-wonders", en: "natural wonders", vi: "kỳ quan thiên nhiên", stages: ["multiple-choice"] },
+      { id: "g6u5-tourist-attraction", en: "tourist attraction", vi: "điểm thu hút khách du lịch", stages: ["multiple-choice"] },
+      { id: "g6u5-popular", en: "popular", vi: "phổ biến, được yêu thích", stages: ["multiple-choice"] },
+      { id: "g6u5-seafood", en: "seafood", vi: "hải sản", stages: ["multiple-choice"] },
+      { id: "g6u5-sand-dunes", en: "sand dunes", vi: "đồi cát", stages: ["multiple-choice"] },
+      { id: "g6u5-slope", en: "slope", vi: "sườn dốc", stages: ["multiple-choice"] },
+      { id: "g6u5-foreign-visitor", en: "foreign visitor", vi: "du khách nước ngoài", stages: ["multiple-choice"] },
+      { id: "g6u5-tour-guide", en: "tour guide", vi: "hướng dẫn viên du lịch", stages: ["multiple-choice"] },
+      { id: "g6u5-fishing-village", en: "fishing village", vi: "làng chài", stages: ["multiple-choice"] },
+      { id: "g6u5-national-park", en: "national park", vi: "vườn quốc gia", stages: ["multiple-choice"] },
+
+      // Missing Word (8 sentences) — each blank only fits its own sentence
+      { id: "g6u5-mw-landscape", en: "landscape", vi: "phong cảnh", example: "From the top of the mountain, we can see the beautiful landscape of the whole valley.", blank: "landscape", stages: ["missing-word"], viFull: "Từ đỉnh núi, chúng ta có thể ngắm phong cảnh tuyệt đẹp của cả thung lũng.", viBlanked: "Từ đỉnh núi, chúng ta có thể ngắm ___ tuyệt đẹp của cả thung lũng." },
+      { id: "g6u5-mw-amazing", en: "amazing", vi: "tuyệt vời, đáng kinh ngạc", example: "Ha Long Bay is so beautiful. It's really amazing!", blank: "amazing", stages: ["missing-word"], viFull: "Vịnh Hạ Long đẹp quá. Nó thật sự tuyệt vời!", viBlanked: "Vịnh Hạ Long đẹp quá. Nó thật sự ___!" },
+      { id: "g6u5-mw-on-time", en: "be on time", vi: "đúng giờ", example: "The bus leaves at 7 a.m. You must be on time.", blank: "time", stages: ["missing-word"], viFull: "Xe buýt khởi hành lúc 7 giờ sáng. Bạn phải đúng giờ.", viBlanked: "Xe buýt khởi hành lúc 7 giờ sáng. Bạn phải ___." },
+      { id: "g6u5-mw-life-jacket", en: "life jacket", vi: "áo phao", example: "You must wear a life jacket when you are on the boat.", blank: "jacket", stages: ["missing-word"], viFull: "Bạn phải mặc áo phao khi ở trên thuyền.", viBlanked: "Bạn phải mặc ___ khi ở trên thuyền." },
+      { id: "g6u5-mw-rubbish", en: "throw rubbish", vi: "vứt rác", example: "Please don't throw rubbish on the beach. Keep it clean!", blank: "rubbish", stages: ["missing-word"], viFull: "Xin đừng vứt rác trên bãi biển. Hãy giữ cho nó sạch sẽ!", viBlanked: "Xin đừng vứt ___ trên bãi biển. Hãy giữ cho nó sạch sẽ!" },
+      { id: "g6u5-mw-touch", en: "touch", vi: "chạm vào", example: "Don't touch the fire. It's very hot!", blank: "touch", stages: ["missing-word"], viFull: "Đừng chạm vào lửa. Nó rất nóng!", viBlanked: "Đừng ___ lửa. Nó rất nóng!" },
+      { id: "g6u5-mw-sell", en: "sell", vi: "bán", example: "The people in the fishing village sell fresh seafood to tourists.", blank: "sell", stages: ["missing-word"], viFull: "Người dân ở làng chài bán hải sản tươi cho khách du lịch.", viBlanked: "Người dân ở làng chài ___ hải sản tươi cho khách du lịch." },
+      { id: "g6u5-mw-picnic", en: "have a picnic", vi: "đi dã ngoại", example: "It's sunny today. Let's have a picnic in the park!", blank: "picnic", stages: ["missing-word"], viFull: "Hôm nay trời nắng. Chúng ta hãy đi dã ngoại ở công viên nhé!", viBlanked: "Hôm nay trời nắng. Chúng ta hãy ___ ở công viên nhé!" },
+
+      // Sentence Shuffle (5 sentences) — Claude viết
+      { id: "g6u5-ss-rules", en: "We must follow the rules.", vi: "Chúng ta phải tuân theo nội quy.", example: "We must follow the rules.", viFull: "Chúng ta phải tuân theo nội quy.", viHint: "Gợi ý: follow = tuân theo · the rules = nội quy", chunks: ["We", "must", "follow", "the rules."], stages: ["sentence-shuffle"] },
+      { id: "g6u5-ss-kites", en: "Let's fly kites on the sand dunes.", vi: "Chúng ta hãy thả diều trên đồi cát nhé.", example: "Let's fly kites on the sand dunes.", viFull: "Chúng ta hãy thả diều trên đồi cát nhé.", viHint: "Gợi ý: fly kites = thả diều · the sand dunes = đồi cát", chunks: ["Let's", "fly kites", "on", "the sand dunes."], stages: ["sentence-shuffle"] },
+      { id: "g6u5-ss-water-sports", en: "Water sports are popular activities here.", vi: "Thể thao dưới nước là những hoạt động phổ biến ở đây.", example: "Water sports are popular activities here.", viFull: "Thể thao dưới nước là những hoạt động phổ biến ở đây.", viHint: "Gợi ý: Water sports = thể thao dưới nước · popular = phổ biến", chunks: ["Water sports", "are", "popular", "activities", "here."], stages: ["sentence-shuffle"] },
+      { id: "g6u5-ss-visitors", en: "Many foreign visitors come to Ha Long Bay.", vi: "Nhiều du khách nước ngoài đến Vịnh Hạ Long.", example: "Many foreign visitors come to Ha Long Bay.", viFull: "Nhiều du khách nước ngoài đến Vịnh Hạ Long.", viHint: "Gợi ý: foreign visitors = du khách nước ngoài · come to = đến", chunks: ["Many", "foreign visitors", "come to", "Ha Long Bay."], stages: ["sentence-shuffle"] },
+      { id: "g6u5-ss-suncream", en: "Don't forget your suncream!", vi: "Đừng quên kem chống nắng của bạn nhé!", example: "Don't forget your suncream!", viFull: "Đừng quên kem chống nắng của bạn nhé!", viHint: "Gợi ý: forget = quên · suncream = kem chống nắng", chunks: ["Don't", "forget", "your", "suncream!"], stages: ["sentence-shuffle"] },
+    ],
+  },
 ];
 
 (function () {
