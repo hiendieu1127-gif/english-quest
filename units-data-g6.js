@@ -12,7 +12,7 @@ const EQ_UNITS = [
   { id: 2, title: "My House", status: "in-progress", vocabulary: "vocabulary-g6.html?unit=g6-unit2", grammar: "unit2-grammar-g6.html", exercises: "unit2-exercises-g6.html" },
   { id: 3, title: "My Friends", status: "in-progress", vocabulary: "vocabulary-g6.html?unit=g6-unit3", grammar: "unit3-grammar-g6.html", exercises: "unit3-exercises-g6.html" },
   { id: 4, title: "My Neighbourhood", status: "in-progress", vocabulary: "vocabulary-g6.html?unit=g6-unit4", grammar: "unit4-grammar-g6.html", exercises: "unit4-exercises-g6.html" },
-  { id: 5, title: "Natural Wonders of Viet Nam", status: "not-started", vocabulary: null, grammar: null, exercises: null },
+  { id: 5, title: "Natural Wonders of Viet Nam", status: "in-progress", vocabulary: "vocabulary-g6.html?unit=g6-unit5", grammar: "unit5-grammar-g6.html", exercises: "unit5-exercises-g6.html" },
   { id: 6, title: "Our Tet Holiday", status: "not-started", vocabulary: null, grammar: null, exercises: null },
   { id: 7, title: "Television", status: "not-started", vocabulary: null, grammar: null, exercises: null },
   { id: 8, title: "Sports and Games", status: "not-started", vocabulary: null, grammar: null, exercises: null },
